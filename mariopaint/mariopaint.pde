@@ -1,77 +1,6 @@
 
 #include <Tone.h>
-
-class Buzzer{
-  
-  int port;
-  long expirationTime;
-  long toneDuration;
-  long toneExpirationTimeUs;
-  boolean isBuzzing;
-  
-  public:
-  Buzzer(int aPort){
-    port = aPort;
-    expirationTime = 0;
-    toneExpirationTimeUs = 0;
-    toneDuration = 1;
-    isBuzzing = false;
-    initPort();
-  }
-  
-  void beepFor(int milliseconds){
-    expirationTime = millis() + milliseconds;
-    startBuzzing();
-  }
-  
-  void playTone(long frequencyInHz, int milliseconds) {
-    long oneSecondInUs = 1000000;
-    toneDuration = (oneSecondInUs/frequencyInHz) / 2;
-    resetToneExpirationTime();
-    beepFor(milliseconds);
-  }
-  
-  
-  void tick(){
-
-    
-    if (millis() > expirationTime){
-      stopBuzzing();
-      return;
-    }
-
-    if (micros() > toneExpirationTimeUs){
-       if (isBuzzing)
-         stopBuzzing();
-       else
-         startBuzzing();
-       
-       resetToneExpirationTime();
-     }
-     
-  }
-
-  void stopBuzzing() {
-    digitalWrite(port, LOW);
-    isBuzzing = false;
-  }
-
-private:
-
-  void resetToneExpirationTime(){
-    toneExpirationTimeUs = micros() + toneDuration;
-  }
-
-  void initPort() {
-    pinMode(port, OUTPUT);
-  }
-  
-  void startBuzzing() {
-    digitalWrite(port, HIGH);
-    isBuzzing = true;
-  }
-  
-};
+#include "MpcMusicPlayer.h"
 
 void debug(const char label[]) {
   Serial.println( label );
@@ -122,6 +51,7 @@ int notesTables[][2] = {
 #define MAX_TONES      6
 #define MAX_BEATS     150
 
+/*
 struct MpcTone {
   //int instrument;
   int note;
@@ -137,7 +67,9 @@ struct MpcMusic {
   int totalBeats;
   MpcBeat beats[MAX_BEATS];
 };
+*/
 
+/*
 class MpcMusicParser{
     
   String *musicData;
@@ -255,6 +187,9 @@ private:
 
 };
 
+*/
+
+/*
 MpcMusic music;
 
 //#define BUZZER_COUNT 1
@@ -263,6 +198,7 @@ MpcMusic music;
 Buzzer buzzers[BUZZER_COUNT]={Buzzer(3),Buzzer(4),Buzzer(5)};
 long startTime;
 int beat;
+
 
 void setup() {
   // Open serial communications:
@@ -342,5 +278,61 @@ void loop() {
   beat++;
 }
 
+*/
+
+//NOTE_G4
+
+MpcTone tone1, tone2, tone3, tone4, tone5, tone6, tone7, tone8;
+MpcBeat beats[8];
+MpcMusic music;
+
+Buzzer buzzer(2);
+MpcMusicPlayer *musicPlayer;
+
+void setup() {
+  Serial.begin(9600);
+  tone1.note=NOTE_C4;
+  beats[0].numberOfTones=1;
+  beats[0].tones=&tone1;
+
+  tone2.note=NOTE_D4;
+  beats[1].numberOfTones=1;
+  beats[1].tones=&tone2;
+  
+  tone3.note=NOTE_E4;
+  beats[2].numberOfTones=1;
+  beats[2].tones=&tone3;
+  
+  tone4.note=NOTE_F4;
+  beats[3].numberOfTones=1;
+  beats[3].tones=&tone4;
+  
+  tone5.note=NOTE_G4;
+  beats[4].numberOfTones=1;
+  beats[4].tones=&tone5;
+  
+  tone6.note=NOTE_A4;
+  beats[5].numberOfTones=1;
+  beats[5].tones=&tone6;
+  
+  tone7.note=NOTE_B4;
+  beats[6].numberOfTones=1;
+  beats[6].tones=&tone7;
+  
+  tone8.note=NOTE_C5;
+  beats[7].numberOfTones=1;
+  beats[7].tones=&tone8;
+  
+  music.delay = 1000;
+  music.numberOfBeats=8;
+  music.beats = ( MpcBeat* )&beats;
+  
+  musicPlayer = new MpcMusicPlayer(&buzzer);
+  musicPlayer->play( &music, millis() );
+}
+
+void loop() {
+  musicPlayer->tick( millis() );
+}
 
 
