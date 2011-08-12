@@ -1,6 +1,8 @@
 
 #include <Tone.h>
+
 #include "MpcMusicPlayer.h"
+#include "StringInputStream.h"
 
 void debug(const char label[]) {
   Serial.println( label );
@@ -289,8 +291,20 @@ MpcMusic music;
 Buzzer buzzer(2);
 MpcMusicPlayer *musicPlayer;
 
+InputStream *is;
+
 void setup() {
   Serial.begin(9600);
+  
+  const char *string = "This is a test";
+  is = new StringInputStream( string );
+  int16_t val;
+  do {
+    val = is->read();
+    Serial.println( (char)val );
+    
+  }while( val != -1 );
+  
   tone1.note=NOTE_C4;
   beats[0].numberOfTones=1;
   beats[0].tones=&tone1;
