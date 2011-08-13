@@ -51,15 +51,10 @@ private:
     beatBeginTime = currentTime;
     uint16_t frequency = music->getBeatAt( currentBeat )->tones[0].note;
     
-    Serial.print( "Playing beat number: " );
-    Serial.print( (int)currentBeat );
-    Serial.print( " Total: " );
-    Serial.print( (int)music->numberOfBeats );
-    Serial.print( " Freq: " );
-    Serial.println( frequency );
+    Serial.print( "Playing beat number: " );Serial.print( (int)currentBeat );Serial.print( " Total: " );Serial.print( (int)music->numberOfBeats );Serial.print( " Freq: " );Serial.println( frequency );
     
     if( frequency != 0 ) {
-      buzzer->playTone( frequency, music->delay - ( music->delay * 0.2 ) );
+      buzzer->playTone( frequency, music->delay - ( music->delay * 0.1 ) );
     }
     currentBeat++;
     if( currentBeat == 255 || currentBeat == music->numberOfBeats ) {

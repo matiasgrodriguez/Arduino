@@ -36,10 +36,12 @@ public:
     if( !parseAsterisk() ) {
       return NULL;
     }
-    dumpMusic( "3" );
-    if( !parseBeat() ) {
+    
+    if( !parseBeats() ) {
+      dumpMusic( "3" );
       return NULL;
     }
+    
     dumpMusic( "4" );
     return builder->build();
   }
@@ -58,7 +60,7 @@ private:
        return false;
      }
      //MMM: calculate delay given time. Ex: 4/4 = ?ms
-     builder->newMusicWithDelay( 120 );
+     builder->newMusicWithDelay( 100 );
      return true;
   }
   
@@ -71,22 +73,30 @@ private:
      return true;
   }
   
-  bool parseBeat() {
-    int16_t probe = stream->read();
-    if( probe == -1 ) {
-      error = MPC_PARESER_ERROR_EOFREADINGBEAT;
-      return false;
+  bool parseBeats() {
+    while( true ) {
+      int16_t probe = stream->read();
+      uint8_t byteInProbe = ( uint8_t )probe;
+      if( probe == -1 || byteInProbe == '\0' ) {
+        return true;//end of srtream, OK.
+      }
+      if( !parseBeat( byteInProbe ) ) {
+        return false;
+      }
     }
-    uint8_t byteInProbe = ( uint8_t )probe;
+  }
+  
+  bool parseBeat(uint8_t byteInProbe) {
     if( byteInProbe == ':' ) {
       //empty beat...
-      Serial.println( "-> Empty Beat" );
+      Serial.println( "-> New Empty Beat" );
       builder->nextBeat();
       return true;
     }
     Serial.println( "-> New Beat" );
+    int16_t probe;
     for(uint16_t i = 0; i < 6; ++i) {
-      if( !parseTone( ( uint8_t )probe ) ) {
+      if( !parseTone( byteInProbe ) ) {
         return false;
       }
       if( i < 5 ) {
@@ -95,6 +105,7 @@ private:
           error = MPC_PARESER_ERROR_EOFREADINGBEAT;
           return false;
         }
+        byteInProbe = ( uint8_t )probe;
       }
     }
     if( !parseVolume() ){
@@ -130,8 +141,9 @@ private:
     }
     
     //instrument: probe, note: chunk[0] or chunk[0-1] '+': last byte read
+    uint8_t instrument = byteInProbe;
     uint16_t note = convertMpcCharNoteToNoteFrequency( ( uint8_t *)chunk, read == 3 );
-    Serial.print( "tone: " );Serial.print( ( char )chunk[ 0 ] );Serial.print( ( char )chunk[ 1 ] );Serial.print( " frequency: " );Serial.println( note );
+    Serial.print( "instrument: " );Serial.print( (char)instrument );Serial.print( " tone: " );Serial.print( ( char )chunk[ 0 ] );Serial.print( ( char )chunk[ 1 ] );Serial.print( " frequency: " );Serial.println( note );
     builder->newTone( note );
     return true;  
   }
