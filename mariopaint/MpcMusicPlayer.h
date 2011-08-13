@@ -27,8 +27,10 @@ public:
   void play(MpcMusic *music, uint32_t currentTime) {
     this->music = music;
     currentBeat = 0;
-    isPlaying = true;
-    playCurrentBeat( currentTime );
+    if( music->numberOfBeats > 0 ) {
+      isPlaying = true;
+      playCurrentBeat( currentTime );
+    }
   }
 
   void tick(uint32_t currentTime) {
@@ -51,6 +53,8 @@ private:
     
     Serial.print( "Playing beat number: " );
     Serial.print( (int)currentBeat );
+    Serial.print( " Total: " );
+    Serial.print( (int)music->numberOfBeats );
     Serial.print( " Freq: " );
     Serial.println( frequency );
     

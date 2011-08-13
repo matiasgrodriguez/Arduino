@@ -20,36 +20,6 @@ void debug( char label[], long integer) {
   Serial.println( integer );
 }
 
-int notesTables[][2] = {
-  { NOTE_AS3, 0 },  // 0
-  { NOTE_B3, 'p' }, // 1   p
-  { NOTE_C4, 'o' }, // 2   o
-  { NOTE_CS4, 0 },  // 3   
-  { NOTE_D4, 'n' }, // 4   n
-  { NOTE_DS4, 0 },  // 5   
-  { NOTE_E4, 'm' }, // 6   m
-  { NOTE_F4, 'l' }, // 7   l
-  { NOTE_FS4, 0 },  // 8   
-  { NOTE_G4, 'k' }, // 9   k
-  { NOTE_GS4, 0 },  //10   
-  { NOTE_A4, 'j' }, //11   j
-  { NOTE_AS4, 0 },  //12   
-  { NOTE_B4, 'i' }, //13   i
-  { NOTE_C5, 'h' }, //14   h
-  { NOTE_CS5, 0 },  //15   
-  { NOTE_D5, 'g' }, //16   g
-  { NOTE_DS5, 0 },  //17
-  { NOTE_E5, 'f' }, //18   f
-  { NOTE_F5, 'e' }, //19   e
-  { NOTE_FS5, 0 },  //20   
-  { NOTE_G5, 'd' }, //21   d
-  { NOTE_GS5, 0 },  //22   
-  { NOTE_A5, 'c' }, //23   c
-  { NOTE_AS5, 0 },  //24   
-  { NOTE_B5, 'b' }, //25   b
-  { NOTE_C6, 'a' }, //26   a
-  { NOTE_CS6, 0 },  //27   
-};
 
 #define REAL_TONES     3
 #define MAX_TONES      6
@@ -285,52 +255,29 @@ void loop() {
 */
 
 Buzzer buzzer(2);
-MpcMusicPlayer *musicPlayer;
+MpcMusicPlayer musicPlayer( &buzzer );
+const char *musicData = "4/4*lj++++++q::";
 
-const char *string = "This is a test";
-
-//InputStream *is;
-
-void inputStreamReadChunkTest() {
-    char chunk[10];
-    StringInputStream input( string );
-    InputStream *in = &input;
-    
-    int read = in->read( (uint8_t*)&chunk, 0, 10 );
-    Serial.print( "Read " );
-    Serial.print( read );
-    Serial.print( " " );
-    for(int i=0;i<read;i++) {
-      Serial.print( chunk[i] );
-    }
-    Serial.println( "" );
-
-    read = in->read( (uint8_t*)&chunk, 0, 3 );
-    Serial.print( "Read " );
-    Serial.print( read );
-    Serial.print( " " );
-    for(int i=0;i<read;i++) {
-      Serial.print( chunk[i] );
-    }
-    Serial.println( "" );
-    
+void dumpMusic(MpcMusic *music) {
+  Serial.print( "Music deay: " );
+  Serial.print( ( int )music->delay );
+  Serial.print( " beats: " );
+  Serial.println( ( int )music->numberOfBeats );
 }
 
 void setup() {
   Serial.begin(9600);
-  inputStreamReadChunkTest();
-  
-  InputStream *is = new StringInputStream( string );
-  int16_t val;
-  do {
-    val = is->read();
-    Serial.println( (char)val );
-    
-  }while( val != -1 );
   
   MpcMusicBuilder builder;
-  MpcMusicParser parser( &builder, is );
+  StringInputStream is( musicData );
+  MpcMusicParser parser( &builder, &is );
   
+  MpcMusic *music = parser.parse();
+  Serial.print( "Error: " );Serial.println( (int)parser.getError() );
+
+  dumpMusic( music );
+  
+  /*
   builder.newMusicWithDelay( 1000 );
   builder.newTone( NOTE_C4 )->nextBeat();
   builder.newTone( NOTE_D4 )->nextBeat();
@@ -349,20 +296,13 @@ void setup() {
   builder.newTone( NOTE_C4 )->nextBeat();
   builder.newTone( NOTE_C4 )->nextBeat();
   builder.newTone( NOTE_C4 )->nextBeat();
-  builder.newTone( NOTE_C4 )->nextBeat();
-  builder.newTone( NOTE_C4 )->nextBeat();
-  builder.nextBeat();
-  builder.newTone( NOTE_C4 )->nextBeat();
-  builder.nextBeat();
-  builder.newTone( NOTE_C4 );
+  */
 
-
-  musicPlayer = new MpcMusicPlayer(&buzzer);
-  musicPlayer->play( builder.build(), millis() );
+  musicPlayer.play( music, millis() );
 }
 
 void loop() {
-  musicPlayer->tick( millis() );
+  musicPlayer.tick( millis() );
 }
 
 

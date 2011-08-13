@@ -13,14 +13,15 @@
 class MpcMusicParser {
   
   InputStream *stream;
-  MpcMusicBuilder *mpcMusicBuilder;
+  MpcMusicBuilder *builder;
   uint8_t error;
   
 public:
 
-  MpcMusicParser(MpcMusicBuilder *builder, InputStream *is) {
-    mpcMusicBuilder = builder;
+  MpcMusicParser(MpcMusicBuilder *mpcMusicBuilder, InputStream *is) {
+    builder = mpcMusicBuilder;
     stream = is;
+    error = 0;
   }
   virtual ~MpcMusicParser() {
   }
@@ -32,6 +33,14 @@ public:
     if( !parseAsterisk() ) {
       return NULL;
     }
+    if( !parseBeat() ) {
+      return NULL;
+    }
+    return builder->build();
+  }
+  
+  uint8_t getError() {
+    return error;
   }
   
 private:
@@ -44,6 +53,7 @@ private:
        return false;
      }
      //MMM: calculate delay given time. Ex: 4/4 = ?ms
+     builder->newMusicWithDelay( 1200 );
      return true;
   }
   
@@ -57,31 +67,52 @@ private:
   }
   
   bool parseBeat() {
+    //Serial.println( "1" );
     int16_t probe = stream->read();
+    //Serial.println( probe );
     if( probe == -1 ) {
       error = MPC_PARESER_ERROR_EOFREADINGBEAT;
       return false;
     }
+    //Serial.println( "2" );
     uint8_t byteInProbe = ( uint8_t )probe;
-    if( byteInProbe = ';' ) {
-      //MMM. Create EMPTY BEAT.
+    if( byteInProbe == ';' ) {
+      //empty beat...
+      builder->nextBeat();
       return true;
     }
-    uint8_t chunk[2];
+    //Serial.println( "3" );
+    //parse tones...
+    //Parse lj+ (intrument,note,'+')
+
+    uint8_t chunk[ 3 ];
     int16_t read = stream->read( ( uint8_t* )&chunk, 0, 2 );
+    //Serial.println( "4" );
     if( read != 2 ) {
       error = MPC_PARESER_ERROR_EOFREADINGBEAT;
       return false;
     }
-    if( chunk[1] != '+' ) {
-      error = MPC_PARESER_ERROR_INVALIDBEAT;
-      return false;
+    if( chunk[ 1 ] != '+' ) {
+      //a sharp/flat note (accidental note)...
+      read = stream->read( ( uint8_t* )&chunk, 2, 1 );
+      if( read != 1 ) {
+        error = MPC_PARESER_ERROR_EOFREADINGBEAT;
+        return false;
+      }
+      if( chunk[ 2 ] != '+' ) {
+        error = MPC_PARESER_ERROR_INVALIDBEAT;
+        return false;
+      }
+      read = 3;
     }
-    //byteInProbe == note
-    //chunk[0] == instrument
-    //chunk[1] == '+'
     
-    
+    //instrument: probe, note: chunk[0] or chunk[0-1] '+': last byte read
+    //Serial.println( "5" );
+    uint16_t note = convertMpcCharNoteToNoteFrequency( ( uint8_t *)chunk, read == 3 );
+    Serial.print( "NOTE: " );Serial.println( note );
+    builder->newTone( note );
+    builder->nextBeat();    
+    Serial.println( "6" );
     return true;
     /*
   void parseBeat() {
@@ -108,6 +139,23 @@ private:
   
   bool hasError() {
     return error != 0;
+  }
+  
+  uint16_t convertMpcCharNoteToNoteFrequency(uint8_t *note, bool accidentalNote) {
+    uint16_t index = lookUpIndexGivenNoteChar( note[0] );
+    if( accidentalNote ) {
+      index = note[ 1 ] == '#' ? 1 : -1;
+    }
+    return MpcNotesTable[ index ][ 0 ];
+  }
+  
+  uint16_t lookUpIndexGivenNoteChar(uint8_t mpcNote) {
+    for(int i = 0; i < 28; ++i) {
+      if( MpcNotesTable[ i ][ 1 ] == mpcNote ) {
+        return i;
+      }
+    }
+    return 1;//ERROR
   }
 
 };

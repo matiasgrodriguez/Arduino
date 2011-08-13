@@ -34,7 +34,11 @@ public:
   }
   
   MpcMusicBuilder *newTone(uint16_t frequency){
-    music->getChunkAt( currentChunk )->beats[ currentBeat ].tones[ 0 ].note = frequency;
+    MpcTone *tone = &music->getChunkAt( currentChunk )->beats[ currentBeat ].tones[ 0 ];
+    if( tone->note == 0 ) {
+      //MMM. Supporting only one tone per beat.
+      tone->note = frequency;
+    }
     return this;
   }
   
