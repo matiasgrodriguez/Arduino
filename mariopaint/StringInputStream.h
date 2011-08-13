@@ -27,6 +27,11 @@ public:
     return currentChar;
   };
   
+  //virtual int16_t read(uint8_t *buffer, uint16_t offset, uint16_t count) {
+   // return InputStream::read( buffer, uint16_t offset, count );
+  //}
+
+  
 };
 
 #endif

@@ -2,6 +2,7 @@
 #include <Tone.h>
 
 #include "MpcMusicPlayer.h"
+#include "MpcMusicParser.h"
 #include "StringInputStream.h"
 
 void debug(const char label[]) {
@@ -284,20 +285,47 @@ void loop() {
 
 //NOTE_G4
 
-MpcTone tone1, tone2, tone3, tone4, tone5, tone6, tone7, tone8;
-MpcBeat beats[8];
+//MpcTone tone1, tone2, tone3, tone4, tone5, tone6, tone7, tone8, tone9;
+//MpcBeat beats[9];
 MpcMusic music;
 
 Buzzer buzzer(2);
 MpcMusicPlayer *musicPlayer;
 
-InputStream *is;
+const char *string = "This is a test";
+
+//InputStream *is;
+
+void inputStreamReadChunkTest() {
+    char chunk[10];
+    StringInputStream input( string );
+    InputStream *in = &input;
+    
+    int read = in->read( (uint8_t*)&chunk, 0, 10 );
+    Serial.print( "Read " );
+    Serial.print( read );
+    Serial.print( " " );
+    for(int i=0;i<read;i++) {
+      Serial.print( chunk[i] );
+    }
+    Serial.println( "" );
+
+    read = in->read( (uint8_t*)&chunk, 0, 3 );
+    Serial.print( "Read " );
+    Serial.print( read );
+    Serial.print( " " );
+    for(int i=0;i<read;i++) {
+      Serial.print( chunk[i] );
+    }
+    Serial.println( "" );
+    
+}
 
 void setup() {
   Serial.begin(9600);
+  inputStreamReadChunkTest();
   
-  const char *string = "This is a test";
-  is = new StringInputStream( string );
+  InputStream *is = new StringInputStream( string );
   int16_t val;
   do {
     val = is->read();
@@ -305,41 +333,19 @@ void setup() {
     
   }while( val != -1 );
   
-  tone1.note=NOTE_C4;
-  beats[0].numberOfTones=1;
-  beats[0].tones=&tone1;
-
-  tone2.note=NOTE_D4;
-  beats[1].numberOfTones=1;
-  beats[1].tones=&tone2;
-  
-  tone3.note=NOTE_E4;
-  beats[2].numberOfTones=1;
-  beats[2].tones=&tone3;
-  
-  tone4.note=NOTE_F4;
-  beats[3].numberOfTones=1;
-  beats[3].tones=&tone4;
-  
-  tone5.note=NOTE_G4;
-  beats[4].numberOfTones=1;
-  beats[4].tones=&tone5;
-  
-  tone6.note=NOTE_A4;
-  beats[5].numberOfTones=1;
-  beats[5].tones=&tone6;
-  
-  tone7.note=NOTE_B4;
-  beats[6].numberOfTones=1;
-  beats[6].tones=&tone7;
-  
-  tone8.note=NOTE_C5;
-  beats[7].numberOfTones=1;
-  beats[7].tones=&tone8;
-  
+  MpcMusicParser parser( is );
+    
   music.delay = 1000;
-  music.numberOfBeats=8;
-  music.beats = ( MpcBeat* )&beats;
+  music.numberOfBeats=9;
+  music.beatChunk.beats[  0 ].tones[ 0 ].note=NOTE_C4;
+  music.beatChunk.beats[  1 ].tones[ 0 ].note=NOTE_D4;
+  music.beatChunk.beats[  2 ].tones[ 0 ].note=NOTE_E4;
+  music.beatChunk.beats[  3 ].tones[ 0 ].note=NOTE_F4;
+  music.beatChunk.beats[  4 ].tones[ 0 ].note=NOTE_G4;
+  music.beatChunk.beats[  5 ].tones[ 0 ].note=NOTE_A4;
+  music.beatChunk.beats[  6 ].tones[ 0 ].note=NOTE_B4;
+  music.beatChunk.beats[  7 ].tones[ 0 ].note=NOTE_C5;
+  music.beatChunk.beats[  8 ].tones[ 0 ].note=4400;
   
   musicPlayer = new MpcMusicPlayer(&buzzer);
   musicPlayer->play( &music, millis() );
