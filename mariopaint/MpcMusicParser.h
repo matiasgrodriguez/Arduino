@@ -9,6 +9,7 @@
 #define MPC_PARESER_ERROR_INVALIDASTERISK       2
 #define MPC_PARESER_ERROR_EOFREADINGBEAT        3
 #define MPC_PARESER_ERROR_INVALIDBEAT           4
+#define MPC_PARESER_ERROR_EOFREADINGVOLUME      5
 
 class MpcMusicParser {
   
@@ -67,33 +68,51 @@ private:
   }
   
   bool parseBeat() {
-    //Serial.println( "1" );
     int16_t probe = stream->read();
-    //Serial.println( probe );
     if( probe == -1 ) {
       error = MPC_PARESER_ERROR_EOFREADINGBEAT;
       return false;
     }
-    //Serial.println( "2" );
     uint8_t byteInProbe = ( uint8_t )probe;
     if( byteInProbe == ';' ) {
       //empty beat...
+      Serial.println( "-> Empty Beat" );
       builder->nextBeat();
       return true;
     }
-    //Serial.println( "3" );
-    //parse tones...
-    //Parse lj+ (intrument,note,'+')
+    Serial.println( "-> New Beat" );
+    for(uint16_t i = 0; i < 6; ++i) {
+      if( !parseTone( ( uint8_t )probe ) ) {
+        return false;
+      }
+      if( i < 5 ) {
+        probe = stream->read();
+        if( probe == -1 ) {
+          error = MPC_PARESER_ERROR_EOFREADINGBEAT;
+          return false;
+        }
+      }
+    }
+    if( !parseVolume() ){
+      return false;
+    }
+    builder->nextBeat();    
+    return true;
+  }
 
+  bool parseTone(uint16_t byteInProbe) {
+    if( byteInProbe == '+' ) {
+      Serial.println( "tone: empty" );
+      return true;
+    }
     uint8_t chunk[ 3 ];
     int16_t read = stream->read( ( uint8_t* )&chunk, 0, 2 );
-    //Serial.println( "4" );
     if( read != 2 ) {
       error = MPC_PARESER_ERROR_EOFREADINGBEAT;
       return false;
     }
     if( chunk[ 1 ] != '+' ) {
-      //a sharp/flat note (accidental note)...
+      //a sharp/flat note (accidental note), read an extra character...
       read = stream->read( ( uint8_t* )&chunk, 2, 1 );
       if( read != 1 ) {
         error = MPC_PARESER_ERROR_EOFREADINGBEAT;
@@ -107,34 +126,21 @@ private:
     }
     
     //instrument: probe, note: chunk[0] or chunk[0-1] '+': last byte read
-    //Serial.println( "5" );
     uint16_t note = convertMpcCharNoteToNoteFrequency( ( uint8_t *)chunk, read == 3 );
-    Serial.print( "NOTE: " );Serial.println( note );
+    Serial.print( "tone: " );Serial.print( chunk[ 0 ] );Serial.print( chunk[ 1 ] );Serial.print( " frequency: " );Serial.println( note );
     builder->newTone( note );
-    builder->nextBeat();    
-    Serial.println( "6" );
-    return true;
-    /*
-  void parseBeat() {
-    //debug( "Begin beat Position", pos );
-    debug( "Begin beat ", currentBeat );
-    if( musicData->charAt( pos ) != ':' ) {
-      currentTone = 0;
-      for(int i = 0; i < 6; ++i) {
-        parseTone();
-        currentTone++;
-      }
-      parseVolume();
-    }else {
-      debug( "Empty Beat..." );
-      pos++;
-    }
-    debug( "End beat Position", pos );
-    currentBeat++;
-    mpcMusic->totalBeats++;
+    return true;  
   }
-  */
   
+  boolean parseVolume() {
+    uint8_t chunk[ 3 ]; 
+    int16_t read = stream->read( ( uint8_t* )chunk, 0, 3 );
+    if( read != 3 ) {
+      error = MPC_PARESER_ERROR_EOFREADINGVOLUME;
+      return false;
+    }
+    Serial.print( "Volume: " );Serial.println( (char)chunk[ 0 ] );
+    //volume: chunk[0], ignore rest.
   }
   
   bool hasError() {

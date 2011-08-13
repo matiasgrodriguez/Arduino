@@ -302,7 +302,7 @@ void setup() {
 }
 
 void loop() {
-  musicPlayer.tick( millis() );
+  //musicPlayer.tick( millis() );
 }
 
 
