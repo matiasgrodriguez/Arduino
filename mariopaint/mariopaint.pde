@@ -2,6 +2,7 @@
 #include <Tone.h>
 
 #include "MpcMusicPlayer.h"
+#include "MpcMusicBuilder.h"
 #include "MpcMusicParser.h"
 #include "StringInputStream.h"
 
@@ -283,12 +284,6 @@ void loop() {
 
 */
 
-//NOTE_G4
-
-//MpcTone tone1, tone2, tone3, tone4, tone5, tone6, tone7, tone8, tone9;
-//MpcBeat beats[9];
-MpcMusic music;
-
 Buzzer buzzer(2);
 MpcMusicPlayer *musicPlayer;
 
@@ -334,21 +329,31 @@ void setup() {
   }while( val != -1 );
   
   MpcMusicParser parser( is );
-    
-  music.delay = 1000;
-  music.numberOfBeats=9;
-  music.beatChunk.beats[  0 ].tones[ 0 ].note=NOTE_C4;
-  music.beatChunk.beats[  1 ].tones[ 0 ].note=NOTE_D4;
-  music.beatChunk.beats[  2 ].tones[ 0 ].note=NOTE_E4;
-  music.beatChunk.beats[  3 ].tones[ 0 ].note=NOTE_F4;
-  music.beatChunk.beats[  4 ].tones[ 0 ].note=NOTE_G4;
-  music.beatChunk.beats[  5 ].tones[ 0 ].note=NOTE_A4;
-  music.beatChunk.beats[  6 ].tones[ 0 ].note=NOTE_B4;
-  music.beatChunk.beats[  7 ].tones[ 0 ].note=NOTE_C5;
-  music.beatChunk.beats[  8 ].tones[ 0 ].note=4400;
+  
+  MpcMusicBuilder builder;
+  builder.newMusicWithDelay( 100 );
+  builder.newTone( NOTE_C4 )->nextBeat();
+  builder.newTone( NOTE_D4 )->nextBeat();
+  builder.newTone( NOTE_E4 )->nextBeat();
+  builder.newTone( NOTE_F4 )->nextBeat();
+  builder.newTone( NOTE_G4 )->nextBeat();
+  builder.newTone( NOTE_A4 )->nextBeat();
+  builder.newTone( NOTE_B4 )->nextBeat();
+  builder.newTone( NOTE_C5 )->nextBeat();
+  builder.newTone( NOTE_B4 )->nextBeat();
+  builder.newTone( NOTE_A4 )->nextBeat();
+  builder.newTone( NOTE_G4 )->nextBeat();
+  builder.newTone( NOTE_F4 )->nextBeat();
+  builder.newTone( NOTE_E4 )->nextBeat();
+  builder.newTone( NOTE_D4 )->nextBeat();
+  builder.newTone( NOTE_C4 )->nextBeat();
+  builder.newTone( NOTE_C4 )->nextBeat();
+  builder.newTone( NOTE_C4 )->nextBeat();
+  builder.newTone( NOTE_C4 )->nextBeat();
+  builder.newTone( NOTE_C4 )->nextBeat();
   
   musicPlayer = new MpcMusicPlayer(&buzzer);
-  musicPlayer->play( &music, millis() );
+  musicPlayer->play( builder.build(), millis() );
 }
 
 void loop() {

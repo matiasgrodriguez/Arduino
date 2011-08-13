@@ -47,7 +47,7 @@ private:
   void playCurrentBeat(uint32_t currentTime) {
     //TODO: verify available buzzers and alocate a tone to each until necessary
     beatBeginTime = currentTime;
-    uint16_t frequency = music->beatChunk.beats[ currentBeat ].tones[0].note;
+    uint16_t frequency = music->getBeatAt( currentBeat )->tones[0].note;
     
     Serial.print( "Playing beat number: " );
     Serial.print( (int)currentBeat );
@@ -55,7 +55,7 @@ private:
     Serial.println( frequency );
     
     
-    buzzer->playTone( frequency, music->delay - 400 );
+    buzzer->playTone( frequency, music->delay - ( music->delay * 0.2 ) );
     currentBeat++;
     if( currentBeat == 255 || currentBeat == music->numberOfBeats ) {
       currentBeat = 0;
