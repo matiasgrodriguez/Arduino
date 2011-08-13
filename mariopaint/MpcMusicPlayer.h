@@ -59,6 +59,7 @@ private:
     currentBeat++;
     if( currentBeat == 255 || currentBeat == music->numberOfBeats ) {
       currentBeat = 0;
+      isPlaying =  false;
     }
   }
   

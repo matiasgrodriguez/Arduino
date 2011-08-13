@@ -144,7 +144,7 @@ private:
     uint8_t instrument = byteInProbe;
     uint16_t note = convertMpcCharNoteToNoteFrequency( ( uint8_t *)chunk, read == 3 );
     Serial.print( "instrument: " );Serial.print( (char)instrument );Serial.print( " tone: " );Serial.print( ( char )chunk[ 0 ] );Serial.print( ( char )chunk[ 1 ] );Serial.print( " frequency: " );Serial.println( note );
-    builder->newTone( note );
+    builder->newTone( instrument, note );
     return true;  
   }
   

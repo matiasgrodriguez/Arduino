@@ -24,6 +24,9 @@ public:
   MpcMusicBuilder *nextBeat(){
     if( currentBeat == MPC_BEATCHUNK_MAX_BEATS - 1 ) {
       music->getChunkAt( currentChunk )->next = new MpcBeatChunk();
+      if( music->getChunkAt( currentChunk )->next == NULL ) {
+        Serial.println( "*N-ALLOC!" );
+      }
       currentChunk ++;
       currentBeat = 0;
     } else {
@@ -33,9 +36,9 @@ public:
     return this;
   }
   
-  MpcMusicBuilder *newTone(uint16_t frequency){
+  MpcMusicBuilder *newTone(uint8_t instrument, uint16_t frequency){
     MpcTone *tone = &music->getChunkAt( currentChunk )->beats[ currentBeat ].tones[ 0 ];
-    if( tone->note == 0 ) {
+    if( tone->note == 0 && instrument == 'l' ) {
       //MMM. Supporting only one tone per beat.
       tone->note = frequency;
     }
