@@ -44,7 +44,7 @@ public:
   
   MpcMusic *build() {
     MpcMusic * ret = music;
-    music = NULL;
+    //music = NULL;
     return ret;
   }
 

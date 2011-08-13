@@ -258,13 +258,6 @@ Buzzer buzzer(2);
 MpcMusicPlayer musicPlayer( &buzzer );
 const char *musicData = "4/4*lj++++++q::";
 
-void dumpMusic(MpcMusic *music) {
-  Serial.print( "Music deay: " );
-  Serial.print( ( int )music->delay );
-  Serial.print( " beats: " );
-  Serial.println( ( int )music->numberOfBeats );
-}
-
 void setup() {
   Serial.begin(9600);
   
@@ -273,9 +266,8 @@ void setup() {
   MpcMusicParser parser( &builder, &is );
   
   MpcMusic *music = parser.parse();
-  Serial.print( "Error: " );Serial.println( (int)parser.getError() );
+  Serial.print( "Music ptr: " );Serial.print( ( uint16_t )music, HEX );Serial.print( " Error: " );Serial.println( (int)parser.getError() );
 
-  dumpMusic( music );
   
   /*
   builder.newMusicWithDelay( 1000 );
@@ -302,7 +294,7 @@ void setup() {
 }
 
 void loop() {
-  //musicPlayer.tick( millis() );
+  musicPlayer.tick( millis() );
 }
 
 
