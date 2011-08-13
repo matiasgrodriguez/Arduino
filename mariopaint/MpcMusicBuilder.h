@@ -29,12 +29,11 @@ public:
     } else {
       currentBeat++;
     }
-    
+    music->numberOfBeats++;
     return this;
   }
   
   MpcMusicBuilder *newTone(uint16_t frequency){
-    music->numberOfBeats = currentChunk * MPC_BEATCHUNK_MAX_BEATS + currentBeat + 1;
     music->getChunkAt( currentChunk )->beats[ currentBeat ].tones[ 0 ].note = frequency;
     return this;
   }

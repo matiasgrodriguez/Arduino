@@ -2,21 +2,24 @@
 #ifndef __MpcMusicParser_h__
 #define __MpcMusicParser_h__
 
+#include "MpcMusicBuilder.h"
 #include "InputStream.h"
 
 #define MPC_PARESER_ERROR_INVALIDTIMESIGNATURE  1
 #define MPC_PARESER_ERROR_INVALIDASTERISK       2
-#define MPC_PARESER_ERROR_EOFREDINGBEAT         3
+#define MPC_PARESER_ERROR_EOFREADINGBEAT        3
 #define MPC_PARESER_ERROR_INVALIDBEAT           4
 
 class MpcMusicParser {
   
   InputStream *stream;
+  MpcMusicBuilder *mpcMusicBuilder;
   uint8_t error;
   
 public:
 
-  MpcMusicParser(InputStream *is) {
+  MpcMusicParser(MpcMusicBuilder *builder, InputStream *is) {
+    mpcMusicBuilder = builder;
     stream = is;
   }
   virtual ~MpcMusicParser() {
@@ -56,7 +59,7 @@ private:
   bool parseBeat() {
     int16_t probe = stream->read();
     if( probe == -1 ) {
-      error = MPC_PARESER_ERROR_EOFREDINGBEAT;
+      error = MPC_PARESER_ERROR_EOFREADINGBEAT;
       return false;
     }
     uint8_t byteInProbe = ( uint8_t )probe;
@@ -67,7 +70,7 @@ private:
     uint8_t chunk[2];
     int16_t read = stream->read( ( uint8_t* )&chunk, 0, 2 );
     if( read != 2 ) {
-      error = MPC_PARESER_ERROR_EOFREDINGBEAT;
+      error = MPC_PARESER_ERROR_EOFREADINGBEAT;
       return false;
     }
     if( chunk[1] != '+' ) {

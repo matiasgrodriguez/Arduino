@@ -54,8 +54,9 @@ private:
     Serial.print( " Freq: " );
     Serial.println( frequency );
     
-    
-    buzzer->playTone( frequency, music->delay - ( music->delay * 0.2 ) );
+    if( frequency != 0 ) {
+      buzzer->playTone( frequency, music->delay - ( music->delay * 0.2 ) );
+    }
     currentBeat++;
     if( currentBeat == 255 || currentBeat == music->numberOfBeats ) {
       currentBeat = 0;

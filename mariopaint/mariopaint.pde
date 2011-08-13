@@ -328,10 +328,10 @@ void setup() {
     
   }while( val != -1 );
   
-  MpcMusicParser parser( is );
-  
   MpcMusicBuilder builder;
-  builder.newMusicWithDelay( 100 );
+  MpcMusicParser parser( &builder, is );
+  
+  builder.newMusicWithDelay( 1000 );
   builder.newTone( NOTE_C4 )->nextBeat();
   builder.newTone( NOTE_D4 )->nextBeat();
   builder.newTone( NOTE_E4 )->nextBeat();
@@ -351,7 +351,12 @@ void setup() {
   builder.newTone( NOTE_C4 )->nextBeat();
   builder.newTone( NOTE_C4 )->nextBeat();
   builder.newTone( NOTE_C4 )->nextBeat();
-  
+  builder.nextBeat();
+  builder.newTone( NOTE_C4 )->nextBeat();
+  builder.nextBeat();
+  builder.newTone( NOTE_C4 );
+
+
   musicPlayer = new MpcMusicPlayer(&buzzer);
   musicPlayer->play( builder.build(), millis() );
 }
