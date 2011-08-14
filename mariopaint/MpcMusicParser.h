@@ -89,11 +89,11 @@ private:
   bool parseBeat(uint8_t byteInProbe) {
     if( byteInProbe == ':' ) {
       //empty beat...
-      Serial.println( "-> New Empty Beat" );
+      Serial.println( "->New Empty Beat" );
       builder->nextBeat();
       return true;
     }
-    Serial.println( "-> New Beat" );
+    Serial.println( "->New Beat" );
     int16_t probe;
     for(uint16_t i = 0; i < 6; ++i) {
       if( !parseTone( byteInProbe ) ) {
@@ -140,7 +140,6 @@ private:
       read = 3;
     }
     
-    //instrument: probe, note: chunk[0] or chunk[0-1] '+': last byte read
     uint8_t instrument = byteInProbe;
     uint16_t note = convertMpcCharNoteToNoteFrequency( ( uint8_t *)chunk, read == 3 );
     Serial.print( "instrument: " );Serial.print( (char)instrument );Serial.print( " tone: " );Serial.print( ( char )chunk[ 0 ] );Serial.print( ( char )chunk[ 1 ] );Serial.print( " frequency: " );Serial.println( note );
