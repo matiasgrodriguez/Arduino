@@ -3,7 +3,7 @@
 #define __MpcBase_h__
 
 #include "base.h"
-#include "pitches.h"
+#include "notes.h"
 
 #define MPC_BEAT_MAX_TONES            1
 #define MPC_BEATCHUNK_MAX_BEATS      16
