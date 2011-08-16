@@ -33,6 +33,7 @@ public:
   }
   
   void tick() {
+    dumpState();
   }
   
   void selectPlayerOne() {
@@ -91,6 +92,12 @@ private:
     currentPlayer = &playerTwo;
     currentPlayer->mark( clock );
     timeControl->onPlayerTwoBeganToPlay();
+  }
+  
+  void dumpState() {
+    Serial.print( "Clock time: " );Serial.print( clock->currentTime() );
+    Serial.print( " Player one isPlaying: " );Serial.print( ( int )isPlayerOnePlaying() );Serial.print( " time: " );Serial.print( playerOne.getTime( clock ) );
+    Serial.print( " Player two isPlaying: " );Serial.print( ( int )isPlayerTwoPlaying() );Serial.print( " time: " );Serial.println( playerTwo.getTime( clock ) );
   }
 
 };

@@ -23,19 +23,19 @@ public:
 
   //<TimeTracker>
   
-  void setTime(int32_t time) {
+  virtual void setTime(int32_t time) {
     this->time = time;
   }
 
-  void addTime(int32_t delta) {
+  virtual void addTime(int32_t delta) {
     setTime( time + delta );
   }
   
-  int32_t getTime(Clock *clock) {
+  virtual int32_t getTime(Clock *clock) {
     return time - elapsedTime( clock );
   }
   
-  int32_t getLastConsumedTime() {
+  virtual int32_t getLastConsumedTime() {
     return lastConsumedTime;
   }
   

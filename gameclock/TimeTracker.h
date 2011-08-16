@@ -8,11 +8,11 @@ class TimeTracker {
 
 public:
 
-  void setTime(int32_t totalTime);
-  void addTime(int32_t delta);
+  virtual void setTime(int32_t totalTime) = 0;
+  virtual void addTime(int32_t delta) = 0;
   
-  int32_t getTime(Clock *clock);
-  int32_t getLastConsumedTime();
+  virtual int32_t getTime(Clock *clock) = 0;
+  virtual int32_t getLastConsumedTime() = 0;
 
 };
 
