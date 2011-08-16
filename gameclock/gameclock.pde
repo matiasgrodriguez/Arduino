@@ -4,10 +4,12 @@
 #include "ArduinoClock.h"
 #include "GameClock.h"
 #include "TimeControlTest.h"
+#include "SuddenDeathTimeControl.h"
 
 GameClock gameClock;
 ManualClock *clock;
 TimeControlTest timeControl( 20, 30 );
+SuddenDeathTimeControl suddenDeathTc( 100 );
 
 void setup() {
   Serial.begin(9600);
