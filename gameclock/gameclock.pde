@@ -43,6 +43,12 @@ void setup() {
   gameClock.tick();
   clock->setCurrentTime( 33 );
   gameClock.tick();
+  gameClock.selectPlayerTwo();
+  clock->setCurrentTime( 53 );
+  gameClock.tick();
+  gameClock.selectPlayerOne();
+  clock->setCurrentTime( 54 );
+  gameClock.tick();
 }
 
 void loop() {
