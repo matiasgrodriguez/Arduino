@@ -9,6 +9,8 @@ class TimeControlTest : public TimeControl {
   int32_t playerOneInitialTime;
   int32_t playerTwoInitialTime;
   
+  TimeTracker *playerOne, *playerTwo;
+  
 public:
 
   TimeControlTest(int32_t playerOneInitialTime, int32_t playerTwoInitialTime) {
@@ -21,6 +23,8 @@ public:
 
   virtual void setup(TimeTracker *playerOne, TimeTracker *playerTwo) {
     Serial.println( "setup" );
+    this->playerOne = playerOne;
+    this->playerTwo = playerTwo;
     playerOne->setTime( playerOneInitialTime );
     playerTwo->setTime( playerTwoInitialTime );
   }
@@ -30,7 +34,7 @@ public:
   }
   
   virtual void onPlayerOnePlayed(){ 
-    Serial.println( "onPlayerOnePlayed" );
+    Serial.print( "onPlayerOnePlayed: " );Serial.println( playerOne->getLastConsumedTime() );
   }
   
   virtual void onPlayerOneTimeExpired(){
@@ -42,7 +46,7 @@ public:
   }
   
   virtual void onPlayerTwoPlayed(){ 
-    Serial.println( "onPlayerTwoPlayed" );
+    Serial.print( "onPlayerTwoPlayed: " );Serial.println( playerTwo->getLastConsumedTime() );
   }
   
   virtual void onPlayerTwoTimeExpired() {

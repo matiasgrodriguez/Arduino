@@ -30,6 +30,19 @@ void setup() {
   gameClock.selectPlayerOne();
   clock->setCurrentTime( 20 );
   gameClock.tick();
+  gameClock.selectPlayerTwo();
+  gameClock.tick();
+  clock->setCurrentTime( 25 );
+  gameClock.selectPlayerOne();
+  gameClock.tick();
+  clock->setCurrentTime( 30 );
+  gameClock.tick();
+  clock->setCurrentTime( 31 );
+  gameClock.tick();
+  clock->setCurrentTime( 32 );
+  gameClock.tick();
+  clock->setCurrentTime( 33 );
+  gameClock.tick();
 }
 
 void loop() {

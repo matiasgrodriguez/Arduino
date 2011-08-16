@@ -33,6 +33,11 @@ public:
   }
   
   void tick() {
+    if( isPlayerOnePlaying() ) {
+      checkIfPlayerOneTimeExpired();
+    } else if( isPlayerTwoPlaying() ) {
+      checkIfPlayerTwoTimeExpired();
+    }
     dumpState();
   }
   
@@ -78,6 +83,17 @@ private:
     currentPlayer->consume( clock );
     timeControl->onPlayerOnePlayed();
   }
+  
+  void checkIfPlayerOneTimeExpired() {
+    if( playerOne.getTime( clock ) > 0 ) {
+      return;
+    }
+    if( playerOne.onlyOnceIsExpired() ) {
+      playerOne.consume( clock );
+      playerOne.mark( clock );
+      timeControl->onPlayerOneTimeExpired();
+    }
+  }
 
   bool isPlayerTwoPlaying() {
     return currentPlayer == &playerTwo;
@@ -92,6 +108,17 @@ private:
     currentPlayer = &playerTwo;
     currentPlayer->mark( clock );
     timeControl->onPlayerTwoBeganToPlay();
+  }
+  
+  void checkIfPlayerTwoTimeExpired() {
+    if( playerTwo.getTime( clock ) > 0 ) {
+      return;
+    }
+    if( playerTwo.onlyOnceIsExpired() ) {
+      playerTwo.consume( clock );
+      playerTwo.mark( clock );
+      timeControl->onPlayerTwoTimeExpired();
+    }
   }
   
   void dumpState() {

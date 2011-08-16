@@ -8,6 +8,7 @@ class TimeTrackerImpl : public TimeTracker {
   int32_t lastConsumedTime;
   
   bool marked;
+  bool expiredFlagRead;
   uint32_t markTime;
   
 public:
@@ -24,6 +25,9 @@ public:
   //<TimeTracker>
   
   virtual void setTime(int32_t time) {
+    if( time > 0 ) {
+      expiredFlagRead = false;
+    }
     this->time = time;
   }
 
@@ -32,6 +36,7 @@ public:
   }
   
   virtual int32_t getTime(Clock *clock) {
+    
     return time - elapsedTime( clock );
   }
   
@@ -41,15 +46,21 @@ public:
   
   //</TimeTracker>
   
-  void mark(Clock * clock) {
+  void mark(Clock *clock) {
     marked = true;
     markTime = clock->currentTime();
   }
   
-  void consume(Clock * clock) {
+  void consume(Clock *clock) {
     lastConsumedTime = elapsedTime( clock );
     marked = false;
     addTime( -lastConsumedTime );
+  }
+  
+  bool onlyOnceIsExpired() {
+    bool ret = !expiredFlagRead;
+    expiredFlagRead = true;
+    return ret;
   }
 
 private:
