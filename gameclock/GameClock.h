@@ -33,6 +33,9 @@ public:
   }
   
   void tick() {
+    if( isOver() ) {
+      return;
+    }
     if( isPlayerOnePlaying() ) {
       checkIfPlayerOneTimeExpired();
     } else if( isPlayerTwoPlaying() ) {
@@ -42,7 +45,7 @@ public:
   }
   
   void selectPlayerOne() {
-    if( isPlayerOnePlaying() ) {
+    if( isOver() || isPlayerOnePlaying() ) {
       return;
     }
     if( isPlayerTwoPlaying() ) {
@@ -52,7 +55,7 @@ public:
   }
   
   void selectPlayerTwo() {
-    if( isPlayerTwoPlaying() ) {
+    if( isOver() || isPlayerTwoPlaying() ) {
       return;
     }
     if( isPlayerOnePlaying() ) {
@@ -68,6 +71,10 @@ public:
   }
   
 private:
+
+  bool isOver() {
+    return timeControl != NULL && timeControl->isOver();
+  }
 
   bool isPlayerOnePlaying() {
     return currentPlayer == &playerOne;
@@ -122,7 +129,7 @@ private:
   }
   
   void dumpState() {
-    Serial.print( "Clock time: " );Serial.print( clock->currentTime() );
+    Serial.print( "Clock time: " );Serial.print( clock->currentTime() );Serial.print( " isOver: " );Serial.print( ( int )isOver() );
     Serial.print( " Player one isPlaying: " );Serial.print( ( int )isPlayerOnePlaying() );Serial.print( " time: " );Serial.print( playerOne.getTime( clock ) );
     Serial.print( " Player two isPlaying: " );Serial.print( ( int )isPlayerTwoPlaying() );Serial.print( " time: " );Serial.println( playerTwo.getTime( clock ) );
   }

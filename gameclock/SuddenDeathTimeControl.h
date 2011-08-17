@@ -4,27 +4,11 @@
 
 #include "TimeControlBase.h"
 
-class SuddenDeathTimeControl : TimeControlBase {
-  
-  uint32_t time;
+class SuddenDeathTimeControl : public TimeControlBase {
   
 public:
 
-  SuddenDeathTimeControl(uint32_t playersTime) {
-    time = playersTime;
-  }
-  
-  virtual void setup(TimeTracker *playerOne, TimeTracker *playerTwo) {
-    TimeControlBase::setup( playerOne, playerTwo );
-    
-    playerOne->setTime( time );
-    playerTwo->setTime( time );
-  }
-  
-  virtual void onPlayerOneTimeExpired() {
-  }
-  
-  virtual void onPlayerTwoTimeExpired() {
+  SuddenDeathTimeControl(uint32_t playersTime) : TimeControlBase( playersTime, playersTime ) {
   }
 
 };

@@ -53,6 +53,11 @@ public:
     Serial.println( "onPlayerTwoTimeExpired" );
   }
   
+  virtual bool isOver() {
+    return false;
+  }
+  
+  
 };
 
 #endif

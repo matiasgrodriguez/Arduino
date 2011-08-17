@@ -5,18 +5,22 @@
 #include "GameClock.h"
 #include "TimeControlTest.h"
 #include "SuddenDeathTimeControl.h"
+#include "HourGlassTimeControl.h"
+#include "FischerDelayTimeControl.h"
 
 GameClock gameClock;
 ManualClock *clock;
 TimeControlTest timeControl( 20, 30 );
-SuddenDeathTimeControl suddenDeathTc( 100 );
+SuddenDeathTimeControl suddenDeathTc( 20 );
+HourGlassTimeControl hourGalssTc( 100 );
+FischerDelayTimeControl fischerDelayTc( 100, 10 );
 
 void setup() {
   Serial.begin(9600);
 
   //clock = new ArduinoClock();  
   clock = new ManualClock();
-  gameClock.setup( clock, &timeControl );
+  gameClock.setup( clock, &hourGalssTc );
 
   gameClock.tick();  
   clock->setCurrentTime( 1 );
