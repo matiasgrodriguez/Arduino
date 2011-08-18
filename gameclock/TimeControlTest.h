@@ -53,6 +53,14 @@ public:
     Serial.println( "onPlayerTwoTimeExpired" );
   }
   
+  virtual int32_t getPlayerOneTime(Clock *clock) {
+    return playerOne->getTime( clock );
+  }
+  
+  virtual int32_t getPlayerTwoTime(Clock *clock) {
+    return playerTwo->getTime( clock );
+  }
+  
   virtual bool isOver() {
     return false;
   }
