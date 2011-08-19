@@ -42,8 +42,17 @@ public:
   }
   
   virtual void onPlayerOneTimeExpired() {
-    onPlayerOneTimeExpired( playerOne, &playerOneState );
+    onPlayerTimeExpired( playerOne, &playerOneState );
   }
+  
+  virtual void onPlayerTwoPlayed() {
+    onPlayerPlayed( playerTwo, &playerTwoState );
+  }
+
+  virtual void onPlayerTwoTimeExpired() {
+    onPlayerTimeExpired( playerTwo, &playerTwoState );
+  }
+  
 
 private:
 
@@ -77,7 +86,7 @@ private:
     setPlayerTime( player, playerState );
   }
   
-  void onPlayerOneTimeExpired(TimeTracker *player, PlayerState *playerState) {
+  void onPlayerTimeExpired(TimeTracker *player, PlayerState *playerState) {
     if( !isPlayerOnByoYomi( playerState ) ) {
       playerNormalPeriodEnded( playerState );
     } else {
