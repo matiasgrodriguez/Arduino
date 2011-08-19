@@ -17,12 +17,18 @@ public:
   virtual ~FischerDelayTimeControl() {
   }
   
-  virtual void onPlayerOnePlayed() {
-    playerOne->addTime( bonus );
+  virtual void onPlayerOneBeganToPlay() {
+    addBonus( playerOne );
   }
 
   virtual void onPlayerTwoBeganToPlay() { 
-    playerTwo->addTime( bonus );
+    addBonus( playerTwo );
+  }
+  
+private:
+
+  void addBonus(TimeTracker *player) {
+    player->addTime( bonus );
   }
   
 };
