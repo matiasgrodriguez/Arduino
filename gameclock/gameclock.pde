@@ -6,7 +6,6 @@
 #include "ManualClock.h"
 #include "ArduinoClock.h"
 #include "GameClock.h"
-#include "TimeControlTest.h"
 #include "SuddenDeathTimeControl.h"
 #include "HourGlassTimeControl.h"
 #include "FischerDelayTimeControl.h"
