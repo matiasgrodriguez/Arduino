@@ -4,7 +4,7 @@
 
 #include "TimeControlBase.h"
 
-#define BYO_YOMI_SETUP_MAX_PERIODS  10
+#define BYO_YOMI_SETUP_MAX_PERIODS  4
 
 struct ByoYomiPeriod {
   
@@ -16,15 +16,11 @@ struct ByoYomiPeriod {
     time = 0;
   }
   
-  ByoYomiPeriod(uint32_t numberOfPlays, uint32_t time) {
-    numberOfPlays = numberOfPlays;
-    time = time;
-  }
-  
 };
 
 struct ByoYomiSetup {
   uint32_t time;
+  uint16_t numberOfPeriods;
   ByoYomiPeriod periods[ BYO_YOMI_SETUP_MAX_PERIODS ];
 };
 
@@ -36,11 +32,13 @@ class ByoYomiTimeControl : public TimeControlBase {
     bool onByoYomi;
     uint16_t period;
     uint16_t numberOfPlays;
+    ByoYomiSetup *setup;
     
   public:
     
-    PlayerState() {
-      onByoYomi = true;
+    PlayerState(ByoYomiSetup *setup) {
+      this->setup = setup;
+      onByoYomi = false;
       period = 0;
       numberOfPlays = 0;
     }
@@ -52,6 +50,34 @@ class ByoYomiTimeControl : public TimeControlBase {
     void incrementNumberOfPlays() {
       numberOfPlays++;
     }
+    
+    bool hasReachedNumberOfPlays() {
+      return numberOfPlays == setup->periods[ period ].numberOfPlays;
+    }
+    
+    void resetNumberOfPlays() {
+      numberOfPlays = 0;
+    }
+    
+    uint32_t getTime() {
+      return setup->periods[ period ].time;
+    }
+    
+    void beginByoYomi() {
+      onByoYomi = true;
+    }
+    
+    void nextByoYomi() {
+      period++;
+      resetNumberOfPlays();
+    }
+    
+    bool isInValidByoYomiPeriod() {
+      return period < setup->numberOfPeriods;
+    }
+    
+private:
+    
 
   };
   
@@ -60,8 +86,11 @@ class ByoYomiTimeControl : public TimeControlBase {
   
 public:
 
-  ByoYomiTimeControl(ByoYomiSetup byoYomiSetup) : TimeControlBase( byoYomiSetup.time, byoYomiSetup.time ) {
-    setup = byoYomiSetup;
+  ByoYomiTimeControl(ByoYomiSetup byoYomiSetup) : TimeControlBase( byoYomiSetup.time, byoYomiSetup.time ), setup( byoYomiSetup ), playerOneState( &setup ), playerTwoState( &setup ) {
+    Serial.print( setup.time );Serial.print( " " );Serial.println( setup.numberOfPeriods );
+  }
+  
+  virtual ~ByoYomiTimeControl() {
   }
   
   virtual void onPlayerOnePlayed() {
@@ -72,9 +101,22 @@ public:
     if( hasPlayerOneReachedTargetNumberOfPlays() ) {
       playerOneRenewByoYomiPeriod();
     }
-  } 
+  }
+  
+  virtual void onPlayerOneTimeExpired() {
+    if( !isPlayerOneOnByoYomi() ) {
+      playerOneNormalPeriodEnded();
+    } else {
+      playerOneMoveToNextByoYomiPeriod();
+    }
+    playerOneBeginByoYomiPeriodOrEndGame();
+  }
+
 
 private:
+
+  ByoYomiTimeControl() : TimeControlBase( 1000, 1000 ), setup(), playerOneState( NULL ), playerTwoState( NULL ) {
+  }
 
   bool isPlayerOneOnByoYomi() {
     return playerOneState.isOnByoYomi();
@@ -85,10 +127,32 @@ private:
   }
   
   bool hasPlayerOneReachedTargetNumberOfPlays() {
-    return false;
+    return playerOneState.hasReachedNumberOfPlays();
   }
   
   void playerOneRenewByoYomiPeriod() {
+    playerOneState.resetNumberOfPlays();
+    setPlayerOneTime();
+  }
+  
+  void playerOneNormalPeriodEnded() {
+    playerOneState.beginByoYomi();
+  }
+  
+  void playerOneMoveToNextByoYomiPeriod() {
+    playerOneState.nextByoYomi();
+  }
+  
+  void playerOneBeginByoYomiPeriodOrEndGame() {
+    if( playerOneState.isInValidByoYomiPeriod() ) {
+      setPlayerOneTime();
+    } else {
+      playerTwoWon = true;
+    }
+  }
+  
+  void setPlayerOneTime() {
+    playerOne->setTime( playerOneState.getTime() );
   }
   
 };
