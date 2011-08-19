@@ -27,6 +27,8 @@ struct ByoYomiSetup {
 
 class ByoYomiTimeControl : public TimeControlBase {
   
+  class PlayerState;
+  
 public:
 
   ByoYomiTimeControl(ByoYomiSetup byoYomiSetup) : TimeControlBase( byoYomiSetup.time, byoYomiSetup.time ), setup( byoYomiSetup ), playerOneState( &setup ), playerTwoState( &setup ) {
@@ -36,65 +38,76 @@ public:
   }
   
   virtual void onPlayerOnePlayed() {
-    if( !isPlayerOneOnByoYomi() ) {
-      return;
-    }
-    playerOneIncrementNumberOfPlayes();
-    if( hasPlayerOneReachedTargetNumberOfPlays() ) {
-      playerOneRenewByoYomiPeriod();
-    }
+    onPlayerPlayed( playerOne, &playerOneState );
   }
   
   virtual void onPlayerOneTimeExpired() {
-    if( !isPlayerOneOnByoYomi() ) {
-      playerOneNormalPeriodEnded();
-    } else {
-      playerOneMoveToNextByoYomiPeriod();
-    }
-    playerOneBeginByoYomiPeriodOrEndGame();
+    onPlayerOneTimeExpired( playerOne, &playerOneState );
   }
-
 
 private:
 
-  ByoYomiTimeControl() : TimeControlBase( 1000, 1000 ), setup(), playerOneState( NULL ), playerTwoState( NULL ) {
+  ByoYomiTimeControl() : TimeControlBase( 0, 0 ), setup(), playerOneState( NULL ), playerTwoState( NULL ) {
   }
 
-  bool isPlayerOneOnByoYomi() {
-    return playerOneState.isOnByoYomi();
+  void onPlayerPlayed(TimeTracker *player, PlayerState *playerState) {
+    if( !isPlayerOnByoYomi( playerState ) ) {
+      return;
+    }
+    playerIncrementNumberOfPlayes( playerState );
+    if( hasPlayerReachedTargetNumberOfPlays( playerState ) ) {
+      playerRenewByoYomiPeriod( player, playerState );
+    }
+  }
+
+  bool isPlayerOnByoYomi(PlayerState *playerState) {
+    return playerState->isOnByoYomi();
   }
   
-  void playerOneIncrementNumberOfPlayes() {
-    playerOneState.incrementNumberOfPlays();
+  void playerIncrementNumberOfPlayes(PlayerState *playerState) {
+    playerState->incrementNumberOfPlays();
   }
   
-  bool hasPlayerOneReachedTargetNumberOfPlays() {
-    return playerOneState.hasReachedNumberOfPlays();
+  bool hasPlayerReachedTargetNumberOfPlays(PlayerState *playerState) {
+    return playerState->hasReachedNumberOfPlays();
   }
   
-  void playerOneRenewByoYomiPeriod() {
-    playerOneState.resetNumberOfPlays();
-    setPlayerOneTime();
+  void playerRenewByoYomiPeriod(TimeTracker *player, PlayerState *playerState) {
+    playerState->resetNumberOfPlays();
+    setPlayerTime( player, playerState );
   }
   
-  void playerOneNormalPeriodEnded() {
-    playerOneState.beginByoYomi();
-  }
-  
-  void playerOneMoveToNextByoYomiPeriod() {
-    playerOneState.nextByoYomi();
-  }
-  
-  void playerOneBeginByoYomiPeriodOrEndGame() {
-    if( playerOneState.isInValidByoYomiPeriod() ) {
-      setPlayerOneTime();
+  void onPlayerOneTimeExpired(TimeTracker *player, PlayerState *playerState) {
+    if( !isPlayerOnByoYomi( playerState ) ) {
+      playerNormalPeriodEnded( playerState );
     } else {
-      playerTwoWon = true;
+      playerMoveToNextByoYomiPeriod( playerState );
+    }
+    playerBeginByoYomiPeriodOrEndGame( player, playerState );
+  }
+  
+  void playerNormalPeriodEnded(PlayerState *playerState) {
+    playerState->beginByoYomi();
+  }
+  
+  void playerMoveToNextByoYomiPeriod(PlayerState *playerState) {
+    playerState->nextByoYomi();
+  }
+  
+  void playerBeginByoYomiPeriodOrEndGame(TimeTracker *player, PlayerState *playerState) {
+    if( playerState->isInValidByoYomiPeriod() ) {
+      setPlayerTime( player, playerState );
+    } else {
+      if( playerOne == player ) {
+        playerTwoWon = true;
+      } else {
+        playerOneWon = true;
+      }
     }
   }
   
-  void setPlayerOneTime() {
-    playerOne->setTime( playerOneState.getTime() );
+  void setPlayerTime(TimeTracker *player, PlayerState *playerState) {
+    player->setTime( playerState->getTime() );
   }
   
 
