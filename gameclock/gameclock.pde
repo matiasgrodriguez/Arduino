@@ -10,6 +10,7 @@
 #include "HourGlassTimeControl.h"
 #include "FischerDelayTimeControl.h"
 #include "ByoYomiTimeControl.h"
+#include "BronsteinDelayTimeControl.h"
 
 GameClock gameClock;
 Clock *clock;
@@ -62,7 +63,7 @@ void printTime() {
   }*/
   lcd.print( (const char*)buffer );
   lcd.setCursor( 0, 1 );
-  lcd.print( "Byo Yomi" );
+  lcd.print( "Fischer Delay" );
 }
 
 TimeControl *createByoYomiTimeControl() {
@@ -79,6 +80,14 @@ TimeControl *createByoYomiTimeControl() {
   return new ByoYomiTimeControl( byoYomiSetup );
 }
 
+TimeControl * createBronsteinDelayTimeControl() {
+  return new BronsteinDelayTimeControl( 20L * 1000L, 5L * 1000L );
+}
+
+TimeControl * createFischerDelayTimeControl() {
+  return new FischerDelayTimeControl( 20L * 1000L, 5L * 1000L );
+}
+
 void setup() {
   Serial.begin(9600);
   Serial.println( "-= BEGIN =-" );
@@ -88,7 +97,7 @@ void setup() {
   lcd.begin( 16, 2 );
   
   clock = new ArduinoClock();
-  timeControl = createByoYomiTimeControl(); 
+  timeControl = createFischerDelayTimeControl(); 
   gameClock.setup( clock, timeControl ); 
   gameClock.selectPlayerOne();
   
