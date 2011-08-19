@@ -26,68 +26,10 @@ struct ByoYomiSetup {
 
 
 class ByoYomiTimeControl : public TimeControlBase {
-    
-  class PlayerState {
-
-    bool onByoYomi;
-    uint16_t period;
-    uint16_t numberOfPlays;
-    ByoYomiSetup *setup;
-    
-  public:
-    
-    PlayerState(ByoYomiSetup *setup) {
-      this->setup = setup;
-      onByoYomi = false;
-      period = 0;
-      numberOfPlays = 0;
-    }
-    
-    bool isOnByoYomi() {
-      return onByoYomi;
-    }
-    
-    void incrementNumberOfPlays() {
-      numberOfPlays++;
-    }
-    
-    bool hasReachedNumberOfPlays() {
-      return numberOfPlays == setup->periods[ period ].numberOfPlays;
-    }
-    
-    void resetNumberOfPlays() {
-      numberOfPlays = 0;
-    }
-    
-    uint32_t getTime() {
-      return setup->periods[ period ].time;
-    }
-    
-    void beginByoYomi() {
-      onByoYomi = true;
-    }
-    
-    void nextByoYomi() {
-      period++;
-      resetNumberOfPlays();
-    }
-    
-    bool isInValidByoYomiPeriod() {
-      return period < setup->numberOfPeriods;
-    }
-    
-private:
-    
-
-  };
-  
-  ByoYomiSetup setup;
-  PlayerState playerOneState, playerTwoState;
   
 public:
 
   ByoYomiTimeControl(ByoYomiSetup byoYomiSetup) : TimeControlBase( byoYomiSetup.time, byoYomiSetup.time ), setup( byoYomiSetup ), playerOneState( &setup ), playerTwoState( &setup ) {
-    Serial.print( setup.time );Serial.print( " " );Serial.println( setup.numberOfPeriods );
   }
   
   virtual ~ByoYomiTimeControl() {
@@ -155,6 +97,61 @@ private:
     playerOne->setTime( playerOneState.getTime() );
   }
   
+
+  class PlayerState {
+
+    bool onByoYomi;
+    uint16_t period;
+    uint16_t numberOfPlays;
+    ByoYomiSetup *setup;
+
+  public:
+    
+    PlayerState(ByoYomiSetup *setup) {
+      this->setup = setup;
+      onByoYomi = false;
+      period = 0;
+      numberOfPlays = 0;
+    }
+    
+    bool isOnByoYomi() {
+      return onByoYomi;
+    }
+    
+    void incrementNumberOfPlays() {
+      numberOfPlays++;
+    }
+    
+    bool hasReachedNumberOfPlays() {
+      return numberOfPlays == setup->periods[ period ].numberOfPlays;
+    }
+    
+    void resetNumberOfPlays() {
+      numberOfPlays = 0;
+    }
+    
+    uint32_t getTime() {
+      return setup->periods[ period ].time;
+    }
+    
+    void beginByoYomi() {
+      onByoYomi = true;
+    }
+    
+    void nextByoYomi() {
+      period++;
+      resetNumberOfPlays();
+    }
+    
+    bool isInValidByoYomiPeriod() {
+      return period < setup->numberOfPeriods;
+    }    
+
+  };
+
+  ByoYomiSetup setup;
+  PlayerState playerOneState, playerTwoState;
+
 };
 
 #endif
