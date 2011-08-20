@@ -11,6 +11,7 @@
 #include "FischerDelayTimeControl.h"
 #include "ByoYomiTimeControl.h"
 #include "BronsteinDelayTimeControl.h"
+#include "SimpleDelayTimeControl.h"
 
 GameClock gameClock;
 Clock *clock;
@@ -86,6 +87,10 @@ TimeControl * createBronsteinDelayTimeControl() {
 
 TimeControl * createFischerDelayTimeControl() {
   return new FischerDelayTimeControl( 20L * 1000L, 5L * 1000L );
+}
+
+TimeControl * createSimpleDelayTimeControl() {
+  return new SimpleDelayTimeControl( 20L * 1000L, 5L * 1000L );
 }
 
 void setup() {
