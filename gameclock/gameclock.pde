@@ -13,12 +13,14 @@
 #include "BronsteinDelayTimeControl.h"
 #include "SimpleDelayTimeControl.h"
 #include "PushButton.h"
+#include "GameUiHandler.h"
 
 GameClock gameClock;
 Clock *clock;
 TimeControl *timeControl;
 PushButton playerOneButton( 9 );
 PushButton playerTwoButton( 8 );
+UiHandler *currentUiHandler;
 
 LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
 
@@ -46,25 +48,16 @@ void format(int32_t time, uint8_t *buffer) {
   }
 }
 
-//bool flag = true;
 void printTime() {
   uint8_t buffer[ 16 ];
   for(int i = 0; i < 16; ++i) {
     buffer[ i ] = ' ';
   }
-  //buffer[ 16 ]=0;
   
   format( timeControl->getPlayerOneTime( clock ), buffer );
   format( timeControl->getPlayerTwoTime( clock ), &buffer[11] );
   //lcd.clear();
   lcd.setCursor( 0, 0 );
-  /*if( flag ) {
-    Serial.print( ( char )buffer[ 0 ] );Serial.print( ( char )buffer[ 1 ] );Serial.print( ( char )buffer[ 2 ] );Serial.print( ( char )buffer[ 3 ] );
-    Serial.print( ( char )buffer[ 4 ] );Serial.print( ( char )buffer[ 5 ] );Serial.print( ( char )buffer[ 6 ] );Serial.print( ( char )buffer[ 7 ] );
-    Serial.print( ( char )buffer[ 8 ] );Serial.print( ( char )buffer[ 9 ] );Serial.print( ( char )buffer[ 10 ] );Serial.print( ( char )buffer[ 11 ] );
-    Serial.print( ( char )buffer[ 12 ] );Serial.print( ( char )buffer[ 13 ] );Serial.print( ( char )buffer[ 14 ] );Serial.println( ( char )buffer[ 15 ] );
-    //flag = false;
-  }*/
   lcd.print( (const char*)buffer );
   lcd.setCursor( 0, 1 );
   lcd.print( "Bronstein Delay" );
@@ -106,25 +99,19 @@ void setup() {
   lcd.begin( 16, 2 );
   
   clock = new ArduinoClock();
-  timeControl = createBronsteinDelayTimeControl(); 
-  gameClock.setup( clock, timeControl ); 
-  gameClock.selectPlayerOne();
+  timeControl = createBronsteinDelayTimeControl();
+  gameClock.setup( clock, timeControl );
+  //gameClock.selectPlayerOne();
+  
+  currentUiHandler = new GameUiHandler();
+
   
   pinMode( 8, INPUT );
   pinMode( 9, INPUT );
 }
 
 void loop() {
-  gameClock.tick();
-  playerOneButton.tick( clock );
-  playerTwoButton.tick( clock );
-  
-  if( playerOneButton.wasPushed() ) {
-    gameClock.selectPlayerTwo();
-  } else if( playerTwoButton.wasPushed() ) {
-    gameClock.selectPlayerOne();
-  }
-
+  currentUiHandler->tick( clock );
   printTime();
   
   delay( 50 );
