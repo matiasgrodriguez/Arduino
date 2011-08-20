@@ -12,10 +12,13 @@
 #include "ByoYomiTimeControl.h"
 #include "BronsteinDelayTimeControl.h"
 #include "SimpleDelayTimeControl.h"
+#include "PushButton.h"
 
 GameClock gameClock;
 Clock *clock;
 TimeControl *timeControl;
+PushButton playerOneButton( 9 );
+PushButton playerTwoButton( 8 );
 
 LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
 
@@ -64,7 +67,7 @@ void printTime() {
   }*/
   lcd.print( (const char*)buffer );
   lcd.setCursor( 0, 1 );
-  lcd.print( "Fischer Delay" );
+  lcd.print( "Bronstein Delay" );
 }
 
 TimeControl *createByoYomiTimeControl() {
@@ -98,11 +101,12 @@ void setup() {
   Serial.println( "-= BEGIN =-" );
   Serial.println( sizeof(GameClock) );
   Serial.println( sizeof(ByoYomiTimeControl) );
+  Serial.println( sizeof(PushButton) );
   
   lcd.begin( 16, 2 );
   
   clock = new ArduinoClock();
-  timeControl = createFischerDelayTimeControl(); 
+  timeControl = createBronsteinDelayTimeControl(); 
   gameClock.setup( clock, timeControl ); 
   gameClock.selectPlayerOne();
   
@@ -112,20 +116,17 @@ void setup() {
 
 void loop() {
   gameClock.tick();
-  printTime();
-  delay( 50 );
+  playerOneButton.tick( clock );
+  playerTwoButton.tick( clock );
   
-  //*
-  int status = digitalRead( 8 );
-  //Serial.print( "Pin 8: " );Serial.println( status );
-  if( status == HIGH  ) {
+  if( playerOneButton.wasPushed() ) {
+    gameClock.selectPlayerTwo();
+  } else if( playerTwoButton.wasPushed() ) {
     gameClock.selectPlayerOne();
-  }else {
-    status = digitalRead( 9 );
-   // Serial.print( "Pin 9: " );Serial.println( status );
-    if( status == HIGH ) {
-      gameClock.selectPlayerTwo();
-    }
-  }//*/
+  }
+
+  printTime();
+  
+  delay( 50 );
 }
 
