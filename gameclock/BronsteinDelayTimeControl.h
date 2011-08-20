@@ -31,6 +31,8 @@ private:
     int32_t playTime = player->getLastConsumedTime();
     if( playTime <= delay ) {
       player->addTime( playTime );
+    } else {
+      player->addTime( delay );
     }
   }
   
