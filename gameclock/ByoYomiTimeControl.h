@@ -4,7 +4,7 @@
 
 #include "TimeControlBase.h"
 
-#define BYO_YOMI_SETUP_MAX_PERIODS  4
+#define BYO_YOMI_SETUP_MAX_PERIODS  5
 
 struct ByoYomiPeriod {
   
