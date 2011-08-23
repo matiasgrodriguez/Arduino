@@ -37,6 +37,8 @@ public:
   virtual ~ByoYomiTimeControl() {
   }
   
+  //<TimeControl>
+  
   virtual void onPlayerOnePlayed() {
     onPlayerPlayed( playerOne, &playerOneState );
   }
@@ -52,7 +54,24 @@ public:
   virtual void onPlayerTwoTimeExpired() {
     onPlayerTimeExpired( playerTwo, &playerTwoState );
   }
+
+  //</TimeControl>
   
+  bool isPlayerOneInNormalTime() {
+    return !isPlayerOnByoYomi( &playerOneState );
+  }
+
+  uint16_t getPlayerOneRemainingNumberOfPlays() {
+    return setup.periods[ playerOneState.getPeriod() ].numberOfPlays - playerOneState.getNumberOfPlays();
+  }
+  
+  bool isPlayerTwoInNormalTime() {
+    return !isPlayerOnByoYomi( &playerTwoState );
+  }
+
+  uint16_t getPlayerTwoRemainingNumberOfPlays() {
+    return setup.periods[ playerTwoState.getPeriod() ].numberOfPlays - playerTwoState.getNumberOfPlays();
+  }
 
 private:
 
@@ -167,13 +186,21 @@ private:
     
     bool isInValidByoYomiPeriod() {
       return period < setup->numberOfPeriods;
-    }    
+    }
+  
+    uint16_t getNumberOfPlays() {
+      return numberOfPlays;
+    }
+
+    uint16_t getPeriod() {
+      return period;
+    }
 
   };
 
   ByoYomiSetup setup;
   PlayerState playerOneState, playerTwoState;
-
+  
 };
 
 #endif

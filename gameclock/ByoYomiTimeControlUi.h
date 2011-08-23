@@ -6,14 +6,14 @@
 #include "TimeControlUi.h"
 #include "ByoYomiTimeControl.h"
 
-const prog_uint8_t name[] PROGMEM = "        Byo Yomi";
+const prog_uint8_t byoYomiName[] PROGMEM = "        Byo Yomi";
 
-const prog_uint8_t option1[] PROGMEM = "KGS MEDIUM           25m +5(30s)";
-const prog_uint8_t option2[] PROGMEM = "KGS FAST             10m +5(20s)";
-const prog_uint8_t option3[] PROGMEM = "KGS BLITZ             1m +3(10s)";
+const prog_uint8_t byoYomiOption1[] PROGMEM = "KGS MEDIUM           25m +5(30s)";
+const prog_uint8_t byoYomiOption2[] PROGMEM = "KGS FAST             10m +5(20s)";
+const prog_uint8_t byoYomiOption3[] PROGMEM = "KGS BLITZ             1m +3(10s)";
 
-const prog_uint8_t *options[] PROGMEM = {
-  option1, option2, option3
+const prog_uint8_t *byoYomiOptions[] PROGMEM = {
+  byoYomiOption1, byoYomiOption2, byoYomiOption3
 };
 
 class ByoYomiTimeControlUi : public TimeControlUi {
@@ -21,7 +21,7 @@ class ByoYomiTimeControlUi : public TimeControlUi {
 public:
 
   virtual const prog_uint8_t *getName() {
-    return name;
+    return byoYomiName;
   }
   
   virtual int16_t getNumberOfOptions() { 
@@ -29,7 +29,7 @@ public:
   }
   
   virtual const prog_uint8_t *getOption(int16_t option) {
-    return options[ option ];
+    return byoYomiOptions[ option ];
   }
   
   virtual TimeControl *create(int16_t option) {
@@ -83,7 +83,7 @@ public:
     return new ByoYomiTimeControl( byoYomiSetup );
   }
   
-  virtual void render(Clock *clock, TimeControl *timeControl, uint8_t *buffer) {
+  virtual void render(Clock *clock, TimeControl *timeControl, uint8_t *buffer, uint8_t *buffer2) {
     static bool flag = true;
     if( flag ) {
       Serial.print( "PlayerOneTime: " );Serial.println( ( long )timeControl->getPlayerOneTime( clock ) );
