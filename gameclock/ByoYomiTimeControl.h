@@ -61,12 +61,20 @@ public:
     return !isPlayerOnByoYomi( &playerOneState );
   }
 
+  uint16_t getPlayerOneRemainingByoYomiPeriods() {
+    return setup.numberOfPeriods - playerOneState.getPeriod();
+  }
+
   uint16_t getPlayerOneRemainingNumberOfPlays() {
     return setup.periods[ playerOneState.getPeriod() ].numberOfPlays - playerOneState.getNumberOfPlays();
   }
   
   bool isPlayerTwoInNormalTime() {
     return !isPlayerOnByoYomi( &playerTwoState );
+  }
+
+  uint16_t getPlayerTwoRemainingByoYomiPeriods() {
+    return setup.numberOfPeriods - playerTwoState.getPeriod();
   }
 
   uint16_t getPlayerTwoRemainingNumberOfPlays() {

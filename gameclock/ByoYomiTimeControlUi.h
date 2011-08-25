@@ -6,7 +6,7 @@
 #include "TimeControlUi.h"
 #include "ByoYomiTimeControl.h"
 
-const prog_uint8_t byoYomiName[] PROGMEM = "        Byo Yomi";
+const prog_uint8_t byoYomiName[] PROGMEM = "Byo Yomi";
 
 const prog_uint8_t byoYomiOption1[] PROGMEM = "KGS MEDIUM           25m +5(30s)";
 const prog_uint8_t byoYomiOption2[] PROGMEM = "KGS FAST             10m +5(20s)";
@@ -83,15 +83,31 @@ public:
     return new ByoYomiTimeControl( byoYomiSetup );
   }
   
-  virtual void render(Clock *clock, TimeControl *timeControl, uint8_t *buffer, uint8_t *buffer2) {
-    static bool flag = true;
-    if( flag ) {
-      Serial.print( "PlayerOneTime: " );Serial.println( ( long )timeControl->getPlayerOneTime( clock ) );
-      Serial.print( "PlayerTwoTime: " );Serial.println( ( long )timeControl->getPlayerTwoTime( clock ) );
-      flag = false;
+  virtual void render(Clock *clock, TimeControl *timeControl, uint8_t *buffer1, uint8_t *buffer2) {
+    formatTime( timeControl->getPlayerOneTime( clock ), &buffer1[  0 ] );
+    formatTime( timeControl->getPlayerTwoTime( clock ), &buffer1[ 11 ] );
+    
+    ByoYomiTimeControl *byoTomi = (ByoYomiTimeControl*)timeControl;
+    if( byoTomi->isPlayerOneInNormalTime() ) {
+      buffer2[ 0 ]='n';
+    }else {
+      uint8_t numberBuffer[2];
+      uint16_t remaining = byoTomi->getPlayerOneRemainingByoYomiPeriods();
+      itoa( remaining, (char*)numberBuffer, 10 );
+      uint16_t length = strlen( (char*)numberBuffer );
+      memcpy( buffer2, numberBuffer, length );
     }
-    formatTime( timeControl->getPlayerOneTime( clock ), &buffer[  0 ] );
-    formatTime( timeControl->getPlayerTwoTime( clock ), &buffer[ 11 ] );
+
+    if( byoTomi->isPlayerTwoInNormalTime() ) {
+      buffer2[ 15 ]='n';
+    }else {
+      uint8_t numberBuffer[2];
+      uint16_t remaining = byoTomi->getPlayerTwoRemainingByoYomiPeriods();
+      Serial.println( remaining );
+      itoa( remaining, (char*)numberBuffer, 10 );
+      uint16_t length = strlen( (char*)numberBuffer );
+      memcpy( &buffer2[16-length], numberBuffer, length );
+    }
   }
   
 };

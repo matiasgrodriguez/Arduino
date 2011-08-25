@@ -5,9 +5,12 @@
 #include "GameClock.h"
 #include "PushButton.h"
 #include "UiHandler.h"
+#include "TimeControlUi.h"
 
 extern GameClock gameClock;
 extern PushButton playerOneButton, playerTwoButton;
+extern TimeControlUi *timeControlUi;
+extern LiquidCrystal lcd;
 
 class GameUiHandler : public UiHandler {
   
@@ -23,6 +26,21 @@ public:
     } else if( playerTwoButton.wasPushed() ) {
       gameClock.selectPlayerOne();
     }
+  }
+  
+  virtual void render() {
+    uint8_t buffer[ 34 ];
+    for(int i = 0; i < 34; ++i) {
+      buffer[ i ] = ' ';
+    }
+    buffer[ 16 ] = '\0';
+    buffer[ 33 ] = '\0';
+    
+    timeControlUi->render( gameClock.getClock(), gameClock.getTimeControl(), buffer, &buffer[17] );
+    lcd.setCursor( 0, 0 );
+    lcd.print( (const char*)buffer );
+    lcd.setCursor( 0, 1 );
+    lcd.print( (const char*)&buffer[17] );
   }
   
 };

@@ -70,6 +70,14 @@ public:
   void resume() {
   }
   
+  Clock *getClock() {
+    return clock;
+  }
+  
+  TimeControl *getTimeControl() {
+    return timeControl;
+  }
+  
 private:
 
   bool isOver() {

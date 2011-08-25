@@ -15,9 +15,11 @@
 #include "SimpleDelayTimeControl.h"
 #include "PushButton.h"
 #include "GameUiHandler.h"
+
 #include "TimeControlUi.h"
 #include "ByoYomiTimeControlUi.h"
 #include "CanadianByoYomiTimeControlUi.h"
+#include "FischerDelayTimeControlUi.h"
 
 
 GameClock gameClock;
@@ -30,27 +32,6 @@ UiHandler *currentUiHandler;
 
 LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
 
-void printTime() {
-  uint8_t buffer[ 34 ];
-  for(int i = 0; i < 34; ++i) {
-    buffer[ i ] = ' ';
-  }
-  buffer[ 16 ] = '\0';
-  buffer[ 33 ] = '\0';
-  
-  timeControlUi->render( clock, timeControl, buffer, &buffer[17] );
-  //lcd.clear();
-  lcd.setCursor( 0, 0 );
-  lcd.print( (const char*)buffer );
-  lcd.setCursor( 0, 1 );
-  
-  lcd.print( (const char*)&buffer[17] );
-  //memcpy_P( buffer, timeControlUi->getName(), 16 );
-  //lcd.print( (const char*)buffer );
-  //Serial.println( (char*)buffer );
-  //Serial.println( (char*)&buffer[17] );
-}
-
 void setup() {
   Serial.begin(9600);
   Serial.println( "-= BEGIN =-" );
@@ -61,7 +42,9 @@ void setup() {
   lcd.begin( 16, 2 );
   
   //timeControlUi = new ByoYomiTimeControlUi();
-  timeControlUi = new CanadianByoYomiTimeControlUi();
+  //timeControlUi = new CanadianByoYomiTimeControlUi();
+  timeControlUi = new FischerDelayTimeControlUi();
+  
   clock = new ArduinoClock();
   timeControl = timeControlUi->create( 2 );
   currentUiHandler = new GameUiHandler();
@@ -75,7 +58,7 @@ void setup() {
 
 void loop() {
   currentUiHandler->tick( clock );
-  printTime();
+  currentUiHandler->render();
   
   delay( 50 );
 }

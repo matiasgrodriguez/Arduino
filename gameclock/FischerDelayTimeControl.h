@@ -25,10 +25,14 @@ public:
     addBonus( playerTwo );
   }
   
+  uint32_t getBonus() {
+    return bonus;
+  }
+  
 private:
 
   void addBonus(TimeTracker *player) {
-    player->addTime( bonus );
+    player->addTime( getBonus() );
   }
   
 };
