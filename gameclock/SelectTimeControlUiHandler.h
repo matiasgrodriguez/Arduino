@@ -35,7 +35,7 @@ public:
     buffer[ 16 ] = '\0';
     buffer[ 33 ] = '\0';
     
-    TimeControlUi *tc = timeControls[ 1 ];
+    TimeControlUi *tc = timeControls[ 0 ];
     if( tc != NULL ) {
       const prog_char *name = tc->getName();
       char nameBuffer[17];

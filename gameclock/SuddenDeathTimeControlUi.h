@@ -26,7 +26,7 @@ class SuddenDeathTimeControlUi : public TimeControlUi {
 public:
 
   virtual const prog_char *getName() {
-    return hourGlassName;
+    return suddenDeathName;
   }
   
   virtual int16_t getNumberOfOptions() {

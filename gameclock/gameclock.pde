@@ -50,7 +50,7 @@ UiHandler *currentUiHandler;
 
 void setup() {
   Serial.begin(9600);
-  Serial.println( "-= BEGIN =-" );
+  Serial.println( "-= :) =-" );
   Serial.println( sizeof(GameClock) );
   Serial.println( sizeof(ByoYomiTimeControl) );
   Serial.println( sizeof(PushButton) );
@@ -59,15 +59,15 @@ void setup() {
     
   clock = new ArduinoClock();
   
-  gameUiHandler.setTimeControlUi( timeControls[ 1 ] );
-  currentUiHandler = &gameUiHandler;
+  //gameUiHandler.setTimeControlUi( timeControls[ 1 ] );
+  //currentUiHandler = &gameUiHandler;
   currentUiHandler = &selectTimeControlUiHandler;
 
-  gameClock.setup( clock, timeControls[ 1 ]->create( 0 ) );
+  //gameClock.setup( clock, timeControls[ 1 ]->create( 0 ) );
 
   pinMode( 8, INPUT );
   pinMode( 9, INPUT );
-  Serial.print( "freeMemory=" );Serial.println(freeMemory());  
+  Serial.print( "freeMem=" );Serial.println(freeMemory());  
 }
 
 void loop() {
