@@ -20,6 +20,8 @@
 #include "ByoYomiTimeControlUi.h"
 #include "CanadianByoYomiTimeControlUi.h"
 #include "FischerDelayTimeControlUi.h"
+#include "BronsteinDelayTimeControlUi.h"
+#include "HourGlassTimeControlUi.h"
 
 
 GameClock gameClock;
@@ -43,7 +45,9 @@ void setup() {
   
   //timeControlUi = new ByoYomiTimeControlUi();
   //timeControlUi = new CanadianByoYomiTimeControlUi();
-  timeControlUi = new FischerDelayTimeControlUi();
+  //timeControlUi = new FischerDelayTimeControlUi();
+  //timeControlUi = new BronsteinDelayTimeControlUi();
+  timeControlUi = new HourGlassTimeControlUi();
   
   clock = new ArduinoClock();
   timeControl = timeControlUi->create( 2 );

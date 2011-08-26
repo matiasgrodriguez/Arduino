@@ -6,11 +6,14 @@
 
 class HourGlassTimeControl : public TimeControlBase {
   
-  uint32_t time;
+  uint32_t lastTransferredTime;
+  bool lastTransferedTimeWasFromPlayerOne;
   
 public:
 
   HourGlassTimeControl(uint32_t playersTime) : TimeControlBase( playersTime, playersTime ) {
+    lastTransferredTime = 0;
+    lastTransferedTimeWasFromPlayerOne = false;
   }
   
   virtual ~HourGlassTimeControl() {
@@ -33,11 +36,21 @@ public:
     transferTime( playerTwo, playerOne );
     TimeControlBase::onPlayerTwoTimeExpired();
   }
+  
+  uint32_t getLastTransferedTime() {
+    return lastTransferredTime;
+  }
+  
+  bool wasTimeTransferredFromPlayerOne() {
+    return lastTransferedTimeWasFromPlayerOne;
+  }
 
 private:
 
   void transferTime(TimeTracker *from, TimeTracker *to) {
-    to->addTime( from->getLastConsumedTime() );
+    lastTransferredTime = from->getLastConsumedTime();
+    lastTransferedTimeWasFromPlayerOne = from == playerOne;
+    to->addTime( lastTransferredTime );
   }
   
 };
