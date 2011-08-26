@@ -25,6 +25,10 @@ public:
     onPlayerPlayed( playerTwo );
   }
   
+  uint32_t getDelay() {
+    return delay;
+  }
+  
 private:
 
   void onPlayerPlayed(TimeTracker *player) {
