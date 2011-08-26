@@ -45,7 +45,8 @@ TimeControlUi *timeControls[] = {
 };
 
 //User Interface ...
-TimeControlUi *timeControlUi;
+GameUiHandler gameUiHandler;
+//SelectTimeControlUiHandler selectTimeControlUiHandler;
 UiHandler *currentUiHandler;
 
 
@@ -57,19 +58,13 @@ void setup() {
   Serial.println( sizeof(PushButton) );
   
   lcd.begin( 16, 2 );
-  
-  //timeControlUi = new ByoYomiTimeControlUi();
-  //timeControlUi = new CanadianByoYomiTimeControlUi();
-  //timeControlUi = new FischerDelayTimeControlUi();
-  //timeControlUi = new BronsteinDelayTimeControlUi();
-  //timeControlUi = new HourGlassTimeControlUi();
-  timeControlUi = new SuddenDeathTimeControlUi();
-  
+    
   clock = new ArduinoClock();
-  timeControl = timeControlUi->create( 6 );
-  currentUiHandler = new GameUiHandler();
+  
+  gameUiHandler.setTimeControlUi( timeControls[ 1 ] );
+  currentUiHandler = &gameUiHandler;
 
-  gameClock.setup( clock, timeControl );
+  gameClock.setup( clock, timeControls[ 1 ]->create( 0 ) );
 
   pinMode( 8, INPUT );
   pinMode( 9, INPUT );
@@ -78,7 +73,7 @@ void setup() {
 
 void loop() {
   currentUiHandler->tick( clock );
-  currentUiHandler->render();
+  currentUiHandler->render( clock );
   
   delay( 50 );
 }

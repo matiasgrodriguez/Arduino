@@ -9,10 +9,11 @@
 
 extern GameClock gameClock;
 extern PushButton playerOneButton, playerTwoButton;
-extern TimeControlUi *timeControlUi;
 extern LiquidCrystal lcd;
 
 class GameUiHandler : public UiHandler {
+  
+  TimeControlUi *timeControlUi;
   
 public:
 
@@ -28,7 +29,7 @@ public:
     }
   }
   
-  virtual void render() {
+  virtual void render(Clock *clock) {
     uint8_t buffer[ 34 ];
     for(int i = 0; i < 34; ++i) {
       buffer[ i ] = ' ';
@@ -36,11 +37,15 @@ public:
     buffer[ 16 ] = '\0';
     buffer[ 33 ] = '\0';
     
-    timeControlUi->render( gameClock.getClock(), gameClock.getTimeControl(), buffer, &buffer[17] );
+    timeControlUi->render( clock, gameClock.getTimeControl(), buffer, &buffer[17] );
     lcd.setCursor( 0, 0 );
     lcd.print( (const char*)buffer );
     lcd.setCursor( 0, 1 );
     lcd.print( (const char*)&buffer[17] );
+  }
+  
+  void setTimeControlUi(TimeControlUi *timeControlUi) {
+    this->timeControlUi = timeControlUi;
   }
   
 };
