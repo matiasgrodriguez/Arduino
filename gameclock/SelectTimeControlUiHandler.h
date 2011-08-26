@@ -11,6 +11,8 @@ extern LiquidCrystal lcd;
 
 extern TimeControlUi *timeControls[];
 
+const prog_char SELECT[] PROGMEM = "Select game:";
+
 class SelectTimeControlUiHandler : public UiHandler {
   
   uint8_t currentTimeControlUi;
@@ -25,6 +27,15 @@ public:
   }
 
   virtual void tick(Clock *clock) {
+    playerOneButton.tick( clock );
+    playerTwoButton.tick( clock );
+    
+    if( playerOneButton.wasPushed() && currentTimeControlUi > 0 ) {
+      currentTimeControlUi--;
+    }
+    if( playerTwoButton.wasPushed() && timeControls[ currentTimeControlUi + 1 ] != NULL ) {
+      currentTimeControlUi++;
+    }
   }
   
   virtual void render(Clock *clock){
@@ -35,15 +46,18 @@ public:
     buffer[ 16 ] = '\0';
     buffer[ 33 ] = '\0';
     
-    TimeControlUi *tc = timeControls[ 0 ];
+    TimeControlUi *tc = timeControls[ currentTimeControlUi ];
+
     if( tc != NULL ) {
-      const prog_char *name = tc->getName();
       char nameBuffer[17];
-      strcpy_P( nameBuffer, name );
+      strcpy_P( nameBuffer, SELECT );
       int16_t length = strlen( nameBuffer );
+      memcpy( buffer, nameBuffer, length );
+      
+      const prog_char *name = tc->getName();
+      strcpy_P( nameBuffer, name );
+      length = strlen( nameBuffer );
       memcpy( &buffer[ 33 - length ], nameBuffer, length );
-      //memcpy_P( buffer, name, str );
-      //memcpy_P( &buffer[17], &name[16], 16 );
     }
     
     lcd.setCursor( 0, 0 );
