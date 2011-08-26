@@ -11,7 +11,7 @@ class TimeControlUi {
 
 public:
 
-  virtual const prog_uint8_t *getName() = 0;
+  virtual const prog_char *getName() = 0;
   virtual int16_t getNumberOfOptions() = 0;
   virtual const prog_uint8_t *getOption(int16_t option) = 0;
   virtual TimeControl *create(int16_t option) = 0;

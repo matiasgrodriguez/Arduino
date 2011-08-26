@@ -7,7 +7,8 @@
 #include "TimeControlUi.h"
 #include "HourGlassTimeControl.h"
 
-const prog_uint8_t hourGlassName[] PROGMEM = "Hour Glass";
+const prog_char hourGlassName[] PROGMEM = "Hour Glass";
+
 const prog_uint8_t hourGlassOption1[] PROGMEM = "                          30 sec";
 const prog_uint8_t hourGlassOption2[] PROGMEM = "                           1 min";
 const prog_uint8_t hourGlassOption3[] PROGMEM = "                           2 min";
@@ -24,7 +25,7 @@ class HourGlassTimeControlUi : public TimeControlUi {
   
 public:
 
-  virtual const prog_uint8_t *getName() {
+  virtual const prog_char *getName() {
     return hourGlassName;
   }
   

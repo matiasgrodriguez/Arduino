@@ -7,7 +7,8 @@
 #include "TimeControlUi.h"
 #include "ByoYomiTimeControl.h"
 
-const prog_uint8_t canadianByoYomiName[] PROGMEM = "Canadian ByoYomi";
+const prog_char canadianByoYomiName[] PROGMEM = "Canadian ByoYomi";
+
 const prog_uint8_t canadianByoYomiOption1[] PROGMEM = "IGS Panda       1m +25mov in 15m";
 const prog_uint8_t canadianByoYomiOption2[] PROGMEM = "IGS Panda       1m +25mov in 10m";
 const prog_uint8_t canadianByoYomiOption3[] PROGMEM = "IGS Panda       1m +25mov in  7m";
@@ -21,7 +22,7 @@ class CanadianByoYomiTimeControlUi : public TimeControlUi {
   
 public:
 
-  virtual const prog_uint8_t *getName() {
+  virtual const prog_char *getName() {
     return canadianByoYomiName;
   }
   

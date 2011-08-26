@@ -7,7 +7,8 @@
 #include "TimeControlUi.h"
 #include "SuddenDeathTimeControl.h"
 
-const prog_uint8_t suddenDeathName[] PROGMEM = "Sudden Death";
+const prog_char suddenDeathName[] PROGMEM = "Sudden Death";
+
 const prog_uint8_t suddenDeathOption1[] PROGMEM = "                          30 sec";
 const prog_uint8_t suddenDeathOption2[] PROGMEM = "                           1 min";
 const prog_uint8_t suddenDeathOption3[] PROGMEM = "                           5 min";
@@ -24,7 +25,7 @@ class SuddenDeathTimeControlUi : public TimeControlUi {
   
 public:
 
-  virtual const prog_uint8_t *getName() {
+  virtual const prog_char *getName() {
     return hourGlassName;
   }
   

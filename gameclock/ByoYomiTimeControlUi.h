@@ -6,7 +6,7 @@
 #include "TimeControlUi.h"
 #include "ByoYomiTimeControl.h"
 
-const prog_uint8_t byoYomiName[] PROGMEM = "Byo Yomi";
+const prog_char byoYomiName[] PROGMEM = "Byo Yomi";
 
 const prog_uint8_t byoYomiOption1[] PROGMEM = "KGS MEDIUM           25m +5(30s)";
 const prog_uint8_t byoYomiOption2[] PROGMEM = "KGS FAST             10m +5(20s)";
@@ -20,7 +20,7 @@ class ByoYomiTimeControlUi : public TimeControlUi {
   
 public:
 
-  virtual const prog_uint8_t *getName() {
+  virtual const prog_char *getName() {
     return byoYomiName;
   }
   

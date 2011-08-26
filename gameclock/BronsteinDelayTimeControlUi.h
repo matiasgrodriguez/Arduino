@@ -7,7 +7,8 @@
 #include "TimeControlUi.h"
 #include "BronsteinDelayTimeControl.h"
 
-const prog_uint8_t bronsteinDelayName[] PROGMEM = "Bronstein Delay";
+const prog_char bronsteinDelayName[] PROGMEM = "Bronstein Delay";
+
 const prog_uint8_t bronsteinDelayOption1[] PROGMEM = "                  2 min + 12 sec";
 const prog_uint8_t bronsteinDelayOption2[] PROGMEM = "                  5 min + 12 sec";
 const prog_uint8_t bronsteinDelayOption3[] PROGMEM = "                 10 min + 10 sec";
@@ -22,7 +23,7 @@ class BronsteinDelayTimeControlUi : public TimeControlUi {
   
 public:
 
-  virtual const prog_uint8_t *getName() {
+  virtual const prog_char *getName() {
     return bronsteinDelayName;
   }
   

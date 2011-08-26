@@ -7,7 +7,8 @@
 #include "TimeControlUi.h"
 #include "FischerDelayTimeControl.h"
 
-const prog_uint8_t fischerDelayName[] PROGMEM = "Fischer Delay";
+const prog_char fischerDelayName[] PROGMEM = "Fischer Delay";
+
 const prog_uint8_t fischerDelayOption1[] PROGMEM = "Chess Cube        10 sec + 1 sec";
 const prog_uint8_t fischerDelayOption2[] PROGMEM = "Chess Cube         1 min + 1 sec";
 const prog_uint8_t fischerDelayOption3[] PROGMEM = "Chess Cube        2 min + 12 sec";
@@ -25,7 +26,7 @@ class FischerDelayTimeControlUi : public TimeControlUi {
   
 public:
 
-  virtual const prog_uint8_t *getName() {
+  virtual const prog_char *getName() {
     return fischerDelayName;
   }
   
