@@ -22,17 +22,32 @@
 #include "FischerDelayTimeControlUi.h"
 #include "BronsteinDelayTimeControlUi.h"
 #include "HourGlassTimeControlUi.h"
+#include "SuddenDeathTimeControlUi.h"
 
 
+//Hardware:
+PushButton playerOneButton( 9 ), playerTwoButton( 8 );
+LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
+
+//GameClock...
 GameClock gameClock;
 Clock *clock;
 TimeControl *timeControl;
+
+//TimeControls:
+TimeControlUi *timeControls[] = {
+  new SuddenDeathTimeControlUi(),
+  new HourGlassTimeControlUi(),
+  new ByoYomiTimeControlUi(),
+  new CanadianByoYomiTimeControlUi(),
+  new FischerDelayTimeControlUi(),
+  new BronsteinDelayTimeControlUi()
+};
+
+//User Interface ...
 TimeControlUi *timeControlUi;
-PushButton playerOneButton( 9 );
-PushButton playerTwoButton( 8 );
 UiHandler *currentUiHandler;
 
-LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
 
 void setup() {
   Serial.begin(9600);
@@ -47,10 +62,11 @@ void setup() {
   //timeControlUi = new CanadianByoYomiTimeControlUi();
   //timeControlUi = new FischerDelayTimeControlUi();
   //timeControlUi = new BronsteinDelayTimeControlUi();
-  timeControlUi = new HourGlassTimeControlUi();
+  //timeControlUi = new HourGlassTimeControlUi();
+  timeControlUi = new SuddenDeathTimeControlUi();
   
   clock = new ArduinoClock();
-  timeControl = timeControlUi->create( 2 );
+  timeControl = timeControlUi->create( 6 );
   currentUiHandler = new GameUiHandler();
 
   gameClock.setup( clock, timeControl );
