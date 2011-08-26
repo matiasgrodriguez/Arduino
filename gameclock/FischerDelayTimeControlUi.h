@@ -19,7 +19,7 @@ const prog_uint8_t *fischerDelayOptions[] PROGMEM = {
   fischerDelayOption1, fischerDelayOption2, fischerDelayOption3, fischerDelayOption4, fischerDelayOption5, fischerDelayOption6
 };
 
-const prog_char FORMAT[] PROGMEM = "+%d sec";
+const prog_char FISCHER_FORMAT[] PROGMEM = "+%d sec";
 
 class FischerDelayTimeControlUi : public TimeControlUi {
   
@@ -75,11 +75,10 @@ public:
     
     FischerDelayTimeControl *fischerDelay = ( FischerDelayTimeControl* )timeControl;
     char buffer[16];
-    sprintf_P( buffer, FORMAT, ( fischerDelay->getBonus() / 1000L ) );
+    sprintf_P( buffer, FISCHER_FORMAT, ( fischerDelay->getBonus() / 1000L ) );
     uint16_t length = strlen( buffer );
     memcpy( &buffer2[ ( 16 - length ) / 2 ], buffer, length ); //center on screen
   }
-
 
 };
 
