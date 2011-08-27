@@ -18,6 +18,10 @@ public:
     wasDown = false;
   }
   
+  void init() {
+    pinMode( pin, INPUT );
+  }
+  
   void tick(Clock *clock) {
     if( wasDown && isUp() ) {
       wasDown = false;

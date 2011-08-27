@@ -3,11 +3,12 @@
 #define __SelectTimeControlUiHandler_h__
 
 #include <avr/pgmspace.h>
+
 #include "UiHandler.h"
 #include "TimeControlUi.h"
 #include "SelectTimeControlOptionUiHandler.h"
 
-extern PushButton playerOneButton, playerTwoButton, selectButton, backButton;
+extern PushButton playerOneButton, playerTwoButton, okButton, backButton;
 extern GameClockLcd lcd2;
 
 extern TimeControlUi *timeControls[];
@@ -33,10 +34,10 @@ public:
   virtual void tick(Clock *clock) {
     playerOneButton.tick( clock );
     playerTwoButton.tick( clock );
-    selectButton.tick( clock );
+    okButton.tick( clock );
     backButton.tick( clock );
     
-    if( selectButton.wasPushed() ) {
+    if( okButton.wasPushed() ) {
       selectTimeControlOptionUiHandler.setTimeControlUi( timeControls[ currentTimeControlUi ] );
       currentUiHandler = &selectTimeControlOptionUiHandler;
       return;
@@ -62,7 +63,6 @@ public:
     
     lcd2.endRender();
   }
-
   
 };
 

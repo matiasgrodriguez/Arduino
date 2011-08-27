@@ -20,13 +20,14 @@ public:
   GameClockLcd(uint8_t rs, uint8_t enable, uint8_t d0, uint8_t d1, uint8_t d2, uint8_t d3) : lcd( rs, enable, d0, d1, d2, d3 ) {
   }
   
+  void init() {
+    lcd.begin( 16, 2 );
+  }
+  
   void beginRender() {
     clearBuffer( buffer1 );
     clearBuffer( buffer2 );
   }
-  
-  //void printTimeAtLeft(int32_t time) {
-  //}
   
   void printTopLeft(const prog_char *str) {
     printAligned( str, buffer1, Left );
