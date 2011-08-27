@@ -66,13 +66,24 @@ public:
   }
   
   void sPrintBottomLeft(const prog_char *format, ...) {
-    char buffer[ GAME_CLOCK_LCD_BUFFER_SIZE ];
     va_list body;
-    va_start(body, format);
-    vsprintf_P(buffer, format, body);
+    va_start( body, format );
+    sPrint( buffer2, Left, format, body );
     va_end(body);
-    
-    printAlignedUsingLocalBuffer( buffer, buffer2, Left );
+  }
+
+  void sPrintBottomCenter(const prog_char *format, ...) {
+    va_list body;
+    va_start( body, format );
+    sPrint( buffer2, Center, format, body );
+    va_end(body);
+  }
+
+  void sPrintBottomRight(const prog_char *format, ...) {
+    va_list body;
+    va_start( body, format );
+    sPrint( buffer2, Right, format, body );
+    va_end( body );
   }
 
   void endRender() {
@@ -130,6 +141,13 @@ private:
     buffer[ 3 ] = ( char )( '0' + ( right / 10 ) );
     buffer[ 4 ] = ( char )( '0' + ( right % 10 ) );
   }
+  
+  void sPrint(char *screenBuffer, Alignment aligment, const prog_char *format, va_list body) {
+    char buffer[ GAME_CLOCK_LCD_BUFFER_SIZE ];
+    vsprintf_P(buffer, format, body);
+    printAlignedUsingLocalBuffer( buffer, screenBuffer, aligment );
+  }
+
   
 };
 

@@ -74,7 +74,7 @@ public:
     lcd->printTopRightTime( hourGlass->getPlayerTwoTime( gameClock->getClock() ) );
 
     if( hourGlass->getLastTransferedTime() != 0 ) {
-      lcd->sPrintBottomLeft( HOURGLASS_FORMAT, ( hourGlass->wasTimeTransferredFromPlayerOne() ? '>' : '<' ), ( hourGlass->getLastTransferedTime() / 1000L ) );
+      lcd->sPrintBottomCenter( HOURGLASS_FORMAT, ( hourGlass->wasTimeTransferredFromPlayerOne() ? '>' : '<' ), ( hourGlass->getLastTransferedTime() / 1000L ) );
     }
   }
   
