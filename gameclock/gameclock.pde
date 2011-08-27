@@ -39,7 +39,7 @@ TimeControlUi *timeControls[] = {
   new ByoYomiTimeControlUi(),
   new CanadianByoYomiTimeControlUi(),
   new FischerDelayTimeControlUi(),
-  //new BronsteinDelayTimeControlUi(),
+  new BronsteinDelayTimeControlUi(),
   NULL
 };
 

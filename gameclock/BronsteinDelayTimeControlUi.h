@@ -17,7 +17,7 @@ const prog_char *bronsteinDelayOptions[] PROGMEM = {
   bronsteinDelayOption1, bronsteinDelayOption2, bronsteinDelayOption3
 };
 
-const prog_char BRONSTEIN_FORMAT[] PROGMEM = "delay %d sec";
+const prog_char bronsteinDelayFormat[] PROGMEM = "delay %d sec";
 
 class BronsteinDelayTimeControlUi : public TimeControlUi {
   
@@ -60,15 +60,12 @@ public:
     return new BronsteinDelayTimeControl( time, delay );
   }
   
-  virtual void renderGame(Clock *clock, TimeControl *timeControl, uint8_t *buffer1, uint8_t *buffer2) {
-    formatTime( timeControl->getPlayerOneTime( clock ), &buffer1[  0 ] );
-    formatTime( timeControl->getPlayerTwoTime( clock ), &buffer1[ 11 ] );
+  virtual void renderGame(GameClock *gameClock, GameClockLcd *lcd) {
+    BronsteinDelayTimeControl *bronsteinDelay = ( BronsteinDelayTimeControl* )gameClock->getTimeControl();
+    lcd->printTopLeftTime( bronsteinDelay->getPlayerOneTime( gameClock->getClock() ) );
+    lcd->printTopRightTime( bronsteinDelay->getPlayerTwoTime( gameClock->getClock() ) );
     
-    BronsteinDelayTimeControl *brownsteinDelay = ( BronsteinDelayTimeControl* )timeControl;
-    char buffer[16];
-    sprintf_P( buffer, BRONSTEIN_FORMAT, ( brownsteinDelay->getDelay() / 1000L ) );
-    uint16_t length = strlen( buffer );
-    memcpy( &buffer2[ ( 16 - length ) / 2 ], buffer, length ); //center on screen
+    lcd->sPrintBottomCenter( bronsteinDelayFormat, bronsteinDelay->getDelay() / 1000L );
   }
   
 };
