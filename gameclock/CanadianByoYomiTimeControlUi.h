@@ -65,7 +65,7 @@ public:
         byoYomiSetup.periods[ 0 ].numberOfPlays = numberOfPlays;
         byoYomiSetup.periods[ 0 ].time = 1000L * 60L * 7L;
         break;
-      case 4: 
+      case 3: 
         byoYomiSetup.time = time;
         byoYomiSetup.numberOfPeriods = numberOfPeriods;
         byoYomiSetup.periods[ 0 ].numberOfPlays = numberOfPlays;
