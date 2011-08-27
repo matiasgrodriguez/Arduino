@@ -67,10 +67,9 @@ public:
   }
   
   virtual void renderGame(GameClock *gameClock, GameClockLcd *lcd) {
-    HourGlassTimeControl *hourGlass = ( HourGlassTimeControl* )gameClock->getTimeControl();
-    lcd->printTopLeftTime( hourGlass->getPlayerOneTime( gameClock->getClock() ) );
-    lcd->printTopRightTime( hourGlass->getPlayerTwoTime( gameClock->getClock() ) );
+    TimeControlUi::renderGame( gameClock, lcd );
 
+    HourGlassTimeControl *hourGlass = ( HourGlassTimeControl* )gameClock->getTimeControl();
     if( hourGlass->getLastTransferedTime() != 0 ) {
       lcd->sPrintBottomCenter( HOURGLASS_FORMAT, ( hourGlass->wasTimeTransferredFromPlayerOne() ? '>' : '<' ), ( hourGlass->getLastTransferedTime() / 1000L ) );
     }

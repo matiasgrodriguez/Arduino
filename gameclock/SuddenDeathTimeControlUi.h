@@ -75,13 +75,7 @@ public:
     }
     return new SuddenDeathTimeControl( time );
   }
-  
-  virtual void renderGame(GameClock *gameClock, GameClockLcd *lcd) {
-    TimeControl *tc = gameClock->getTimeControl();
-    lcd->printTopLeftTime( tc->getPlayerOneTime( gameClock->getClock() ) );
-    lcd->printTopRightTime( tc->getPlayerTwoTime( gameClock->getClock() ) );
-  }
-  
+
 };
 
 #endif

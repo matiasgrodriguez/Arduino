@@ -92,10 +92,9 @@ public:
   }
   
   virtual void renderGame(GameClock *gameClock, GameClockLcd *lcd) {
-    ByoYomiTimeControl *byoYomi = ( ByoYomiTimeControl* )gameClock->getTimeControl();
-    lcd->printTopLeftTime( byoYomi->getPlayerOneTime( gameClock->getClock() ) );
-    lcd->printTopRightTime( byoYomi->getPlayerTwoTime( gameClock->getClock() ) );
+    TimeControlUi::renderGame( gameClock, lcd );
     
+    ByoYomiTimeControl *byoYomi = ( ByoYomiTimeControl* )gameClock->getTimeControl();    
     if( byoYomi->isPlayerOneInNormalTime() ) {
       lcd->printBottomLeft( byoYomiUiNormalTime );
     }else {

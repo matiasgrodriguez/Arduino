@@ -79,10 +79,9 @@ public:
   }
   
   virtual void renderGame(GameClock *gameClock, GameClockLcd *lcd) {
-    FischerDelayTimeControl *fischerDelay = ( FischerDelayTimeControl* )gameClock->getTimeControl();
-    lcd->printTopLeftTime( fischerDelay->getPlayerOneTime( gameClock->getClock() ) );
-    lcd->printTopRightTime( fischerDelay->getPlayerTwoTime( gameClock->getClock() ) );
+    TimeControlUi::renderGame( gameClock, lcd );
     
+    FischerDelayTimeControl *fischerDelay = ( FischerDelayTimeControl* )gameClock->getTimeControl();    
     lcd->sPrintBottomCenter( fischerDelayFormat, fischerDelay->getBonus() / 1000L );
   }
 

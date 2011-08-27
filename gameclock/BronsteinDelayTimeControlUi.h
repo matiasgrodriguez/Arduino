@@ -61,10 +61,9 @@ public:
   }
   
   virtual void renderGame(GameClock *gameClock, GameClockLcd *lcd) {
-    BronsteinDelayTimeControl *bronsteinDelay = ( BronsteinDelayTimeControl* )gameClock->getTimeControl();
-    lcd->printTopLeftTime( bronsteinDelay->getPlayerOneTime( gameClock->getClock() ) );
-    lcd->printTopRightTime( bronsteinDelay->getPlayerTwoTime( gameClock->getClock() ) );
+    TimeControlUi::renderGame( gameClock, lcd );
     
+    BronsteinDelayTimeControl *bronsteinDelay = ( BronsteinDelayTimeControl* )gameClock->getTimeControl();
     lcd->sPrintBottomCenter( bronsteinDelayFormat, bronsteinDelay->getDelay() / 1000L );
   }
   
