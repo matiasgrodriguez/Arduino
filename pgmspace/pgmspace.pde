@@ -1,8 +1,6 @@
 
 #include <avr/pgmspace.h>
 
-#include <MemoryFree.h>
-
 const prog_char option1[] PROGMEM = "KGS MEDIUM           25m +5(30s)";
 const prog_char option2[] PROGMEM = "KGS FAST             10m +5(20s)";
 
@@ -12,13 +10,12 @@ const prog_char *table[] PROGMEM = {
 };
 
 const prog_char *getString(uint8_t option) {
-  //Serial.println( "Option: " );
-  //Serial.println( ( int )option );
   if( option == 0 ) {
     return table[ 0 ];
   } else {
     return table[ 1 ];
   }
+  //This (below) does not work because the compiler needs to know the value of 'option'
   //return table[ option ];
 }
 
@@ -39,9 +36,12 @@ void printOption(const prog_char *option) {
 void setup() {
   Serial.begin( 9600 );
   
+  //even if getString is implemented with the commented code above this works
+  //because it seems that the compiler infers the value of the 'option' 
+  //parameter and inlines the call
   printOption( getString( 0 ) );
   printOption( getString( 1 ) );
-  Serial.print("freeMemory=");Serial.println(freeMemory());
+  Serial.println( "..Setup end...");
 }
 
 
