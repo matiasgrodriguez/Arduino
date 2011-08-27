@@ -8,13 +8,16 @@
 
 const prog_char byoYomiName[] PROGMEM = "Byo Yomi";
 
-const prog_char byoYomiOption1[] PROGMEM = "KGS MEDIUM           25m +5(30s)";
-const prog_char byoYomiOption2[] PROGMEM = "KGS FAST             10m +5(20s)";
-const prog_char byoYomiOption3[] PROGMEM = "KGS BLITZ             1m +3(10s)";
+const prog_char byoYomiOption1[] PROGMEM = "KGS Medium           25m +5(30s)";
+const prog_char byoYomiOption2[] PROGMEM = "KGS Fast             10m +5(20s)";
+const prog_char byoYomiOption3[] PROGMEM = "KGS Blitz             1m +3(10s)";
 
 const prog_char *byoYomiOptions[] PROGMEM = {
   byoYomiOption1, byoYomiOption2, byoYomiOption3
 };
+
+const prog_char byoYomiUiNormalTime[] PROGMEM = "normal";
+const prog_char byoYomiUiFormat[] PROGMEM = "%d";
 
 class ByoYomiTimeControlUi : public TimeControlUi {
   
@@ -88,30 +91,37 @@ public:
     return new ByoYomiTimeControl( byoYomiSetup );
   }
   
-  virtual void render(Clock *clock, TimeControl *timeControl, uint8_t *buffer1, uint8_t *buffer2) {
-    formatTime( timeControl->getPlayerOneTime( clock ), &buffer1[  0 ] );
-    formatTime( timeControl->getPlayerTwoTime( clock ), &buffer1[ 11 ] );
+  virtual void renderGame(GameClock *gameClock, GameClockLcd *lcd) {
+    ByoYomiTimeControl *byoYomi = ( ByoYomiTimeControl* )gameClock->getTimeControl();
+    lcd->printTopLeftTime( byoYomi->getPlayerOneTime( gameClock->getClock() ) );
+    lcd->printTopRightTime( byoYomi->getPlayerTwoTime( gameClock->getClock() ) );
     
-    ByoYomiTimeControl *byoTomi = (ByoYomiTimeControl*)timeControl;
-    if( byoTomi->isPlayerOneInNormalTime() ) {
-      buffer2[ 0 ]='n';
+    if( byoYomi->isPlayerOneInNormalTime() ) {
+      lcd->printBottomLeft( byoYomiUiNormalTime );
     }else {
+      lcd->sPrintBottomLeft( byoYomiUiFormat, byoYomi->getPlayerOneRemainingByoYomiPeriods() );
+      /*
       uint8_t numberBuffer[2];
       uint16_t remaining = byoTomi->getPlayerOneRemainingByoYomiPeriods();
       itoa( remaining, (char*)numberBuffer, 10 );
       uint16_t length = strlen( (char*)numberBuffer );
       memcpy( buffer2, numberBuffer, length );
+      */
     }
 
-    if( byoTomi->isPlayerTwoInNormalTime() ) {
-      buffer2[ 15 ]='n';
+    if( byoYomi->isPlayerTwoInNormalTime() ) {
+      //buffer2[ 15 ]='n';
+      lcd->printBottomRight( byoYomiUiNormalTime );
     }else {
+      lcd->sPrintBottomRight( byoYomiUiFormat, byoYomi->getPlayerTwoRemainingByoYomiPeriods() );
+      /*
       uint8_t numberBuffer[2];
       uint16_t remaining = byoTomi->getPlayerTwoRemainingByoYomiPeriods();
       Serial.println( remaining );
       itoa( remaining, (char*)numberBuffer, 10 );
       uint16_t length = strlen( (char*)numberBuffer );
       memcpy( &buffer2[16-length], numberBuffer, length );
+      */
     }
   }
   

@@ -3,9 +3,7 @@
 #define __HourGlassTimeControlUi_h__
 
 #include <avr/pgmspace.h>
-//#include <stdlib.h>
-#include "GameClock.h"
-#include "GameClockLcd.h"
+
 #include "TimeControlUi.h"
 #include "HourGlassTimeControl.h"
 

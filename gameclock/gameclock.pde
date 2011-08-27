@@ -36,7 +36,7 @@ GameClock gameClock;
 TimeControlUi *timeControls[] = {
   new SuddenDeathTimeControlUi(),
   new HourGlassTimeControlUi(),
-  //new ByoYomiTimeControlUi(),
+  new ByoYomiTimeControlUi(),
   //new CanadianByoYomiTimeControlUi(),
   //new FischerDelayTimeControlUi(),
   //new BronsteinDelayTimeControlUi(),
