@@ -11,7 +11,7 @@ class HourGlassTimeControl : public TimeControlBase {
   
 public:
 
-  HourGlassTimeControl(uint32_t playersTime) : TimeControlBase( playersTime, playersTime ) {
+  HourGlassTimeControl(uint32_t playersTime) : TimeControlBase( playersTime ) {
     lastTransferredTime = 0;
     lastTransferedTimeWasFromPlayerOne = false;
   }

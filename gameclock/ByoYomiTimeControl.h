@@ -31,7 +31,7 @@ class ByoYomiTimeControl : public TimeControlBase {
   
 public:
 
-  ByoYomiTimeControl(ByoYomiSetup byoYomiSetup) : TimeControlBase( byoYomiSetup.time, byoYomiSetup.time ), setup( byoYomiSetup ), playerOneState( &setup ), playerTwoState( &setup ) {
+  ByoYomiTimeControl(ByoYomiSetup byoYomiSetup) : TimeControlBase( byoYomiSetup.time ), setup( byoYomiSetup ), playerOneState( &setup ), playerTwoState( &setup ) {
   }
   
   virtual ~ByoYomiTimeControl() {
@@ -83,7 +83,7 @@ public:
 
 private:
 
-  ByoYomiTimeControl() : TimeControlBase( 0, 0 ), setup(), playerOneState( NULL ), playerTwoState( NULL ) {
+  ByoYomiTimeControl() : TimeControlBase( 0 ), setup(), playerOneState( NULL ), playerTwoState( NULL ) {
   }
 
   void onPlayerPlayed(TimeTracker *player, PlayerState *playerState) {

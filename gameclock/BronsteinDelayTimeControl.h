@@ -10,7 +10,7 @@ class BronsteinDelayTimeControl : public TimeControlBase {
   
 public:
 
-  BronsteinDelayTimeControl(uint32_t playersTime, uint32_t delay) : TimeControlBase( playersTime, playersTime ) {
+  BronsteinDelayTimeControl(uint32_t playersTime, uint32_t delay) : TimeControlBase( playersTime ) {
     this->delay = delay;
   }
   

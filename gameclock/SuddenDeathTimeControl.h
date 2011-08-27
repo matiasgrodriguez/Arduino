@@ -8,7 +8,7 @@ class SuddenDeathTimeControl : public TimeControlBase {
   
 public:
 
-  SuddenDeathTimeControl(uint32_t playersTime) : TimeControlBase( playersTime, playersTime ) {
+  SuddenDeathTimeControl(uint32_t playersTime) : TimeControlBase( playersTime ) {
   }
 
 };

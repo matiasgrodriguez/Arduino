@@ -9,13 +9,12 @@ class TimeControlBase : public TimeControl {
 protected:
 
   TimeTracker *playerOne, *playerTwo;
-  uint32_t playerOneInitialTime, playerTwoInitialTime;
+  uint32_t playersInitialTime;
   bool playerOneWon, playerTwoWon;
 
-  TimeControlBase(uint32_t playerOneInitialTime, uint32_t playerTwoInitialTime) {
+  TimeControlBase(uint32_t playersInitialTime) {
     playerOne = playerTwo = NULL;
-    this->playerOneInitialTime = playerOneInitialTime;
-    this->playerTwoInitialTime = playerTwoInitialTime;
+    this->playersInitialTime = playersInitialTime;
     playerOneWon = playerTwoWon = false;
   }
 
@@ -28,8 +27,8 @@ public:
     this->playerOne = playerOne;
     this->playerTwo = playerTwo;
     
-    playerOne->setTime( playerOneInitialTime );
-    playerTwo->setTime( playerTwoInitialTime );
+    playerOne->setTime( playersInitialTime );
+    playerTwo->setTime( playersInitialTime );
   }
   
   virtual void onPlayerOneBeganToPlay() {

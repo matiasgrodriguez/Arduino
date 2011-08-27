@@ -10,7 +10,7 @@ class FischerDelayTimeControl : public TimeControlBase {
   
 public:
 
-  FischerDelayTimeControl(uint32_t playersTime, uint32_t playBonus) : TimeControlBase( playersTime, playersTime ) {
+  FischerDelayTimeControl(uint32_t playersTime, uint32_t playBonus) : TimeControlBase( playersTime ) {
     bonus = playBonus;
   }
   
