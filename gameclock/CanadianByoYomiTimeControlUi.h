@@ -4,6 +4,7 @@
 
 #include <avr/pgmspace.h>
 #include <stdlib.h>
+
 #include "TimeControlUi.h"
 #include "ByoYomiTimeControl.h"
 
@@ -17,6 +18,9 @@ const prog_char canadianByoYomiOption4[] PROGMEM = "IGS Panda       1m +25mov in
 const prog_char *canadianByoYomiOptions[] PROGMEM = {
   canadianByoYomiOption1, canadianByoYomiOption2, canadianByoYomiOption3, canadianByoYomiOption4
 };
+
+const prog_char canadianByoYomiUiNormalTime[] PROGMEM = "normal";
+const prog_char canadianByoYomiUiFormat[] PROGMEM = "%d";
 
 class CanadianByoYomiTimeControlUi : public TimeControlUi {
   
@@ -76,28 +80,23 @@ public:
     return new ByoYomiTimeControl( byoYomiSetup );
   }
   
-  virtual void render(Clock *clock, TimeControl *timeControl, uint8_t *buffer1, uint8_t *buffer2) {
-    formatTime( timeControl->getPlayerOneTime( clock ), &buffer1[  0 ] );
-    formatTime( timeControl->getPlayerTwoTime( clock ), &buffer1[ 11 ] );
-    ByoYomiTimeControl *canadian = ( ByoYomiTimeControl* )timeControl;
+  virtual void renderGame(GameClock *gameClock, GameClockLcd *lcd) {
+    ByoYomiTimeControl *canadian = ( ByoYomiTimeControl* )gameClock->getTimeControl();
+    lcd->printTopLeftTime( canadian->getPlayerOneTime( gameClock->getClock() ) );
+    lcd->printTopRightTime( canadian->getPlayerTwoTime( gameClock->getClock() ) );
+    
     uint8_t numberBuffer[3];
     
     if( canadian->isPlayerOneInNormalTime() ) {
-      buffer2[ 0 ]='n';
+      lcd->printBottomLeft( canadianByoYomiUiNormalTime );
     }else {
-      uint16_t remaining = canadian->getPlayerOneRemainingNumberOfPlays();
-      itoa( remaining, (char*)numberBuffer, 10 );
-      uint16_t length = strlen( (char*)numberBuffer );
-      memcpy( buffer2, numberBuffer, length );
+      lcd->sPrintBottomLeft( canadianByoYomiUiFormat, canadian->getPlayerOneRemainingNumberOfPlays() );
     }
     
     if( canadian->isPlayerTwoInNormalTime() ) {
-      buffer2[ 15 ]='n';
+      lcd->printBottomRight( canadianByoYomiUiNormalTime );
     }else {
-      uint16_t remaining = canadian->getPlayerTwoRemainingNumberOfPlays();
-      itoa( remaining, (char*)numberBuffer, 10 );
-      uint16_t length = strlen( (char*)numberBuffer );
-      memcpy( &buffer2[16-length], numberBuffer, length );
+      lcd->sPrintBottomRight( canadianByoYomiUiFormat, canadian->getPlayerTwoRemainingNumberOfPlays() );
     }
   }
   

@@ -37,7 +37,7 @@ TimeControlUi *timeControls[] = {
   new SuddenDeathTimeControlUi(),
   new HourGlassTimeControlUi(),
   new ByoYomiTimeControlUi(),
-  //new CanadianByoYomiTimeControlUi(),
+  new CanadianByoYomiTimeControlUi(),
   //new FischerDelayTimeControlUi(),
   //new BronsteinDelayTimeControlUi(),
   NULL

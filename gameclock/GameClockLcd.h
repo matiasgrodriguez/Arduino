@@ -69,14 +69,14 @@ public:
     va_list body;
     va_start( body, format );
     sPrint( buffer2, Left, format, body );
-    va_end(body);
+    va_end( body );
   }
 
   void sPrintBottomCenter(const prog_char *format, ...) {
     va_list body;
     va_start( body, format );
     sPrint( buffer2, Center, format, body );
-    va_end(body);
+    va_end( body );
   }
 
   void sPrintBottomRight(const prog_char *format, ...) {
