@@ -100,28 +100,12 @@ public:
       lcd->printBottomLeft( byoYomiUiNormalTime );
     }else {
       lcd->sPrintBottomLeft( byoYomiUiFormat, byoYomi->getPlayerOneRemainingByoYomiPeriods() );
-      /*
-      uint8_t numberBuffer[2];
-      uint16_t remaining = byoTomi->getPlayerOneRemainingByoYomiPeriods();
-      itoa( remaining, (char*)numberBuffer, 10 );
-      uint16_t length = strlen( (char*)numberBuffer );
-      memcpy( buffer2, numberBuffer, length );
-      */
     }
 
     if( byoYomi->isPlayerTwoInNormalTime() ) {
-      //buffer2[ 15 ]='n';
       lcd->printBottomRight( byoYomiUiNormalTime );
     }else {
       lcd->sPrintBottomRight( byoYomiUiFormat, byoYomi->getPlayerTwoRemainingByoYomiPeriods() );
-      /*
-      uint8_t numberBuffer[2];
-      uint16_t remaining = byoTomi->getPlayerTwoRemainingByoYomiPeriods();
-      Serial.println( remaining );
-      itoa( remaining, (char*)numberBuffer, 10 );
-      uint16_t length = strlen( (char*)numberBuffer );
-      memcpy( &buffer2[16-length], numberBuffer, length );
-      */
     }
   }
   
