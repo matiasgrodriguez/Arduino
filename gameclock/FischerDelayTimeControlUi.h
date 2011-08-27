@@ -20,7 +20,7 @@ const prog_char *fischerDelayOptions[] PROGMEM = {
   fischerDelayOption1, fischerDelayOption2, fischerDelayOption3, fischerDelayOption4, fischerDelayOption5, fischerDelayOption6
 };
 
-const prog_char FISCHER_FORMAT[] PROGMEM = "+%d sec";
+const prog_char fischerDelayFormat[] PROGMEM = "+%d sec";
 
 class FischerDelayTimeControlUi : public TimeControlUi {
   
@@ -78,15 +78,12 @@ public:
     return new FischerDelayTimeControl( time, bonus );
   }
   
-  virtual void render(Clock *clock, TimeControl *timeControl, uint8_t *buffer1, uint8_t *buffer2) {
-    formatTime( timeControl->getPlayerOneTime( clock ), &buffer1[  0 ] );
-    formatTime( timeControl->getPlayerTwoTime( clock ), &buffer1[ 11 ] );
+  virtual void renderGame(GameClock *gameClock, GameClockLcd *lcd) {
+    FischerDelayTimeControl *fischerDelay = ( FischerDelayTimeControl* )gameClock->getTimeControl();
+    lcd->printTopLeftTime( fischerDelay->getPlayerOneTime( gameClock->getClock() ) );
+    lcd->printTopRightTime( fischerDelay->getPlayerTwoTime( gameClock->getClock() ) );
     
-    FischerDelayTimeControl *fischerDelay = ( FischerDelayTimeControl* )timeControl;
-    char buffer[16];
-    sprintf_P( buffer, FISCHER_FORMAT, ( fischerDelay->getBonus() / 1000L ) );
-    uint16_t length = strlen( buffer );
-    memcpy( &buffer2[ ( 16 - length ) / 2 ], buffer, length ); //center on screen
+    lcd->sPrintBottomCenter( fischerDelayFormat, fischerDelay->getBonus() / 1000L );
   }
 
 };

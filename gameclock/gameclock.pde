@@ -38,7 +38,7 @@ TimeControlUi *timeControls[] = {
   new HourGlassTimeControlUi(),
   new ByoYomiTimeControlUi(),
   new CanadianByoYomiTimeControlUi(),
-  //new FischerDelayTimeControlUi(),
+  new FischerDelayTimeControlUi(),
   //new BronsteinDelayTimeControlUi(),
   NULL
 };
