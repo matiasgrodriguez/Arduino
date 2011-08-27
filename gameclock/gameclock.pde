@@ -1,5 +1,4 @@
 
-
 #include <LiquidCrystal.h>
 #include <MemoryFree.h>
 
@@ -72,13 +71,9 @@ void setup() {
     
   clock = new ArduinoClock();
   
-  //gameUiHandler.setTimeControlUi( timeControls[ 1 ] );
-  //currentUiHandler = &gameUiHandler;
   currentUiHandler = &selectTimeControlUiHandler;
 
   selectTimeControlOptionUiHandler.wire( &selectTimeControlUiHandler );
-
-  //gameClock.setup( clock, timeControls[ 1 ]->create( 0 ) );
 
   pinMode( 6, INPUT );
   pinMode( 7, INPUT );
