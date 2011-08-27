@@ -5,11 +5,15 @@
 #include <avr/pgmspace.h>
 #include "UiHandler.h"
 #include "TimeControlUi.h"
+#include "SelectTimeControlOptionUiHandler.h"
 
-extern PushButton playerOneButton, playerTwoButton;
+extern PushButton playerOneButton, playerTwoButton, selectButton, backButton;
 extern LiquidCrystal lcd;
 
 extern TimeControlUi *timeControls[];
+
+extern SelectTimeControlOptionUiHandler selectTimeControlOptionUiHandler;
+extern UiHandler *currentUiHandler;
 
 const prog_char SELECT[] PROGMEM = "Select game:";
 
@@ -29,6 +33,14 @@ public:
   virtual void tick(Clock *clock) {
     playerOneButton.tick( clock );
     playerTwoButton.tick( clock );
+    selectButton.tick( clock );
+    backButton.tick( clock );
+    
+    if( selectButton.wasPushed() ) {
+      selectTimeControlOptionUiHandler.setTimeControlUi( timeControls[ currentTimeControlUi ] );
+      currentUiHandler = &selectTimeControlOptionUiHandler;
+      return;
+    }
     
     if( playerOneButton.wasPushed() && currentTimeControlUi > 0 ) {
       currentTimeControlUi--;
@@ -36,6 +48,7 @@ public:
     if( playerTwoButton.wasPushed() && timeControls[ currentTimeControlUi + 1 ] != NULL ) {
       currentTimeControlUi++;
     }
+
   }
   
   virtual void render(Clock *clock){

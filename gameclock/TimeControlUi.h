@@ -13,7 +13,7 @@ public:
 
   virtual const prog_char *getName() = 0;
   virtual int16_t getNumberOfOptions() = 0;
-  virtual const prog_uint8_t *getOption(int16_t option) = 0;
+  virtual const prog_char *getOption(int16_t option) = 0;
   virtual TimeControl *create(int16_t option) = 0;
   
   virtual void render(Clock *clock, TimeControl *timeControl, uint8_t *buffer1, uint8_t *buffer2) = 0;

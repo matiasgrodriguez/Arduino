@@ -9,11 +9,11 @@
 
 const prog_char bronsteinDelayName[] PROGMEM = "Bronstein Delay";
 
-const prog_uint8_t bronsteinDelayOption1[] PROGMEM = "                  2 min + 12 sec";
-const prog_uint8_t bronsteinDelayOption2[] PROGMEM = "                  5 min + 12 sec";
-const prog_uint8_t bronsteinDelayOption3[] PROGMEM = "                 10 min + 10 sec";
+const prog_char bronsteinDelayOption1[] PROGMEM = "                  2 min + 12 sec";
+const prog_char bronsteinDelayOption2[] PROGMEM = "                  5 min + 12 sec";
+const prog_char bronsteinDelayOption3[] PROGMEM = "                 10 min + 10 sec";
 
-const prog_uint8_t *bronsteinDelayOptions[] PROGMEM = {
+const prog_char *bronsteinDelayOptions[] PROGMEM = {
   bronsteinDelayOption1, bronsteinDelayOption2, bronsteinDelayOption3
 };
 
@@ -31,8 +31,13 @@ public:
     return 3;
   }
   
-  virtual const prog_uint8_t *getOption(int16_t option) {
-    return bronsteinDelayOptions[ option ];
+  virtual const prog_char *getOption(int16_t option) {
+    switch( option ) {
+      case 0: return bronsteinDelayOptions[ option ];
+      case 1: return bronsteinDelayOptions[ option ];
+      case 2: return bronsteinDelayOptions[ option ];
+    }
+    return bronsteinDelayOptions[ 0 ];
   }
   
   virtual TimeControl *create(int16_t option) { 

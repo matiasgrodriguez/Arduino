@@ -9,12 +9,12 @@
 
 const prog_char canadianByoYomiName[] PROGMEM = "Canadian ByoYomi";
 
-const prog_uint8_t canadianByoYomiOption1[] PROGMEM = "IGS Panda       1m +25mov in 15m";
-const prog_uint8_t canadianByoYomiOption2[] PROGMEM = "IGS Panda       1m +25mov in 10m";
-const prog_uint8_t canadianByoYomiOption3[] PROGMEM = "IGS Panda       1m +25mov in  7m";
-const prog_uint8_t canadianByoYomiOption4[] PROGMEM = "IGS Panda       1m +25mov in  5m";
+const prog_char canadianByoYomiOption1[] PROGMEM = "IGS Panda       1m +25mov in 15m";
+const prog_char canadianByoYomiOption2[] PROGMEM = "IGS Panda       1m +25mov in 10m";
+const prog_char canadianByoYomiOption3[] PROGMEM = "IGS Panda       1m +25mov in  7m";
+const prog_char canadianByoYomiOption4[] PROGMEM = "IGS Panda       1m +25mov in  5m";
 
-const prog_uint8_t *canadianByoYomiOptions[] PROGMEM = {
+const prog_char *canadianByoYomiOptions[] PROGMEM = {
   canadianByoYomiOption1, canadianByoYomiOption2, canadianByoYomiOption3, canadianByoYomiOption4
 };
 
@@ -30,8 +30,14 @@ public:
     return 4;
   }
   
-  virtual const prog_uint8_t *getOption(int16_t option) {
-    return canadianByoYomiOptions[ option ];
+  virtual const prog_char *getOption(int16_t option) {
+    switch( option ) {
+      case 0: return canadianByoYomiOptions[ option ];
+      case 1: return canadianByoYomiOptions[ option ];
+      case 2: return canadianByoYomiOptions[ option ];
+      case 3: return canadianByoYomiOptions[ option ];
+    }
+    return canadianByoYomiOptions[ 0 ];
   }
   
   virtual TimeControl *create(int16_t option) {

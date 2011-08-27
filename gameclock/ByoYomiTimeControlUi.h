@@ -8,11 +8,11 @@
 
 const prog_char byoYomiName[] PROGMEM = "Byo Yomi";
 
-const prog_uint8_t byoYomiOption1[] PROGMEM = "KGS MEDIUM           25m +5(30s)";
-const prog_uint8_t byoYomiOption2[] PROGMEM = "KGS FAST             10m +5(20s)";
-const prog_uint8_t byoYomiOption3[] PROGMEM = "KGS BLITZ             1m +3(10s)";
+const prog_char byoYomiOption1[] PROGMEM = "KGS MEDIUM           25m +5(30s)";
+const prog_char byoYomiOption2[] PROGMEM = "KGS FAST             10m +5(20s)";
+const prog_char byoYomiOption3[] PROGMEM = "KGS BLITZ             1m +3(10s)";
 
-const prog_uint8_t *byoYomiOptions[] PROGMEM = {
+const prog_char *byoYomiOptions[] PROGMEM = {
   byoYomiOption1, byoYomiOption2, byoYomiOption3
 };
 
@@ -28,8 +28,13 @@ public:
     return 3;
   }
   
-  virtual const prog_uint8_t *getOption(int16_t option) {
-    return byoYomiOptions[ option ];
+  virtual const prog_char *getOption(int16_t option) {
+    switch( option ) {
+      case 0: return byoYomiOptions[ option ];
+      case 1: return byoYomiOptions[ option ];
+      case 2: return byoYomiOptions[ option ];
+    }
+    return byoYomiOptions[ 0 ];
   }
   
   virtual TimeControl *create(int16_t option) {

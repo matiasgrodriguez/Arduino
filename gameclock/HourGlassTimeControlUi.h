@@ -9,13 +9,13 @@
 
 const prog_char hourGlassName[] PROGMEM = "Hour Glass";
 
-const prog_uint8_t hourGlassOption1[] PROGMEM = "                          30 sec";
-const prog_uint8_t hourGlassOption2[] PROGMEM = "                           1 min";
-const prog_uint8_t hourGlassOption3[] PROGMEM = "                           2 min";
-const prog_uint8_t hourGlassOption4[] PROGMEM = "                           5 min";
-const prog_uint8_t hourGlassOption5[] PROGMEM = "                          10 min";
+const prog_char hourGlassOption1[] PROGMEM = "                          30 sec";
+const prog_char hourGlassOption2[] PROGMEM = "                           1 min";
+const prog_char hourGlassOption3[] PROGMEM = "                           2 min";
+const prog_char hourGlassOption4[] PROGMEM = "                           5 min";
+const prog_char hourGlassOption5[] PROGMEM = "                          10 min";
 
-const prog_uint8_t *hourGlassOptions[] PROGMEM = {
+const prog_char *hourGlassOptions[] PROGMEM = {
   hourGlassOption1, hourGlassOption2, hourGlassOption3, hourGlassOption4, hourGlassOption5
 };
 
@@ -33,8 +33,15 @@ public:
     return 5;
   }
   
-  virtual const prog_uint8_t *getOption(int16_t option) {
-    return hourGlassOptions[ option ];
+  virtual const prog_char *getOption(int16_t option) {
+    switch( option ) {
+      case 0: return hourGlassOptions[ option ];
+      case 1: return hourGlassOptions[ option ];
+      case 2: return hourGlassOptions[ option ];
+      case 3: return hourGlassOptions[ option ];
+      case 4: return hourGlassOptions[ option ];
+    }
+    return hourGlassOptions[ 0 ];
   }
   
   virtual TimeControl *create(int16_t option) { 

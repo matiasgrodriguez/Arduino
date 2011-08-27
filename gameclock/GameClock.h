@@ -86,7 +86,7 @@ private:
 
   bool isPlayerOnePlaying() {
     return currentPlayer == &playerOne;
-  }
+  }  
   
   void onPlayerOneBeginToPlay() {
     currentPlayer = &playerOne;

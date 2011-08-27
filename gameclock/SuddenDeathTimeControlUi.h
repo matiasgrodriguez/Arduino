@@ -9,15 +9,15 @@
 
 const prog_char suddenDeathName[] PROGMEM = "Sudden Death";
 
-const prog_uint8_t suddenDeathOption1[] PROGMEM = "                          30 sec";
-const prog_uint8_t suddenDeathOption2[] PROGMEM = "                           1 min";
-const prog_uint8_t suddenDeathOption3[] PROGMEM = "                           5 min";
-const prog_uint8_t suddenDeathOption4[] PROGMEM = "                          10 min";
-const prog_uint8_t suddenDeathOption5[] PROGMEM = "                          20 min";
-const prog_uint8_t suddenDeathOption6[] PROGMEM = "                          30 min";
-const prog_uint8_t suddenDeathOption7[] PROGMEM = "                          1 hour";
+const prog_char suddenDeathOption1[] PROGMEM = "                          30 sec";
+const prog_char suddenDeathOption2[] PROGMEM = "                           1 min";
+const prog_char suddenDeathOption3[] PROGMEM = "                           5 min";
+const prog_char suddenDeathOption4[] PROGMEM = "                          10 min";
+const prog_char suddenDeathOption5[] PROGMEM = "                          20 min";
+const prog_char suddenDeathOption6[] PROGMEM = "                          30 min";
+const prog_char suddenDeathOption7[] PROGMEM = "                          1 hour";
 
-const prog_uint8_t *suddenDeathOptions[] PROGMEM = {
+const prog_char *suddenDeathOptions[] PROGMEM = {
   suddenDeathOption1, suddenDeathOption2, suddenDeathOption3, suddenDeathOption4, suddenDeathOption5, suddenDeathOption6, suddenDeathOption7
 };
 
@@ -33,8 +33,18 @@ public:
     return 7;
   }
   
-  virtual const prog_uint8_t *getOption(int16_t option) {
-    return suddenDeathOptions[ option ];
+  virtual const prog_char *getOption(int16_t option) {
+    switch( option ) {
+      case 0: return suddenDeathOptions[ option ];
+      case 1: return suddenDeathOptions[ option ];
+      case 2: return suddenDeathOptions[ option ];
+      case 3: return suddenDeathOptions[ option ];
+      case 4: return suddenDeathOptions[ option ];
+      case 5: return suddenDeathOptions[ option ];
+      case 6: return suddenDeathOptions[ option ];
+    }
+    return suddenDeathOptions[ 0 ];
+
   }
   
   virtual TimeControl *create(int16_t option) { 

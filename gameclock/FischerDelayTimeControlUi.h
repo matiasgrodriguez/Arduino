@@ -9,14 +9,14 @@
 
 const prog_char fischerDelayName[] PROGMEM = "Fischer Delay";
 
-const prog_uint8_t fischerDelayOption1[] PROGMEM = "Chess Cube        10 sec + 1 sec";
-const prog_uint8_t fischerDelayOption2[] PROGMEM = "Chess Cube         1 min + 1 sec";
-const prog_uint8_t fischerDelayOption3[] PROGMEM = "Chess Cube        2 min + 12 sec";
-const prog_uint8_t fischerDelayOption4[] PROGMEM = "Chess Cube         3 min + 2 sec";
-const prog_uint8_t fischerDelayOption5[] PROGMEM = "Chess Cube         5 min + 3 sec";
-const prog_uint8_t fischerDelayOption6[] PROGMEM = "Chess Cube       25 min + 10 sec";
+const prog_char fischerDelayOption1[] PROGMEM = "Chess Cube        10 sec + 1 sec";
+const prog_char fischerDelayOption2[] PROGMEM = "Chess Cube         1 min + 1 sec";
+const prog_char fischerDelayOption3[] PROGMEM = "Chess Cube        2 min + 12 sec";
+const prog_char fischerDelayOption4[] PROGMEM = "Chess Cube         3 min + 2 sec";
+const prog_char fischerDelayOption5[] PROGMEM = "Chess Cube         5 min + 3 sec";
+const prog_char fischerDelayOption6[] PROGMEM = "Chess Cube       25 min + 10 sec";
 
-const prog_uint8_t *fischerDelayOptions[] PROGMEM = {
+const prog_char *fischerDelayOptions[] PROGMEM = {
   fischerDelayOption1, fischerDelayOption2, fischerDelayOption3, fischerDelayOption4, fischerDelayOption5, fischerDelayOption6
 };
 
@@ -34,8 +34,16 @@ public:
     return 6;
   }
   
-  virtual const prog_uint8_t *getOption(int16_t option) {
-    return fischerDelayOptions[ option ];
+  virtual const prog_char *getOption(int16_t option) {
+    switch( option ) {
+      case 0: return fischerDelayOptions[ option ];
+      case 1: return fischerDelayOptions[ option ];
+      case 2: return fischerDelayOptions[ option ];
+      case 3: return fischerDelayOptions[ option ];
+      case 4: return fischerDelayOptions[ option ];
+      case 5: return fischerDelayOptions[ option ];
+    }
+    return fischerDelayOptions[ 0 ];
   }
   
   virtual TimeControl *create(int16_t option) { 
