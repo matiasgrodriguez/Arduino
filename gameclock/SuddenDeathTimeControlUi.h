@@ -4,6 +4,7 @@
 
 #include <avr/pgmspace.h>
 #include <stdlib.h>
+
 #include "TimeControlUi.h"
 #include "SuddenDeathTimeControl.h"
 
@@ -75,9 +76,10 @@ public:
     return new SuddenDeathTimeControl( time );
   }
   
-  virtual void render(Clock *clock, TimeControl *timeControl, uint8_t *buffer1, uint8_t *buffer2) {
-    formatTime( timeControl->getPlayerOneTime( clock ), &buffer1[  0 ] );
-    formatTime( timeControl->getPlayerTwoTime( clock ), &buffer1[ 11 ] );
+  virtual void renderGame(GameClock *gameClock, GameClockLcd *lcd) {
+    TimeControl *tc = gameClock->getTimeControl();
+    lcd->printTopLeftTime( tc->getPlayerOneTime( gameClock->getClock() ) );
+    lcd->printTopRightTime( tc->getPlayerTwoTime( gameClock->getClock() ) );
   }
   
 };

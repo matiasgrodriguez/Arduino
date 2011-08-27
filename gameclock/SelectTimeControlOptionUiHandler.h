@@ -4,11 +4,13 @@
 
 #include <avr/pgmspace.h>
 #include "UiHandler.h"
-#include "TimeControlUi.h"
+#include "GameClock.h"
+#include "GameClockLcd.h"
+#include "GameUiHandler.h"
 #include "GameUiHandler.h"
 
 extern PushButton playerOneButton, playerTwoButton, selectButton, backButton;
-extern LiquidCrystal lcd;
+extern GameClockLcd lcd2;
 
 extern GameClock gameClock;
 
@@ -58,23 +60,9 @@ public:
   }
   
   virtual void render(Clock *clock){
-    uint8_t buffer[ 34 ];
-    for(int i = 0; i < 34; ++i) {
-      buffer[ i ] = ' ';
-    }
-    buffer[ 16 ] = '\0';
-    buffer[ 33 ] = '\0';
-    
-    char nameBuffer[33];
-    const prog_char *option = timeControlUi->getOption( currentOption );
-    memcpy_P( nameBuffer, option, 33 );
-    memcpy( buffer, nameBuffer, 16 );
-    memcpy( &buffer[ 17 ], &nameBuffer[16], 16 );
-    
-    lcd.setCursor( 0, 0 );
-    lcd.print( (const char*)buffer );
-    lcd.setCursor( 0, 1 );
-    lcd.print( (const char*)&buffer[17] );
+    lcd2.beginRender();
+    lcd2.printWholeScreen( timeControlUi->getOption( currentOption ) );
+    lcd2.endRender();
   }
   
   void setTimeControlUi(TimeControlUi *timeControlUi) {

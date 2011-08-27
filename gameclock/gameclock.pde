@@ -9,6 +9,7 @@
 
 #include "GameClock.h"
 #include "PushButton.h"
+#include "GameClockLcd.h"
 
 #include "SelectTimeControlUiHandler.h"
 #include "SelectTimeControlOptionUiHandler.h"
@@ -22,8 +23,8 @@
 #include "SuddenDeathTimeControlUi.h"
 //#include "NormalDelayTimeControlUi.h"
 
-
 //Hardware:
+GameClockLcd lcd2(12, 11, 5, 4, 3, 2);
 PushButton playerOneButton( 9 ), playerTwoButton( 8 ), selectButton( 7 ), backButton( 6 );
 LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
 
@@ -35,10 +36,10 @@ GameClock gameClock;
 TimeControlUi *timeControls[] = {
   new SuddenDeathTimeControlUi(),
   new HourGlassTimeControlUi(),
-  new ByoYomiTimeControlUi(),
-  new CanadianByoYomiTimeControlUi(),
-  new FischerDelayTimeControlUi(),
-  new BronsteinDelayTimeControlUi(),
+  //new ByoYomiTimeControlUi(),
+  //new CanadianByoYomiTimeControlUi(),
+  //new FischerDelayTimeControlUi(),
+  //new BronsteinDelayTimeControlUi(),
   NULL
 };
 
@@ -83,6 +84,21 @@ void setup() {
 }
 
 void loop() {
+  /*
+  lcd2.beginRender();
+  int status = digitalRead( 6 );
+  if( status ) {
+    //lcd2.printTopLeft( timeControls[ 0 ]->getName() );
+    //lcd2.printTopCenter( timeControls[ 0 ]->getName() );
+    //lcd2.printBottomLeft( timeControls[ 0 ]->getName() );
+    //lcd2.printBottomCenter( timeControls[ 0 ]->getName() );
+    lcd2.printWholeScreen( timeControls[ 0 ]->getOption( status ) );
+  } else {
+    //lcd2.printTopRight( timeControls[ 0 ]->getName() );
+    lcd2.printBottomRight( timeControls[ 0 ]->getName() );
+  }
+  lcd2.endRender();
+  */
   currentUiHandler->tick( clock );
   currentUiHandler->render( clock );
   

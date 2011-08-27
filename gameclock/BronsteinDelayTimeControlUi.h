@@ -60,7 +60,7 @@ public:
     return new BronsteinDelayTimeControl( time, delay );
   }
   
-  virtual void render(Clock *clock, TimeControl *timeControl, uint8_t *buffer1, uint8_t *buffer2) {
+  virtual void renderGame(Clock *clock, TimeControl *timeControl, uint8_t *buffer1, uint8_t *buffer2) {
     formatTime( timeControl->getPlayerOneTime( clock ), &buffer1[  0 ] );
     formatTime( timeControl->getPlayerTwoTime( clock ), &buffer1[ 11 ] );
     

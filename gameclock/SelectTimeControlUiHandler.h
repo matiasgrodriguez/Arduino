@@ -8,14 +8,14 @@
 #include "SelectTimeControlOptionUiHandler.h"
 
 extern PushButton playerOneButton, playerTwoButton, selectButton, backButton;
-extern LiquidCrystal lcd;
+extern GameClockLcd lcd2;
 
 extern TimeControlUi *timeControls[];
 
 extern SelectTimeControlOptionUiHandler selectTimeControlOptionUiHandler;
 extern UiHandler *currentUiHandler;
 
-const prog_char SELECT[] PROGMEM = "Select game:";
+const prog_char SELECT_TIME_CONTROL_UI_HANDLER_MESSAGE[] PROGMEM = "Select game:";
 
 class SelectTimeControlUiHandler : public UiHandler {
   
@@ -52,31 +52,15 @@ public:
   }
   
   virtual void render(Clock *clock){
-    uint8_t buffer[ 34 ];
-    for(int i = 0; i < 34; ++i) {
-      buffer[ i ] = ' ';
-    }
-    buffer[ 16 ] = '\0';
-    buffer[ 33 ] = '\0';
+    lcd2.beginRender();
     
     TimeControlUi *tc = timeControls[ currentTimeControlUi ];
-
+    lcd2.printTopLeft( SELECT_TIME_CONTROL_UI_HANDLER_MESSAGE );
     if( tc != NULL ) {
-      char nameBuffer[17];
-      strcpy_P( nameBuffer, SELECT );
-      int16_t length = strlen( nameBuffer );
-      memcpy( buffer, nameBuffer, length );
-      
-      const prog_char *name = tc->getName();
-      strcpy_P( nameBuffer, name );
-      length = strlen( nameBuffer );
-      memcpy( &buffer[ 33 - length ], nameBuffer, length );
+      lcd2.printBottomRight( tc->getName() );
     }
     
-    lcd.setCursor( 0, 0 );
-    lcd.print( (const char*)buffer );
-    lcd.setCursor( 0, 1 );
-    lcd.print( (const char*)&buffer[17] );
+    lcd2.endRender();
   }
 
   

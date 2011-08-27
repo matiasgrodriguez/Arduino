@@ -3,7 +3,9 @@
 #define __HourGlassTimeControlUi_h__
 
 #include <avr/pgmspace.h>
-#include <stdlib.h>
+//#include <stdlib.h>
+#include "GameClock.h"
+#include "GameClockLcd.h"
 #include "TimeControlUi.h"
 #include "HourGlassTimeControl.h"
 
@@ -66,16 +68,13 @@ public:
     return new HourGlassTimeControl( time );
   }
   
-  virtual void render(Clock *clock, TimeControl *timeControl, uint8_t *buffer1, uint8_t *buffer2) {
-    formatTime( timeControl->getPlayerOneTime( clock ), &buffer1[  0 ] );
-    formatTime( timeControl->getPlayerTwoTime( clock ), &buffer1[ 11 ] );
-    
-    HourGlassTimeControl *hourGlass = ( HourGlassTimeControl* )timeControl;
+  virtual void renderGame(GameClock *gameClock, GameClockLcd *lcd) {
+    HourGlassTimeControl *hourGlass = ( HourGlassTimeControl* )gameClock->getTimeControl();
+    lcd->printTopLeftTime( hourGlass->getPlayerOneTime( gameClock->getClock() ) );
+    lcd->printTopRightTime( hourGlass->getPlayerTwoTime( gameClock->getClock() ) );
+
     if( hourGlass->getLastTransferedTime() != 0 ) {
-      char buffer[16];
-      sprintf_P( buffer, HOURGLASS_FORMAT, ( hourGlass->wasTimeTransferredFromPlayerOne() ? '>' : '<' ), ( hourGlass->getLastTransferedTime() / 1000L ) );
-      uint16_t length = strlen( buffer );
-      memcpy( &buffer2[ ( 16 - length ) / 2 ], buffer, length ); //center on screen
+      lcd->sPrintBottomLeft( HOURGLASS_FORMAT, ( hourGlass->wasTimeTransferredFromPlayerOne() ? '>' : '<' ), ( hourGlass->getLastTransferedTime() / 1000L ) );
     }
   }
   

@@ -3,7 +3,9 @@
 #define __TimeControlUi_h__
 
 #include <avr/pgmspace.h>
-#include "TimeControl.h"
+
+#include "GameClock.h"
+#include "GameClockLcd.h"
 
 #define UI_BUFFER_SIZE 32
 
@@ -16,7 +18,7 @@ public:
   virtual const prog_char *getOption(int16_t option) = 0;
   virtual TimeControl *create(int16_t option) = 0;
   
-  virtual void render(Clock *clock, TimeControl *timeControl, uint8_t *buffer1, uint8_t *buffer2) = 0;
+  virtual void renderGame(GameClock *gameClock, GameClockLcd *lcd) = 0;
   
 protected:
   
