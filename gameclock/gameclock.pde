@@ -27,7 +27,7 @@ GameClockLcd lcd2(12, 11, 5, 4, 3, 2);
 PushButton playerOneButton( 9 ), playerTwoButton( 8 ), okButton( 7 ), backButton( 6 );
 
 //GameClock...
-Clock *clock;
+ArduinoClock clock;
 GameClock gameClock;
 
 //TimeControls:
@@ -52,7 +52,6 @@ void setup() {
   Serial.println( "-= :) =-" );
   Serial.println( sizeof(GameClock) );
   Serial.println( sizeof(ByoYomiTimeControl) );
-  Serial.println( sizeof(PushButton) );
 
   lcd2.init();
   playerOneButton.init();
@@ -60,7 +59,7 @@ void setup() {
   okButton.init();
   backButton.init();
 
-  clock = new ArduinoClock();
+  //clock = new ArduinoClock();
   
   selectTimeControlOptionUiHandler.wire( &selectTimeControlUiHandler );
   currentUiHandler = &selectTimeControlUiHandler;
@@ -69,8 +68,8 @@ void setup() {
 }
 
 void loop() {
-  currentUiHandler->tick( clock );
-  currentUiHandler->render( clock );
+  currentUiHandler->tick( &clock );
+  currentUiHandler->render( &clock );
   
   delay( 50 );
 }
