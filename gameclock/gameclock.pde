@@ -73,7 +73,5 @@ void setup() {
 void loop() {
   currentUiHandler->tick( &clock );
   currentUiHandler->render( &clock );
-  
-  delay( 50 );
 }
 

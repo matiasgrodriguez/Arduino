@@ -12,12 +12,19 @@ class GameClockLcd {
   enum Alignment { Left, Center, Right };
   
   LiquidCrystal lcd;
-  char buffer1[ GAME_CLOCK_LCD_BUFFER_SIZE ];
-  char buffer2[ GAME_CLOCK_LCD_BUFFER_SIZE ];
+  char buffer1A[ GAME_CLOCK_LCD_BUFFER_SIZE ];
+  char buffer1B[ GAME_CLOCK_LCD_BUFFER_SIZE ];
+  char buffer2A[ GAME_CLOCK_LCD_BUFFER_SIZE ];
+  char buffer2B[ GAME_CLOCK_LCD_BUFFER_SIZE ];
+
+  char *buffer1;
+  char *buffer2;
   
 public:
 
   GameClockLcd(uint8_t rs, uint8_t enable, uint8_t d0, uint8_t d1, uint8_t d2, uint8_t d3) : lcd( rs, enable, d0, d1, d2, d3 ) {
+    buffer1 = buffer1A;
+    buffer2 = buffer2A;
   }
   
   void init() {
@@ -25,6 +32,7 @@ public:
   }
   
   void beginRender() {
+    swapBuffers();
     clearBuffer( buffer1 );
     clearBuffer( buffer2 );
   }
@@ -88,10 +96,14 @@ public:
   }
 
   void endRender() {
-    lcd.setCursor( 0, 0 );
-    lcd.print( buffer1 );
-    lcd.setCursor( 0, 1 );
-    lcd.print( buffer2 );
+    if( isBufferDirty( buffer1A, buffer1B ) ) {
+      lcd.setCursor( 0, 0 );
+      lcd.print( buffer1 );
+    }
+    if( isBufferDirty( buffer2A, buffer2B ) ) {
+      lcd.setCursor( 0, 1 );
+      lcd.print( buffer2 );
+    }
   }
   
 private:
@@ -148,8 +160,21 @@ private:
     vsprintf_P(buffer, format, body);
     printAlignedUsingLocalBuffer( buffer, screenBuffer, aligment );
   }
-
   
+  void swapBuffers() {
+    buffer1 = buffer1 != buffer1A ? buffer1A : buffer1B;
+    buffer2 = buffer2 != buffer2A ? buffer2A : buffer2B;
+  }
+  
+  bool isBufferDirty(char *bufferA, char *bufferB) {
+    for(int16_t i = 0; i < GAME_CLOCK_LCD_BUFFER_SIZE; ++ i ) {
+      if( bufferA[ i ] != bufferB[ i ] ) {
+        return true;
+      }
+    }
+    return false;
+  }
+
 };
 
 #endif
