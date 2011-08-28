@@ -55,6 +55,7 @@ void setup() {
   Serial.print( "ByoYomiTimeControl: " );Serial.println( sizeof( ByoYomiTimeControl ) );
   Serial.print( "FischerDelayTimeControl: " );Serial.println( sizeof( FischerDelayTimeControl ) );
   Serial.print( "BronsteinDelayTimeControl: " );Serial.println( sizeof( BronsteinDelayTimeControl ) );
+  Serial.print( "GameClockLcd: " );Serial.println( sizeof( GameClockLcd ) );
   */
 
   lcd2.init();
