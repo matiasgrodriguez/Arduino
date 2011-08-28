@@ -4,7 +4,6 @@
 
 #include "base.h"
 
-
 #include "GameClock.h"
 #include "PushButton.h"
 #include "GameClockLcd.h"
@@ -49,22 +48,25 @@ GameUiHandler gameUiHandler;
 
 void setup() {
   Serial.begin(9600);
-  Serial.println( "-= :) =-" );
-  Serial.println( sizeof(GameClock) );
-  Serial.println( sizeof(ByoYomiTimeControl) );
+  /*
+  Serial.print( "GameClock: " );Serial.println( sizeof(GameClock) );
+  Serial.print( "SuddenDeathTimeControl: " );Serial.println( sizeof( SuddenDeathTimeControl ) );
+  Serial.print( "HourGlassTimeControl: " );Serial.println( sizeof( HourGlassTimeControl ) );
+  Serial.print( "ByoYomiTimeControl: " );Serial.println( sizeof( ByoYomiTimeControl ) );
+  Serial.print( "FischerDelayTimeControl: " );Serial.println( sizeof( FischerDelayTimeControl ) );
+  Serial.print( "BronsteinDelayTimeControl: " );Serial.println( sizeof( BronsteinDelayTimeControl ) );
+  */
 
   lcd2.init();
   playerOneButton.init();
   playerTwoButton.init();
   okButton.init();
   backButton.init();
-
-  //clock = new ArduinoClock();
   
   selectTimeControlOptionUiHandler.wire( &selectTimeControlUiHandler );
   currentUiHandler = &selectTimeControlUiHandler;
 
-  Serial.print( "freeMem=" );Serial.println(freeMemory());  
+  Serial.print( "mem:" );Serial.println( freeMemory() ); 
 }
 
 void loop() {
