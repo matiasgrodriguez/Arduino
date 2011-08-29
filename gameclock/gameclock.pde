@@ -48,15 +48,6 @@ GameUiHandler gameUiHandler;
 
 void setup() {
   Serial.begin(9600);
-  /*
-  Serial.print( "GameClock: " );Serial.println( sizeof(GameClock) );
-  Serial.print( "SuddenDeathTimeControl: " );Serial.println( sizeof( SuddenDeathTimeControl ) );
-  Serial.print( "HourGlassTimeControl: " );Serial.println( sizeof( HourGlassTimeControl ) );
-  Serial.print( "ByoYomiTimeControl: " );Serial.println( sizeof( ByoYomiTimeControl ) );
-  Serial.print( "FischerDelayTimeControl: " );Serial.println( sizeof( FischerDelayTimeControl ) );
-  Serial.print( "BronsteinDelayTimeControl: " );Serial.println( sizeof( BronsteinDelayTimeControl ) );
-  Serial.print( "GameClockLcd: " );Serial.println( sizeof( GameClockLcd ) );
-  */
 
   lcd2.init();
   playerOneButton.init();

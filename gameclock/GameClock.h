@@ -13,6 +13,7 @@ class GameClock {
   TimeTrackerImpl playerOne, playerTwo;
   
   TimeTrackerImpl *currentPlayer;
+  bool paused;
   
 public:
 
@@ -20,6 +21,7 @@ public:
     clock = NULL;
     timeControl = NULL;
     currentPlayer = NULL;
+    paused = false;
   }
   
   virtual ~GameClock() {
@@ -33,7 +35,7 @@ public:
   }
   
   void tick() {
-    if( isOver() ) {
+    if( isPaused() || isOver() ) {
       return;
     }
     if( isPlayerOnePlaying() ) {
@@ -45,7 +47,7 @@ public:
   }
   
   void selectPlayerOne() {
-    if( isOver() || isPlayerOnePlaying() ) {
+    if( isOver() || isPaused() || isPlayerOnePlaying() ) {
       return;
     }
     if( isPlayerTwoPlaying() ) {
@@ -55,7 +57,7 @@ public:
   }
   
   void selectPlayerTwo() {
-    if( isOver() || isPlayerTwoPlaying() ) {
+    if( isOver() || isPaused() || isPlayerTwoPlaying() ) {
       return;
     }
     if( isPlayerOnePlaying() ) {
@@ -65,9 +67,19 @@ public:
   }
   
   void pause() {
+    if( currentPlayer == NULL || isPaused() || isOver() ) {
+      return;
+    }
+    currentPlayer->beginPause( clock );
+    paused = true;
   }
   
   void resume() {
+    if( isOver() || !isPaused() ) {
+      return;
+    }
+    currentPlayer->endPause( clock );
+    paused = false;
   }
   
   Clock *getClock() {
@@ -76,6 +88,10 @@ public:
   
   TimeControl *getTimeControl() {
     return timeControl;
+  }
+  
+  bool isPaused() {
+    return paused;
   }
   
 private:

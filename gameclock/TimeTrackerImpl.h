@@ -11,6 +11,9 @@ class TimeTrackerImpl : public TimeTracker {
   bool expiredFlagRead;
   uint32_t markTime;
   
+  bool pauseMarked;
+  uint32_t pauseMarkTime;
+  
 public:
 
   TimeTrackerImpl() {
@@ -18,6 +21,8 @@ public:
     lastConsumedTime = 0;
     marked = false;
     markTime = 0;
+    pauseMarked = false;
+    pauseMarkTime = 0;
   }
   virtual ~TimeTrackerImpl() {
   }
@@ -62,10 +67,23 @@ public:
     expiredFlagRead = true;
     return ret;
   }
+  
+  void beginPause(Clock *clock) {
+    pauseMarked = true;
+    pauseMarkTime = clock->currentTime();
+  }
+
+  void endPause(Clock *clock) {
+    pauseMarked = false;
+    markTime = clock->currentTime() - ( pauseMarkTime - markTime );
+  }
 
 private:
 
   int32_t elapsedTime(Clock *clock) {
+    if( pauseMarked ) {
+      return  pauseMarkTime - markTime;
+    }
     return marked ? clock->currentTime() - markTime : 0;
   }
   

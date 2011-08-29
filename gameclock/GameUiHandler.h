@@ -9,7 +9,7 @@
 #include "TimeControlUi.h"
 
 extern GameClock gameClock;
-extern PushButton playerOneButton, playerTwoButton;
+extern PushButton playerOneButton, playerTwoButton, okButton, backButton;
 extern GameClockLcd lcd2;
 
 class GameUiHandler : public UiHandler {
@@ -21,12 +21,19 @@ public:
   virtual void tick(Clock *clock) {
     playerOneButton.tick( clock );
     playerTwoButton.tick( clock );
+    backButton.tick( clock );
+    okButton.tick( clock );
     gameClock.tick();
     
     if( playerOneButton.wasPushed() ) {
       gameClock.selectPlayerTwo();
     } else if( playerTwoButton.wasPushed() ) {
       gameClock.selectPlayerOne();
+    }
+    if( backButton.wasPushed() ) {
+      gameClock.pause();
+    } else if( okButton.wasPushed() ) {
+      gameClock.resume();
     }
   }
   
