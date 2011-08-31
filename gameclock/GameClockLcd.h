@@ -12,19 +12,19 @@ class GameClockLcd {
   enum Alignment { Left, Center, Right };
   
   LiquidCrystal lcd;
-  char buffer1A[ GAME_CLOCK_LCD_BUFFER_SIZE ];
-  char buffer1B[ GAME_CLOCK_LCD_BUFFER_SIZE ];
-  char buffer2A[ GAME_CLOCK_LCD_BUFFER_SIZE ];
-  char buffer2B[ GAME_CLOCK_LCD_BUFFER_SIZE ];
+  char topBufferA[ GAME_CLOCK_LCD_BUFFER_SIZE ];
+  char topBufferB[ GAME_CLOCK_LCD_BUFFER_SIZE ];
+  char bottomBufferA[ GAME_CLOCK_LCD_BUFFER_SIZE ];
+  char bottomBufferB[ GAME_CLOCK_LCD_BUFFER_SIZE ];
 
-  char *buffer1;
-  char *buffer2;
+  char *topBuffer;
+  char *bottomBuffer;
   
 public:
 
   GameClockLcd(uint8_t rs, uint8_t enable, uint8_t d0, uint8_t d1, uint8_t d2, uint8_t d3) : lcd( rs, enable, d0, d1, d2, d3 ) {
-    buffer1 = buffer1A;
-    buffer2 = buffer2A;
+    topBuffer = topBufferA;
+    bottomBuffer = bottomBufferA;
   }
   
   void init() {
@@ -33,76 +33,76 @@ public:
   
   void beginRender() {
     swapBuffers();
-    clearBuffer( buffer1 );
-    clearBuffer( buffer2 );
+    clearBuffer( topBuffer );
+    clearBuffer( bottomBuffer );
   }
   
   void printTopLeft(const prog_char *str) {
-    printAligned( str, buffer1, Left );
+    printAligned( str, topBuffer, Left );
   }
 
   void printTopCenter(const prog_char *str) {
-    printAligned( str, buffer1, Center );
+    printAligned( str, topBuffer, Center );
   }
 
   void printTopRight(const prog_char *str) {
-    printAligned( str, buffer1, Right );
+    printAligned( str, topBuffer, Right );
   }
 
   void printBottomLeft(const prog_char *str) {
-    printAligned( str, buffer2, Left );
+    printAligned( str, bottomBuffer, Left );
   }
 
   void printBottomCenter(const prog_char *str) {
-    printAligned( str, buffer2, Center );
+    printAligned( str, bottomBuffer, Center );
   }
 
   void printBottomRight(const prog_char *str) {
-    printAligned( str, buffer2, Right );
+    printAligned( str, bottomBuffer, Right );
   }
   
   void printWholeScreen(const prog_char *str) {
-    memcpy_P( buffer1, str, GAME_CLOCK_LCD_BUFFER_SIZE - 1 );
-    memcpy_P( buffer2, &str[ GAME_CLOCK_LCD_BUFFER_SIZE - 1 ], GAME_CLOCK_LCD_BUFFER_SIZE - 1 );
+    memcpy_P( topBuffer, str, GAME_CLOCK_LCD_BUFFER_SIZE - 1 );
+    memcpy_P( bottomBuffer, &str[ GAME_CLOCK_LCD_BUFFER_SIZE - 1 ], GAME_CLOCK_LCD_BUFFER_SIZE - 1 );
   }
   
   void printTopLeftTime(int32_t time) {
-    formatTime( time, buffer1 );
+    formatTime( time, topBuffer );
   }
   
   void printTopRightTime(int32_t time) {
-    formatTime( time, &buffer1[ 11 ] );
+    formatTime( time, &topBuffer[ 11 ] );
   }
   
   void sPrintBottomLeft(const prog_char *format, ...) {
     va_list body;
     va_start( body, format );
-    sPrint( buffer2, Left, format, body );
+    sPrint( bottomBuffer, Left, format, body );
     va_end( body );
   }
 
   void sPrintBottomCenter(const prog_char *format, ...) {
     va_list body;
     va_start( body, format );
-    sPrint( buffer2, Center, format, body );
+    sPrint( bottomBuffer, Center, format, body );
     va_end( body );
   }
 
   void sPrintBottomRight(const prog_char *format, ...) {
     va_list body;
     va_start( body, format );
-    sPrint( buffer2, Right, format, body );
+    sPrint( bottomBuffer, Right, format, body );
     va_end( body );
   }
 
   void endRender() {
-    if( isBufferDirty( buffer1A, buffer1B ) ) {
+    if( isBufferDirty( topBufferA, topBufferB ) ) {
       lcd.setCursor( 0, 0 );
-      lcd.print( buffer1 );
+      lcd.print( topBuffer );
     }
-    if( isBufferDirty( buffer2A, buffer2B ) ) {
+    if( isBufferDirty( bottomBufferA, bottomBufferB ) ) {
       lcd.setCursor( 0, 1 );
-      lcd.print( buffer2 );
+      lcd.print( bottomBuffer );
     }
   }
   
@@ -162,8 +162,8 @@ private:
   }
   
   void swapBuffers() {
-    buffer1 = buffer1 != buffer1A ? buffer1A : buffer1B;
-    buffer2 = buffer2 != buffer2A ? buffer2A : buffer2B;
+    topBuffer = topBuffer != topBufferA ? topBufferA : topBufferB;
+    bottomBuffer = bottomBuffer != bottomBufferA ? bottomBufferA : bottomBufferB;
   }
   
   bool isBufferDirty(char *bufferA, char *bufferB) {
