@@ -43,11 +43,19 @@ public:
       return;
     }
     
-    if( playerOneButton.wasPushed() && currentTimeControlUi > 0 ) {
-      currentTimeControlUi--;
+    if( playerOneButton.wasPushed() ) {
+      if( currentTimeControlUi > 0 ) {
+        currentTimeControlUi--;
+      } else {
+        do { currentTimeControlUi++; } while( timeControls[ currentTimeControlUi + 1 ] != NULL );
+      }
     }
-    if( playerTwoButton.wasPushed() && timeControls[ currentTimeControlUi + 1 ] != NULL ) {
-      currentTimeControlUi++;
+    if( playerTwoButton.wasPushed() ) {
+      if( timeControls[ currentTimeControlUi + 1 ] != NULL ) {
+        currentTimeControlUi++;
+      } else {
+        currentTimeControlUi = 0;
+      }
     }
 
   }
