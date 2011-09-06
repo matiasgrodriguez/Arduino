@@ -3,13 +3,16 @@
 #define __GameClock_h__
 
 #include "Clock.h"
-#include "TimeControlWithSound.h"
+#include "TimeControl.h"
 #include "TimeTrackerImpl.h"
+#include "Buzzer.h"
+
+extern Buzzer buzzer;
 
 class GameClock {
   
   Clock *clock;
-  TimeControlWithSound timeControl;
+  TimeControl *timeControl;
   TimeTrackerImpl playerOne, playerTwo;
   
   TimeTrackerImpl *currentPlayer;
@@ -28,9 +31,9 @@ public:
   
   void setup(Clock *clock, TimeControl *timeControl) {
     this->clock = clock;
-    this->timeControl.setDelegate( timeControl );
+    this->timeControl = timeControl;
     
-    this->timeControl.setup( &playerOne, &playerTwo );
+    this->timeControl->setup( &playerOne, &playerTwo );
   }
   
   void tick() {
@@ -71,6 +74,7 @@ public:
     }
     currentPlayer->beginPause( clock );
     paused = true;
+    beep();
   }
   
   void resume() {
@@ -79,6 +83,7 @@ public:
     }
     currentPlayer->endPause( clock );
     paused = false;
+    beep();
   }
   
   Clock *getClock() {
@@ -86,7 +91,7 @@ public:
   }
   
   TimeControl *getTimeControl() {
-    return timeControl.getDelegate();
+    return timeControl;
   }
   
   bool isPaused() {
@@ -96,7 +101,7 @@ public:
 private:
 
   bool isOver() {
-    return timeControl.getDelegate() != NULL && timeControl.isOver();
+    return timeControl != NULL && timeControl->isOver();
   }
 
   bool isPlayerOnePlaying() {
@@ -106,12 +111,13 @@ private:
   void onPlayerOneBeginToPlay() {
     currentPlayer = &playerOne;
     currentPlayer->mark( clock );
-    timeControl.onPlayerOneBeganToPlay();
+    timeControl->onPlayerOneBeganToPlay();
+    beep();
   }
 
   void onPlayerOnePlayed() {
     currentPlayer->consume( clock );
-    timeControl.onPlayerOnePlayed();
+    timeControl->onPlayerOnePlayed();
   }
   
   void checkIfPlayerOneTimeExpired() {
@@ -121,7 +127,7 @@ private:
     if( playerOne.onlyOnceIsExpired() ) {
       playerOne.consume( clock );
       playerOne.mark( clock );
-      timeControl.onPlayerOneTimeExpired();
+      timeControl->onPlayerOneTimeExpired();
     }
   }
 
@@ -131,13 +137,14 @@ private:
   
   void onPlayerTwoPlayed() {
     currentPlayer->consume( clock );
-    timeControl.onPlayerTwoPlayed();
+    timeControl->onPlayerTwoPlayed();
   }
 
   void onPlayerTwoBeginToPlay() {
     currentPlayer = &playerTwo;
     currentPlayer->mark( clock );
-    timeControl.onPlayerTwoBeganToPlay();
+    timeControl->onPlayerTwoBeganToPlay();
+    beep();
   }
   
   void checkIfPlayerTwoTimeExpired() {
@@ -147,8 +154,12 @@ private:
     if( playerTwo.onlyOnceIsExpired() ) {
       playerTwo.consume( clock );
       playerTwo.mark( clock );
-      timeControl.onPlayerTwoTimeExpired();
+      timeControl->onPlayerTwoTimeExpired();
     }
+  }
+  
+  void beep() {
+    buzzer.beepFor( 150 );
   }
   
   void dumpState() {

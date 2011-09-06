@@ -44,19 +44,23 @@ public:
       gameClock.setup( clock, timeControlUi->create( currentOption ) );
       gameUiHandler.setTimeControlUi( timeControlUi );
       currentUiHandler = &gameUiHandler;
+      beep();
       return;
     }
     
     if( backButton.wasPushed() ) {
       currentUiHandler = previusHandler;
+      beep();
       return;
     }
 
     if( playerOneButton.wasPushed() && currentOption > 0 ) {
       currentOption--;
+      beep();
     }
     if( playerTwoButton.wasPushed() && currentOption < timeControlUi->getNumberOfOptions() - 1 ) {
       currentOption++;
+      beep();
     }
   }
   
