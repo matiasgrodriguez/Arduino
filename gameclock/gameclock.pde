@@ -6,6 +6,7 @@
 
 #include "GameClock.h"
 #include "PushButton.h"
+#include "Buzzer.h"
 #include "GameClockLcd.h"
 #include "ArduinoClock.h"
 
@@ -24,6 +25,7 @@
 //Hardware:
 GameClockLcd lcd2(12, 11, 5, 4, 3, 2);
 PushButton playerOneButton( 9 ), playerTwoButton( 8 ), okButton( 7 ), backButton( 6 );
+Buzzer buzzer( 10 );
 
 //GameClock...
 ArduinoClock clock;
@@ -63,6 +65,7 @@ void setup() {
 
 void loop() {
   currentUiHandler->tick( &clock );
+  buzzer.tick();
   currentUiHandler->render( &clock );
 }
 

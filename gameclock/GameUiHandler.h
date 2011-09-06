@@ -7,10 +7,12 @@
 #include "GameClockLcd.h"
 #include "UiHandler.h"
 #include "TimeControlUi.h"
+#include "Buzzer.h"
 
 extern GameClock gameClock;
 extern PushButton playerOneButton, playerTwoButton, okButton, backButton;
 extern GameClockLcd lcd2;
+extern Buzzer buzzer;
 
 class GameUiHandler : public UiHandler {
   
@@ -32,8 +34,10 @@ public:
     }
     if( backButton.wasPushed() ) {
       gameClock.pause();
+      buzzer.beepFor( 50 );
     } else if( okButton.wasPushed() ) {
       gameClock.resume();
+      buzzer.beepFor( 50 );
     }
   }
   
