@@ -4,12 +4,14 @@
 
 #include <avr/pgmspace.h>
 
+#include "Buzzer.h"
 #include "UiHandler.h"
 #include "TimeControlUi.h"
 #include "SelectTimeControlOptionUiHandler.h"
 
 extern PushButton playerOneButton, playerTwoButton, okButton, backButton;
 extern GameClockLcd lcd2;
+extern Buzzer buzzer;
 
 extern TimeControlUi *timeControls[];
 
@@ -49,6 +51,7 @@ public:
       } else {
         do { currentTimeControlUi++; } while( timeControls[ currentTimeControlUi + 1 ] != NULL );
       }
+      buzzer.beepFor( 150 );
     }
     if( playerTwoButton.wasPushed() ) {
       if( timeControls[ currentTimeControlUi + 1 ] != NULL ) {
@@ -56,6 +59,7 @@ public:
       } else {
         currentTimeControlUi = 0;
       }
+      buzzer.beepFor( 150 );
     }
 
   }
