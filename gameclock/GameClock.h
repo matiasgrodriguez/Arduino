@@ -159,7 +159,7 @@ private:
   }
   
   void beep() {
-    buzzer.beepFor( 150 );
+    buzzer.playTone( 880, 250 );
   }
   
   void dumpState() {
