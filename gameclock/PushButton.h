@@ -5,19 +5,19 @@
 #include <WProgram.h>
 
 #include "base.h"
+#include "SignalFilter.h"
 
 class PushButton {
   
+  SignalFilter filter;
   uint8_t pin;
   bool wasDown;
-  uint32_t lastUpTime;
 
 public:
 
-  PushButton(uint8_t pin) {
+  PushButton(uint8_t pin) : filter( 10 ) {
     this->pin = pin;
     wasDown = false;
-    lastUpTime = 0;
   }
   
   void init() {
@@ -26,17 +26,10 @@ public:
   }
   
   void tick(Clock *clock) {
-    uint32_t currentTime = clock->currentTime();
-    if( wasDown ) {
-      if( isUp() && upElapsedTime( currentTime ) > 500L  ) {
-        wasDown = false;
-        lastUpTime = currentTime;
-      }
-    }
-    
-    /*if( wasDown && isUp() ) {
+    filter.tick( clock, digitalRead( pin ) );
+    if( wasDown && isUp() ) {
       wasDown = false;
-    }*/
+    }
   }
   
   bool isUp() {
@@ -44,7 +37,8 @@ public:
   }
 
   bool isDown() {
-    return digitalRead( pin );
+    return filter.isOn();
+    //return digitalRead( pin );
   }
   
   bool wasPushed() {
@@ -58,10 +52,6 @@ public:
   }
   
 private:
-
-  uint32_t upElapsedTime(uint32_t currentTime) {
-    return currentTime - lastUpTime;
-  }
 
 };
 
