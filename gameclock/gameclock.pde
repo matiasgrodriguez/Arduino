@@ -24,7 +24,7 @@
 
 //Hardware:
 GameClockLcd lcd2(12, 11, 5, 4, 3, 2);
-PushButton playerOneButton( 9 ), playerTwoButton( 8 ), okButton( 7 ), backButton( 6 );
+PushButton playerOneButton( 9 ), playerTwoButton( 8 );
 Buzzer buzzer( 10 );
 
 //GameClock...
@@ -54,8 +54,6 @@ void setup() {
   lcd2.init();
   playerOneButton.init();
   playerTwoButton.init();
-  okButton.init();
-  backButton.init();
   
   selectTimeControlOptionUiHandler.wire( &selectTimeControlUiHandler );
   currentUiHandler = &selectTimeControlUiHandler;

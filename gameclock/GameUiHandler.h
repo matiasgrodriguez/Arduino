@@ -10,7 +10,7 @@
 #include "Buzzer.h"
 
 extern GameClock gameClock;
-extern PushButton playerOneButton, playerTwoButton, okButton, backButton;
+extern PushButton playerOneButton, playerTwoButton;
 extern GameClockLcd lcd2;
 
 class GameUiHandler : public UiHandler {
@@ -22,8 +22,6 @@ public:
   virtual void tick(Clock *clock) {
     playerOneButton.tick( clock );
     playerTwoButton.tick( clock );
-    backButton.tick( clock );
-    okButton.tick( clock );
     gameClock.tick();
     
     if( playerOneButton.wasPushed() ) {
@@ -31,11 +29,13 @@ public:
     } else if( playerTwoButton.wasPushed() ) {
       gameClock.selectPlayerOne();
     }
+    /*
     if( backButton.wasPushed() ) {
       gameClock.pause();
     } else if( okButton.wasPushed() ) {
       gameClock.resume();
     }
+    */
   }
   
   virtual void render(Clock *clock) {
