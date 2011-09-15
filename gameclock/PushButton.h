@@ -15,7 +15,7 @@ class PushButton {
 
 public:
 
-  PushButton(uint8_t pin) : filter( 5 ) {
+  PushButton(uint8_t pin) : filter( 3 ) {
     this->pin = pin;
     wasDown = false;
   }
