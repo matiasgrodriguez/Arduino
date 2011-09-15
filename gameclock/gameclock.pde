@@ -47,6 +47,7 @@ UiHandler *currentUiHandler;
 SelectTimeControlUiHandler selectTimeControlUiHandler;
 SelectTimeControlOptionUiHandler selectTimeControlOptionUiHandler;
 GameUiHandler gameUiHandler;
+GameButtonGestures buttonGestures;
 
 void setup() {
   Serial.begin(9600);

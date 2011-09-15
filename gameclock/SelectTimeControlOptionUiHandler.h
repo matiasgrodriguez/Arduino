@@ -8,9 +8,9 @@
 #include "GameClock.h"
 #include "GameClockLcd.h"
 #include "GameUiHandler.h"
-#include "GameUiHandler.h"
+#include "GameButtonGestures.h"
 
-extern PushButton playerOneButton, playerTwoButton;
+extern GameButtonGestures buttonGestures;
 extern GameClockLcd lcd2;
 
 extern GameClock gameClock;
@@ -37,10 +37,9 @@ public:
   }
 
   virtual void tick(Clock *clock) {
-    playerOneButton.tick( clock );
-    playerTwoButton.tick( clock );
+    buttonGestures.tick( clock );
     
-    if( playerTwoButton.wasPushed() ) {
+    if( buttonGestures.wasButtonTwoPressed() ) {
       if( isBackOption() ) {
         currentUiHandler = previusHandler;
       } else {
@@ -53,7 +52,7 @@ public:
       return;
     }
 
-    if( playerOneButton.wasPushed() ) {
+    if( buttonGestures.wasButtonOnePressed() ) {
       if( isBackOption() ) {
         currentOption = 0;
       } else {

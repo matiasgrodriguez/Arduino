@@ -2,15 +2,15 @@
 #ifndef __GameUiHandler_h__
 #define __GameUiHandler_h__
 
-#include "PushButton.h"
 #include "GameClock.h"
 #include "GameClockLcd.h"
 #include "UiHandler.h"
 #include "TimeControlUi.h"
+#include "GameButtonGestures.h"
 #include "Buzzer.h"
 
 extern GameClock gameClock;
-extern PushButton playerOneButton, playerTwoButton;
+extern GameButtonGestures buttonGestures;
 extern GameClockLcd lcd2;
 
 class GameUiHandler : public UiHandler {
@@ -20,13 +20,12 @@ class GameUiHandler : public UiHandler {
 public:
 
   virtual void tick(Clock *clock) {
-    playerOneButton.tick( clock );
-    playerTwoButton.tick( clock );
+    buttonGestures.tick( clock );
     gameClock.tick();
     
-    if( playerOneButton.wasPushed() ) {
+    if( buttonGestures.wasButtonOnePressed() ) {
       gameClock.selectPlayerTwo();
-    } else if( playerTwoButton.wasPushed() ) {
+    } else if( buttonGestures.wasButtonTwoPressed() ) {
       gameClock.selectPlayerOne();
     }
     

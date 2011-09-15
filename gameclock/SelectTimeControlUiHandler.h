@@ -6,9 +6,10 @@
 
 #include "UiHandler.h"
 #include "TimeControlUi.h"
+#include "GameButtonGestures.h"
 #include "SelectTimeControlOptionUiHandler.h"
 
-extern PushButton playerOneButton, playerTwoButton;
+extern GameButtonGestures buttonGestures;
 extern GameClockLcd lcd2;
 
 extern TimeControlUi *timeControls[];
@@ -33,21 +34,20 @@ public:
   }
 
   virtual void tick(Clock *clock) {
-    playerOneButton.tick( clock );
-    playerTwoButton.tick( clock );
+    buttonGestures.tick( clock );
     
-    if( playerTwoButton.wasPushed() ) {
-      selectTimeControlOptionUiHandler.setTimeControlUi( timeControls[ currentTimeControlUi ] );
-      currentUiHandler = &selectTimeControlOptionUiHandler;
-      beep();
-    }
-
-    if( playerOneButton.wasPushed() ) {
+    if( buttonGestures.wasButtonOnePressed() ) {
       if( timeControls[ currentTimeControlUi + 1 ] != NULL ) {
         currentTimeControlUi++;
       } else {
         currentTimeControlUi = 0;
       }
+      beep();
+    }
+    
+     if( buttonGestures.wasButtonTwoPressed() ) {
+      selectTimeControlOptionUiHandler.setTimeControlUi( timeControls[ currentTimeControlUi ] );
+      currentUiHandler = &selectTimeControlOptionUiHandler;
       beep();
     }
 
