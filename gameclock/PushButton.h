@@ -15,7 +15,7 @@ class PushButton {
 
 public:
 
-  PushButton(uint8_t pin) : filter( 10 ) {
+  PushButton(uint8_t pin) : filter( 5 ) {
     this->pin = pin;
     wasDown = false;
   }
@@ -38,7 +38,6 @@ public:
 
   bool isDown() {
     return filter.isOn();
-    //return digitalRead( pin );
   }
   
   bool wasPushed() {
@@ -50,8 +49,6 @@ public:
     }
     return false;
   }
-  
-private:
 
 };
 
