@@ -16,7 +16,8 @@ extern TimeControlUi *timeControls[];
 extern SelectTimeControlOptionUiHandler selectTimeControlOptionUiHandler;
 extern UiHandler *currentUiHandler;
 
-const prog_char SELECT_TIME_CONTROL_UI_HANDLER_MESSAGE[] PROGMEM = "Select game:";
+const prog_char SELECT_TIME_CONTROL_UI_HANDLER_LEFT_MESSAGE[] PROGMEM = "Next";
+const prog_char SELECT_TIME_CONTROL_UI_HANDLER_RIGHT_MESSAGE[] PROGMEM = "OK";
 
 class SelectTimeControlUiHandler : public UiHandler {
   
@@ -56,8 +57,9 @@ public:
     lcd2.beginRender();
     
     TimeControlUi *tc = timeControls[ currentTimeControlUi ];
-    lcd2.printTopLeft( SELECT_TIME_CONTROL_UI_HANDLER_MESSAGE );
-    lcd2.printBottomRight( tc->getName() );
+    lcd2.printTopLeft( SELECT_TIME_CONTROL_UI_HANDLER_LEFT_MESSAGE );
+    lcd2.printTopRight( SELECT_TIME_CONTROL_UI_HANDLER_RIGHT_MESSAGE );
+    lcd2.printBottomCenter( tc->getName() );
 
     lcd2.endRender();
   }
