@@ -17,6 +17,7 @@ class GameClock {
   
   TimeTrackerImpl *currentPlayer;
   bool paused;
+  bool overNotified;
   
 public:
 
@@ -24,6 +25,7 @@ public:
     clock = NULL;
     currentPlayer = NULL;
     paused = false;
+    overNotified = false;
   }
   
   virtual ~GameClock() {
@@ -37,6 +39,9 @@ public:
   }
   
   void tick() {
+    if( isOver() && overWasNotNotified() ) {
+      onOver();
+    }
     if( isPaused() || isOver() ) {
       return;
     }
@@ -97,12 +102,12 @@ public:
   bool isPaused() {
     return paused;
   }
-  
-private:
 
   bool isOver() {
     return timeControl != NULL && timeControl->isOver();
   }
+  
+private:
 
   bool isPlayerOnePlaying() {
     return currentPlayer == &playerOne;
@@ -156,6 +161,15 @@ private:
       playerTwo.mark( clock );
       timeControl->onPlayerTwoTimeExpired();
     }
+  }
+  
+  bool overWasNotNotified() {
+    return !overNotified;
+  }
+
+  void onOver() {
+    buzzer.playTone( 3520, 2000 );
+    overNotified = true;
   }
   
   void beep() {

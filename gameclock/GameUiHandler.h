@@ -29,6 +29,7 @@ public:
     } else if( playerTwoButton.wasPushed() ) {
       gameClock.selectPlayerOne();
     }
+    
     /*
     if( backButton.wasPushed() ) {
       gameClock.pause();
