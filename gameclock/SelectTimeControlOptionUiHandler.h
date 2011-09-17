@@ -63,7 +63,7 @@ public:
   }
   
   virtual void render(Clock *clock){
-    lcd2.beginRender();
+    lcd2.beginRender( clock );
     
     if( isBackOption() ) {
       lcd2.printBottomCenter( selectTimeControlOptionUiHandlerBack );

@@ -59,7 +59,7 @@ void setup() {
   selectTimeControlOptionUiHandler.wire( &selectTimeControlUiHandler );
   currentUiHandler = &selectTimeControlUiHandler;
 
-  Serial.print( "mem:" );Serial.println( freeMemory() ); 
+  Serial.print( "mem:" );Serial.println( freeMemory() );
 }
 
 void loop() {

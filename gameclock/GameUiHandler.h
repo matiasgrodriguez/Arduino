@@ -27,8 +27,10 @@ public:
       if( gameClock.isOver() ) {
         //reset
       } else if( gameClock.isPaused() ) {
+        lcd2.setBlinking( false );
         gameClock.resume();
       } else {
+        lcd2.setBlinking( true );
         gameClock.pause();
       }
       return;
@@ -43,7 +45,7 @@ public:
   }
   
   virtual void render(Clock *clock) {
-    lcd2.beginRender();
+    lcd2.beginRender( clock );
     timeControlUi->renderGame( &gameClock, &lcd2 );
     lcd2.endRender();
   }

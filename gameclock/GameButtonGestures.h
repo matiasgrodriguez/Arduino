@@ -62,7 +62,7 @@ private:
   }
 
   bool wasButtonPressedConsideringTreshold(bool playerButtonPushed, uint32_t playerButtonPushedTime) {
-    return playerButtonPushed && ( currentTime - playerButtonPushedTime > 0 );
+    return playerButtonPushed && ( currentTime - playerButtonPushedTime > 10 );
   }
 
 };

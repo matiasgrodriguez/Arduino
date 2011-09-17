@@ -17,6 +17,8 @@ class GameClockLcd {
   char bottomBufferA[ GAME_CLOCK_LCD_BUFFER_SIZE ];
   char bottomBufferB[ GAME_CLOCK_LCD_BUFFER_SIZE ];
 
+  uint32_t blinkToggleTime;
+  bool blink, blinkToggle;
   char *topBuffer;
   char *bottomBuffer;
   
@@ -25,16 +27,20 @@ public:
   GameClockLcd(uint8_t rs, uint8_t enable, uint8_t d0, uint8_t d1, uint8_t d2, uint8_t d3) : lcd( rs, enable, d0, d1, d2, d3 ) {
     topBuffer = topBufferA;
     bottomBuffer = bottomBufferA;
+    blinkToggleTime = 0;
+    blink = false;
+    blinkToggle = true;
   }
   
   void init() {
     lcd.begin( 16, 2 );
   }
   
-  void beginRender() {
+  void beginRender(Clock *clock) {
     swapBuffers();
     clearBuffer( topBuffer );
     clearBuffer( bottomBuffer );
+    updateBlinkState( clock );
   }
   
   void printTopLeft(const prog_char *str) {
@@ -62,8 +68,10 @@ public:
   }
   
   void printWholeScreen(const prog_char *str) {
-    memcpy_P( topBuffer, str, GAME_CLOCK_LCD_BUFFER_SIZE - 1 );
-    memcpy_P( bottomBuffer, &str[ GAME_CLOCK_LCD_BUFFER_SIZE - 1 ], GAME_CLOCK_LCD_BUFFER_SIZE - 1 );
+    if( notBlinkingOrBlinkOnFase() ) {
+      memcpy_P( topBuffer, str, GAME_CLOCK_LCD_BUFFER_SIZE - 1 );
+      memcpy_P( bottomBuffer, &str[ GAME_CLOCK_LCD_BUFFER_SIZE - 1 ], GAME_CLOCK_LCD_BUFFER_SIZE - 1 );
+    }
   }
   
   void printTopLeftTime(int32_t time) {
@@ -93,6 +101,10 @@ public:
     va_start( body, format );
     sPrint( bottomBuffer, Right, format, body );
     va_end( body );
+  }
+  
+  void setBlinking(bool blinking) {
+    blink = blinking;
   }
 
   void endRender() {
@@ -128,7 +140,9 @@ private:
     } else if( aligment == Right ) {
       index = GAME_CLOCK_LCD_BUFFER_SIZE - 1 - length;
     }
-    memcpy( &screenBuffer[ index ], buffer, length );
+    if( notBlinkingOrBlinkOnFase() ) {
+      memcpy( &screenBuffer[ index ], buffer, length );
+    }
   }
 
   void formatTime(int32_t time, char *buffer) {
@@ -148,11 +162,13 @@ private:
   }
   
   void formatTimeNibble(int32_t left, int32_t right, char *buffer) {
-    buffer[ 0 ] = ( char )( '0' + ( left / 10 ) );
-    buffer[ 1 ] = ( char )( '0' + ( left % 10 ) );
-    buffer[ 2 ] = ':';
-    buffer[ 3 ] = ( char )( '0' + ( right / 10 ) );
-    buffer[ 4 ] = ( char )( '0' + ( right % 10 ) );
+    if( notBlinkingOrBlinkOnFase() ) {
+      buffer[ 0 ] = ( char )( '0' + ( left / 10 ) );
+      buffer[ 1 ] = ( char )( '0' + ( left % 10 ) );
+      buffer[ 2 ] = ':';
+      buffer[ 3 ] = ( char )( '0' + ( right / 10 ) );
+      buffer[ 4 ] = ( char )( '0' + ( right % 10 ) );
+    }
   }
   
   void sPrint(char *screenBuffer, Alignment aligment, const prog_char *format, va_list body) {
@@ -173,6 +189,18 @@ private:
       }
     }
     return false;
+  }
+  
+  void updateBlinkState(Clock *clock) {
+    uint32_t currentTime = clock->currentTime();
+    if( currentTime > blinkToggleTime ) {
+      blinkToggleTime = currentTime + 250;
+      blinkToggle = !blinkToggle;
+    }
+  }
+  
+  bool notBlinkingOrBlinkOnFase() {
+    return !blink || ( blink && blinkToggle );
   }
 
 };

@@ -54,7 +54,7 @@ public:
   }
   
   virtual void render(Clock *clock){
-    lcd2.beginRender();
+    lcd2.beginRender( clock );
     
     TimeControlUi *tc = timeControls[ currentTimeControlUi ];
     lcd2.printTopLeft( SELECT_TIME_CONTROL_UI_HANDLER_LEFT_MESSAGE );
