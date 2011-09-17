@@ -45,7 +45,7 @@ public:
       beep();
     }
     
-     if( buttonGestures.wasButtonTwoPressed() ) {
+    if( buttonGestures.wasButtonTwoPressed() ) {
       selectTimeControlOptionUiHandler.setTimeControlUi( timeControls[ currentTimeControlUi ] );
       currentUiHandler = &selectTimeControlOptionUiHandler;
       beep();

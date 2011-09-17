@@ -23,16 +23,6 @@ public:
     buttonGestures.tick( clock );
     gameClock.tick();
     
-    if( buttonGestures.wasButtonOnePressed() ) {
-      gameClock.selectPlayerTwo();
-      return;
-    }
-    
-    if( buttonGestures.wasButtonTwoPressed() ) {
-      gameClock.selectPlayerOne();
-      return;
-    }
-    
     if( buttonGestures.wasButtonOneAndTwoPressed() ) {
       if( gameClock.isOver() ) {
         //reset
@@ -41,6 +31,13 @@ public:
       } else {
         gameClock.pause();
       }
+      return;
+    }
+
+    if( buttonGestures.wasButtonOnePressed() ) {
+      gameClock.selectPlayerTwo();
+    } else if( buttonGestures.wasButtonTwoPressed() ) {
+      gameClock.selectPlayerOne();
     }
  
   }

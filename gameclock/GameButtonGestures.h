@@ -21,9 +21,11 @@ public:
     playerOneButton.tick( clock );
     playerTwoButton.tick( clock );
     
-    playerOneButtonPushed = playerOneButton.wasPushed();
-    if( playerOneButtonPushed ) {
-      playerOneButtonPushedTime = currentTime;
+    if( !playerOneButtonPushed ) {
+      playerOneButtonPushed = playerOneButton.wasPushed();
+      if( playerOneButtonPushed ) {
+        playerOneButtonPushedTime = currentTime;
+      }
     }
 
     playerTwoButtonPushed = playerTwoButton.wasPushed();
@@ -33,32 +35,34 @@ public:
   }
   
   bool wasButtonOnePressed() {
-    if( !wasButtonPressed( playerOneButtonPushed, playerOneButtonPushedTime ) ) {
-      return false;
-    }
-    playerOneButtonPushed = false;
-    return true;
+    return wasButtonPressed( &playerOneButtonPushed, playerOneButtonPushedTime );
   }
   
   bool wasButtonTwoPressed() {
-    if( !wasButtonPressed( playerTwoButtonPushed, playerTwoButtonPushedTime ) ) {
-      return false;
-    }
-    playerTwoButtonPushed = false;
-    return true;
+    return wasButtonPressed( &playerTwoButtonPushed, playerTwoButtonPushedTime );
   }
   
   bool wasButtonOneAndTwoPressed() {
-    return false;
+    bool bothButtonsWherePressed = playerOneButtonPushed && playerTwoButtonPushed;
+    if( bothButtonsWherePressed ) {
+      playerOneButtonPushed = false;
+      playerTwoButtonPushed = false;
+    }
+    return bothButtonsWherePressed;
   }
 
 private:
 
-  bool wasButtonPressed(bool playerButtonPushed, uint32_t playerButtonPushedTime) {
-    if( !playerButtonPushed || ( currentTime - playerButtonPushedTime > 20 ) ) {
+  bool wasButtonPressed(bool *playerButtonPushed, uint32_t playerButtonPushedTime) {
+    if( !wasButtonPressedConsideringTreshold( *playerButtonPushed, playerOneButtonPushedTime ) ) {
       return false;
     }
+    *playerButtonPushed = false;
     return true;
+  }
+
+  bool wasButtonPressedConsideringTreshold(bool playerButtonPushed, uint32_t playerButtonPushedTime) {
+    return playerButtonPushed && ( currentTime - playerButtonPushedTime > 0 );
   }
 
 };
