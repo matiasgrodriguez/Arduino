@@ -170,6 +170,7 @@ private:
   void onOver() {
     buzzer.playTone( 3520, 2000 );
     overNotified = true;
+    currentPlayer = NULL;
   }
   
   void beep() {
