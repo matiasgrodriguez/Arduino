@@ -106,13 +106,17 @@ public:
   bool isOver() {
     return timeControl != NULL && timeControl->isOver();
   }
-  
-private:
 
   bool isPlayerOnePlaying() {
     return currentPlayer == &playerOne;
-  }  
+  }
   
+  bool isPlayerTwoPlaying() {
+    return currentPlayer == &playerTwo;
+  }
+  
+private:
+
   void onPlayerOneBeginToPlay() {
     currentPlayer = &playerOne;
     currentPlayer->mark( clock );
@@ -134,10 +138,6 @@ private:
       playerOne.mark( clock );
       timeControl->onPlayerOneTimeExpired();
     }
-  }
-
-  bool isPlayerTwoPlaying() {
-    return currentPlayer == &playerTwo;
   }
   
   void onPlayerTwoPlayed() {
