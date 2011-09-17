@@ -25,17 +25,24 @@ public:
     
     if( buttonGestures.wasButtonOnePressed() ) {
       gameClock.selectPlayerTwo();
-    } else if( buttonGestures.wasButtonTwoPressed() ) {
-      gameClock.selectPlayerOne();
+      return;
     }
     
-    /*
-    if( backButton.wasPushed() ) {
-      gameClock.pause();
-    } else if( okButton.wasPushed() ) {
-      gameClock.resume();
+    if( buttonGestures.wasButtonTwoPressed() ) {
+      gameClock.selectPlayerOne();
+      return;
     }
-    */
+    
+    if( buttonGestures.wasButtonOneAndTwoPressed() ) {
+      if( gameClock.isOver() ) {
+        //reset
+      } else if( gameClock.isPaused() ) {
+        gameClock.resume();
+      } else {
+        gameClock.pause();
+      }
+    }
+ 
   }
   
   virtual void render(Clock *clock) {
