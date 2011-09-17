@@ -33,7 +33,7 @@ public:
   }
   
   bool wasButtonOnePressed() {
-    if( !playerOneButtonPushed || ( currentTime - playerOneButtonPushedTime > 20  ) ) {
+    if( !wasButtonPressed( playerOneButtonPushed, playerOneButtonPushedTime ) ) {
       return false;
     }
     playerOneButtonPushed = false;
@@ -41,7 +41,7 @@ public:
   }
   
   bool wasButtonTwoPressed() {
-    if( !playerTwoButtonPushed || ( currentTime - playerTwoButtonPushedTime > 20 ) ) {
+    if( !wasButtonPressed( playerTwoButtonPushed, playerTwoButtonPushedTime ) ) {
       return false;
     }
     playerTwoButtonPushed = false;
@@ -54,14 +54,12 @@ public:
 
 private:
 
-  /*
-  bool wasButtonPressed(bool playerButtonPushed, playerButtonPushedTime ) {
+  bool wasButtonPressed(bool playerButtonPushed, uint32_t playerButtonPushedTime) {
     if( !playerButtonPushed || ( currentTime - playerButtonPushedTime > 20 ) ) {
       return false;
     }
     return true;
   }
-  */
 
 };
 
