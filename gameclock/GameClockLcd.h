@@ -74,12 +74,12 @@ public:
     }
   }
   
-  void printTopLeftTime(int32_t time) {
-    formatTime( time, topBuffer );
+  void printTopLeftTime(int32_t time, bool blink) {
+    formatTime( time, topBuffer, blink );
   }
   
-  void printTopRightTime(int32_t time) {
-    formatTime( time, &topBuffer[ 11 ] );
+  void printTopRightTime(int32_t time, bool blink) {
+    formatTime( time, &topBuffer[ 11 ], blink );
   }
   
   void sPrintBottomLeft(const prog_char *format, ...) {
@@ -145,9 +145,9 @@ private:
     }
   }
 
-  void formatTime(int32_t time, char *buffer) {
+  void formatTime(int32_t time, char *buffer, bool blink) {
     if( time <=0 ) {
-      formatTimeNibble( 0, 0, buffer );
+      formatTimeNibble( 0, 0, buffer, blink );
       return;
     }
     int32_t hours = time / ( 1000L * 60L * 60L );
@@ -155,17 +155,19 @@ private:
     int32_t seconds = ( ( time % ( 1000L * 60L * 60L ) ) % ( 1000L * 60L ) ) / 1000L;
     //Serial.print( "Time: " );Serial.print( time );Serial.print( " hours: " );Serial.print( hours );Serial.print( " minutes: " );Serial.print( minutes );Serial.print( " seconds: " );Serial.println( seconds );
     if( hours > 0 ) {
-      formatTimeNibble( hours, minutes, buffer );
+      formatTimeNibble( hours, minutes, buffer, blink );
     }else {
-      formatTimeNibble( minutes, seconds, buffer );
+      formatTimeNibble( minutes, seconds, buffer, blink );
     }
   }
   
-  void formatTimeNibble(int32_t left, int32_t right, char *buffer) {
+  void formatTimeNibble(int32_t left, int32_t right, char *buffer, bool blink) {
     if( notBlinkingOrBlinkOnFase() ) {
       buffer[ 0 ] = ( char )( '0' + ( left / 10 ) );
       buffer[ 1 ] = ( char )( '0' + ( left % 10 ) );
-      buffer[ 2 ] = ':';
+      if( !blink || blink && blinkToggle ) {
+        buffer[ 2 ] = ':';
+      }
       buffer[ 3 ] = ( char )( '0' + ( right / 10 ) );
       buffer[ 4 ] = ( char )( '0' + ( right % 10 ) );
     }

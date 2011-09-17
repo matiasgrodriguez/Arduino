@@ -20,10 +20,10 @@ public:
   
   virtual void renderGame(GameClock *gameClock, GameClockLcd *lcd) {
     TimeControl *timeControl = gameClock->getTimeControl();
-    lcd->printTopLeftTime( timeControl->getPlayerOneTime( gameClock->getClock() ) );
-    lcd->printTopRightTime( timeControl->getPlayerTwoTime( gameClock->getClock() ) );
+    lcd->printTopLeftTime( timeControl->getPlayerOneTime( gameClock->getClock() ), gameClock->isPlayerOnePlaying() );
+    lcd->printTopRightTime( timeControl->getPlayerTwoTime( gameClock->getClock() ), gameClock->isPlayerTwoPlaying() );
   }
-  
+
 };
 
 #endif
