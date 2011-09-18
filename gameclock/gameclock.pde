@@ -23,7 +23,7 @@
 //#include "NormalDelayTimeControlUi.h"
 
 //Hardware:
-GameClockLcd lcd2(12, 11, 5, 4, 3, 2);
+GameClockLcd lcd2( 7, 6, 5, 4, 3, 2);
 PushButton playerOneButton( 9 ), playerTwoButton( 8 );
 Buzzer buzzer( 10 );
 
