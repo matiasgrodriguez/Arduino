@@ -15,7 +15,7 @@ class GameClock {
   TimeControl *timeControl;
   TimeTrackerImpl playerOne, playerTwo;
   
-  TimeTrackerImpl *currentPlayer;
+  TimeTrackerImpl *currentPlayer, *playerThatLoose;
   bool paused;
   bool overNotified;
   
@@ -23,7 +23,7 @@ public:
 
   GameClock() {
     clock = NULL;
-    currentPlayer = NULL;
+    playerThatLoose = currentPlayer = NULL;
     paused = false;
     overNotified = false;
   }
@@ -115,6 +115,14 @@ public:
     return currentPlayer == &playerTwo;
   }
   
+  bool playerOneWon() {
+    return isOver() && playerThatLoose == &playerTwo;
+  }
+  
+  bool playerTwoWon() {
+    return isOver() && playerThatLoose == &playerOne;
+  }
+
 private:
 
   void onPlayerOneBeginToPlay() {
@@ -170,6 +178,7 @@ private:
   void onOver() {
     buzzer.playTone( 3520, 2000 );
     overNotified = true;
+    playerThatLoose = currentPlayer;
     currentPlayer = NULL;
   }
   

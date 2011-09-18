@@ -13,6 +13,9 @@ extern GameClock gameClock;
 extern GameButtonGestures buttonGestures;
 extern GameClockLcd lcd2;
 
+const prog_char gameUiHandlerPlayerOneWinnerMessage[] PROGMEM = "WINNER ";
+const prog_char gameUiHandlerPlayerTwoWinnerMessage[] PROGMEM = " WINNER";
+
 class GameUiHandler : public UiHandler {
   
   TimeControlUi *timeControlUi;
@@ -47,6 +50,13 @@ public:
   virtual void render(Clock *clock) {
     lcd2.beginRender( clock );
     timeControlUi->renderGame( &gameClock, &lcd2 );
+    if( gameClock.isOver() ) {
+      if( gameClock.playerOneWon() ) {
+        lcd2.printBottomLeft( gameUiHandlerPlayerOneWinnerMessage );
+      } else if( gameClock.playerTwoWon() ) {
+        lcd2.printBottomRight( gameUiHandlerPlayerTwoWinnerMessage );
+      }
+    }
     lcd2.endRender();
   }
   
