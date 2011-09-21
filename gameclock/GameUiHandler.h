@@ -16,6 +16,8 @@ extern GameClockLcd lcd2;
 const prog_char gameUiHandlerPlayerOneWinnerMessage[] PROGMEM = "WINNER ";
 const prog_char gameUiHandlerPlayerTwoWinnerMessage[] PROGMEM = " WINNER";
 
+void(* resetFunc) (void) = 0; //declare reset function @ address 0
+
 class GameUiHandler : public UiHandler {
   
   TimeControlUi *timeControlUi;
@@ -28,7 +30,7 @@ public:
     
     if( buttonGestures.wasButtonOneAndTwoPressed() ) {
       if( gameClock.isOver() ) {
-        //reset
+        resetFunc();
       } else if( gameClock.isPaused() ) {
         lcd2.setBlinking( false );
         gameClock.resume();

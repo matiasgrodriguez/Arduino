@@ -50,7 +50,8 @@ GameUiHandler gameUiHandler;
 GameButtonGestures buttonGestures;
 
 void setup() {
-  Serial.begin(9600);
+  delay( 500 );
+  //Serial.begin(9600);
 
   lcd2.init();
   playerOneButton.init();
@@ -59,7 +60,8 @@ void setup() {
   selectTimeControlOptionUiHandler.wire( &selectTimeControlUiHandler );
   currentUiHandler = &selectTimeControlUiHandler;
 
-  Serial.print( "mem:" );Serial.println( freeMemory() );
+  //Serial.print( "mem:" );Serial.println( freeMemory() );
+  //delay( 500 );
 }
 
 void loop() {
