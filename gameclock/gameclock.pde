@@ -24,7 +24,7 @@
 
 //Hardware:
 GameClockLcd lcd2( 7, 6, 5, 4, 3, 2);
-PushButton playerOneButton( 8 ), playerTwoButton( 10 );
+PushButton playerOneButton( 8 ), playerTwoButton( 10 ), menuButton( 9 );
 Buzzer buzzer( 12 );
 
 //GameClock...
@@ -50,7 +50,6 @@ GameUiHandler gameUiHandler;
 GameButtonGestures buttonGestures;
 
 void setup() {
-  delay( 300 );
   //Serial.begin(9600);
 
   lcd2.init();

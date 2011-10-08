@@ -28,7 +28,7 @@ public:
     buttonGestures.tick( clock );
     gameClock.tick();
     
-    if( buttonGestures.wasButtonOneAndTwoPressed() ) {
+    if( buttonGestures.wasButtonThreePressed() ) {
       if( gameClock.isOver() ) {
         resetFunc();
       } else if( gameClock.isPaused() ) {
