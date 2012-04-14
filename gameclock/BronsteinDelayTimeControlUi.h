@@ -10,11 +10,12 @@
 const prog_char bronsteinDelayName[] PROGMEM = "Bronstein Delay";
 
 const prog_char bronsteinDelayOption1[] PROGMEM = "                  2 min + 12 sec";
-const prog_char bronsteinDelayOption2[] PROGMEM = "                  5 min + 12 sec";
-const prog_char bronsteinDelayOption3[] PROGMEM = "                 10 min + 10 sec";
+const prog_char bronsteinDelayOption2[] PROGMEM = "Objective         3 min + 12 sec";
+const prog_char bronsteinDelayOption3[] PROGMEM = "                  5 min + 12 sec";
+const prog_char bronsteinDelayOption4[] PROGMEM = "                 10 min + 10 sec";
 
 const prog_char *bronsteinDelayOptions[] PROGMEM = {
-  bronsteinDelayOption1, bronsteinDelayOption2, bronsteinDelayOption3
+  bronsteinDelayOption1, bronsteinDelayOption2, bronsteinDelayOption3, bronsteinDelayOption4
 };
 
 const prog_char bronsteinDelayFormat[] PROGMEM = "delay %d sec";
@@ -28,7 +29,7 @@ public:
   }
   
   virtual int16_t getNumberOfOptions() {
-    return 3;
+    return 4;
   }
   
   virtual const prog_char *getOption(int16_t option) {
@@ -36,6 +37,7 @@ public:
       case 0: return bronsteinDelayOptions[ option ];
       case 1: return bronsteinDelayOptions[ option ];
       case 2: return bronsteinDelayOptions[ option ];
+      case 3: return bronsteinDelayOptions[ option ];
     }
     return bronsteinDelayOptions[ 0 ];
   }
@@ -49,10 +51,14 @@ public:
         delay = 1000L * 12L;
         break;
       case 1:
+        time = 1000L * 60L * 3L;
+        delay = 1000L * 12L;
+        break;
+      case 2:
         time = 1000L * 60L * 5L;
         delay = 1000L * 1L;
         break;
-      case 2:
+      case 3:
         time = 1000L * 60L * 10L;
         delay = 1000L * 10L;
         break;
