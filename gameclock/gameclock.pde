@@ -55,6 +55,7 @@ void setup() {
   lcd2.init();
   playerOneButton.init();
   playerTwoButton.init();
+  menuButton.init();
   
   selectTimeControlOptionUiHandler.wire( &selectTimeControlUiHandler );
   currentUiHandler = &selectTimeControlUiHandler;
