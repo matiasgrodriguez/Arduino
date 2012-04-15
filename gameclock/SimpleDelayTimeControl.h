@@ -18,7 +18,7 @@ public:
   }
   
   /*
-   This time control is not supported by the game clock and TimeTracker. This time control works lie this:
+   This time control is not supported by the game clock and TimeTracker. This time control works like this:
     - At the beginning of the play the clock should wait for the delay period.
     - If the user makes a play before the delay the players keeps his original time.
     - I the player makes a play after the delay, he retains the consumed time after the delay.
