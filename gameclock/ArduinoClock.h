@@ -2,7 +2,7 @@
 #ifndef __ArduinoClock_h__
 #define __ArduinoClock_h__
 
-#include <WProgram.h>
+#include <Arduino.h>
 
 #include "Clock.h"
 

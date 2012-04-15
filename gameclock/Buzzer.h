@@ -2,7 +2,7 @@
 #ifndef __Buzzer_h__
 #define __Buzzer_h__
 
-#include <WProgram.h>
+#include <Arduino.h>
 
 class Buzzer{
   

@@ -2,7 +2,7 @@
 #ifndef __PushButton_h__
 #define __PushButton_h__
 
-#include <WProgram.h>
+#include <Arduino.h>
 
 #include "base.h"
 #include "SignalFilter.h"

@@ -1,5 +1,4 @@
 
-#include <MemoryFree.h>
 #include <LiquidCrystal.h>
 
 #include "base.h"
@@ -59,9 +58,6 @@ void setup() {
   
   selectTimeControlOptionUiHandler.wire( &selectTimeControlUiHandler );
   currentUiHandler = &selectTimeControlUiHandler;
-
-  //Serial.print( "mem:" );Serial.println( freeMemory() );
-  //delay( 500 );
 }
 
 void loop() {
