@@ -16,6 +16,9 @@ public:
   ArduinoDigitalPin(uint8_t pin, uint8_t mode) {
     this->pin = pin;
     pinMode( pin, mode );
+    if( mode == INPUT ) {
+      set( true );
+    }
   }
 
   virtual bool isSet() {
