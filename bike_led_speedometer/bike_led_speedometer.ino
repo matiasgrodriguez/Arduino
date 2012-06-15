@@ -1,6 +1,4 @@
 
-#include <arduino.h>
-
 #include "ArduinoDigitalPin.h"
 #include "ArduinoClock.h"
 #include "PulseCounter.h"
@@ -20,7 +18,6 @@ void setup() {
 void loop() {
   pulseCounter->tick( clock );
   Serial.print( "Time: " );Serial.println( pulseCounter->pulsesPerSecond() );
-  
 }
 
 
