@@ -17,7 +17,7 @@ void setup() {
 
 void loop() {
   pulseCounter->tick( clock );
-  Serial.print( "Time: " );Serial.println( pulseCounter->pulsesPerSecond() );
+  //Serial.print( "Time: " );Serial.println( pulseCounter->getPulsesPerSecond() );
 }
 
 
