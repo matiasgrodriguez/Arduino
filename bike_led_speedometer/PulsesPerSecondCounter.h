@@ -5,22 +5,24 @@
 #include "Clock.h"
 #include "DigitalPin.h"
 
-class PulseCounter {
+class PulsesPerSecondCounter {
   
   DigitalPin *pin;
   uint32_t pulsesPerSecondUpdateTime;
   uint16_t pulseCount;
   uint16_t pulsesPerSecond;
   bool state;
+  bool pulsesPerSecondUpdated;
 
 public:
 
-  PulseCounter(DigitalPin *pin) {
+  PulsesPerSecondCounter(DigitalPin *pin) {
     this->pin = pin;
     pulsesPerSecondUpdateTime = 0;
     pulseCount = 0;
     pulsesPerSecond = 0;
     state = false;
+    pulsesPerSecondUpdated = false;
   }
 
   virtual void tick(Clock *clock) {
@@ -30,6 +32,14 @@ public:
   
   uint32_t getPulsesPerSecond() {
     return pulsesPerSecond;
+  }
+  
+  bool checkIfwasUpdatedAndClearFlag() {
+    if( pulsesPerSecondUpdated ) {
+      pulsesPerSecondUpdated = false;
+      return true;
+    }
+    return false;
   }
   
 private:
@@ -58,7 +68,7 @@ private:
     pulsesPerSecond = pulseCount;
     pulsesPerSecondUpdateTime = currentTime;
     pulseCount = 0;
-    Serial.print( "Update " );Serial.println( getPulsesPerSecond() );
+    pulsesPerSecondUpdated = true;
   }
 
 };
