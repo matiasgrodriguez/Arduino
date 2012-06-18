@@ -2,19 +2,19 @@
 #include "ArduinoDigitalPin.h"
 #include "ArduinoClock.h"
 #include "PulseCounter.h"
-#include "Accelerometer2.h"
+#include "PulseToSpeedStatus.h"
 
 DigitalPin *pulsePin;
 DigitalWritablePin *acceleratingPin, *deceleratingPin, *nonePin, *stoppedPin;
 Clock *clock;
 
 PulseCounter *pulseCounter;
-Accelerometer2 *accelerometer2;
+PulseToSpeedStatus *pulseToSpeedStatus;
 
 void updatePins(bool,bool,bool,bool);
 
 void setup() {
-  Serial.begin(9600);
+  //Serial.begin(9600);
   
   clock = new ArduinoClock();
   pulsePin = new ArduinoDigitalPin( 6, INPUT );
@@ -24,7 +24,7 @@ void setup() {
   stoppedPin = new ArduinoDigitalPin( 2, OUTPUT );
   
   pulseCounter = new PulseCounter( pulsePin );
-  accelerometer2 = new Accelerometer2( pulseCounter );
+  pulseToSpeedStatus = new PulseToSpeedStatus( pulseCounter );
   
   acceleratingPin->set( false );
   deceleratingPin->set( false );
@@ -34,21 +34,23 @@ void setup() {
 
 void loop() {  
   pulseCounter->tick( clock );
-  accelerometer2->tick( clock );
-  Accelerometer2::Status status2 = accelerometer2->getStatus();
+  pulseToSpeedStatus->tick( clock );
+  PulseToSpeedStatus::Status status = pulseToSpeedStatus->getStatus();
 
-  if( status2 == Accelerometer2::None ) {
-      Serial.println( "None" );
+  if( status == PulseToSpeedStatus::None ) {
+//      Serial.println( "None" );
       updatePins( true, false, false, false );
-  } else if( status2 == Accelerometer2::Accelerating ) {
-      Serial.println( "Accelerating" );
+  } else if( status == PulseToSpeedStatus::Accelerating ) {
+//      Serial.println( "Accelerating" );
       updatePins( false, true, false, false );
-  } else if ( status2 == Accelerometer2::Decelerating ) {
-    Serial.println( "Decelerating" );
+  } else if ( status == PulseToSpeedStatus::Decelerating ) {
+//    Serial.println( "Decelerating" );
     updatePins( false, false, true, false );
-  } else if ( status2 == Accelerometer2::Stopped ) {
-    Serial.println( "Stopped" );
+  } else if ( status == PulseToSpeedStatus::Stopped ) {
+//    Serial.println( "Stopped" );
     updatePins( false, false, false, true );
+  } else {
+    updatePins( true, true, true, true );
   }
 }
 

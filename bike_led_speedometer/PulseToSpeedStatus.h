@@ -1,11 +1,11 @@
 
-#ifndef __Accelerometer2_h__
-#define __Accelerometer2_h__
+#ifndef __PulseToSpeedStatus_h__
+#define __PulseToSpeedStatus_h__
 
 #include "Clock.h"
 #include "PulseCounter.h"
 
-class Accelerometer2 {
+class PulseToSpeedStatus {
   
 public:
   
@@ -19,7 +19,7 @@ private:
   
 public:
 
-  Accelerometer2(PulseCounter *pulseCounter) {
+  PulseToSpeedStatus(PulseCounter *pulseCounter) {
     this->pulseCounter = pulseCounter;
     lastPulseCount = 0;
   }
@@ -30,7 +30,7 @@ public:
 
     if( lastPulseCount == currentPulseCount ) {
       if( pulseCounter->getCurrentPulseElapsedInterval( clock ) > minusOnePulseInterval ) {
-        status = pulseCounter->getCurrentPulseElapsedInterval( clock ) > 3000 ? Stopped : Decelerating;
+        status = pulseCounter->getCurrentPulseElapsedInterval( clock ) > 4000 ? Stopped : Decelerating;
       }
       return;
     }
