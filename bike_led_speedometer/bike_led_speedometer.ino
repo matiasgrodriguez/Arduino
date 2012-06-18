@@ -1,17 +1,12 @@
 
 #include "ArduinoDigitalPin.h"
 #include "ArduinoClock.h"
-#include "PulsesPerSecondCounter.h"
-#include "Accelerometer.h"
 #include "PulseCounter.h"
 #include "Accelerometer2.h"
 
 DigitalPin *pulsePin;
 DigitalWritablePin *acceleratingPin, *deceleratingPin, *nonePin, *stoppedPin;
 Clock *clock;
-
-PulsesPerSecondCounter *pulsesPerSecondCounter;
-Accelerometer *accelerometer;
 
 PulseCounter *pulseCounter;
 Accelerometer2 *accelerometer2;
@@ -28,9 +23,6 @@ void setup() {
   nonePin = new ArduinoDigitalPin( 3, OUTPUT );
   stoppedPin = new ArduinoDigitalPin( 2, OUTPUT );
   
-  pulsesPerSecondCounter = new PulsesPerSecondCounter( pulsePin );
-  accelerometer = new Accelerometer( pulsesPerSecondCounter );
-  
   pulseCounter = new PulseCounter( pulsePin );
   accelerometer2 = new Accelerometer2( pulseCounter );
   
@@ -40,11 +32,7 @@ void setup() {
   stoppedPin->set( false );
 }
 
-void loop() {
-  pulsesPerSecondCounter->tick( clock );
-  accelerometer->tick( clock );
-  Accelerometer::Status status = accelerometer->getStatus();
-  
+void loop() {  
   pulseCounter->tick( clock );
   accelerometer2->tick( clock );
   Accelerometer2::Status status2 = accelerometer2->getStatus();
