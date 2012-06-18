@@ -1,6 +1,6 @@
 
-#ifndef __PulseCounter_h__
-#define __PulseCounter_h__
+#ifndef __PulsesPerSecondCounter_h__
+#define __PulsesPerSecondCounter_h__
 
 #include "Clock.h"
 #include "DigitalPin.h"
