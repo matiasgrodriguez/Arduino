@@ -11,9 +11,9 @@ class PulseCounter {
   uint32_t pulseCount;
   
   uint32_t minusTwoPulseTime;
-  uint32_t minusTwoPulseInterval;
+  uint16_t minusTwoPulseInterval;
   uint32_t minusOnePulseTime;
-  uint32_t minusOnePulseInterval;
+  uint16_t minusOnePulseInterval;
 
   bool pinState;
   
@@ -58,7 +58,7 @@ public:
     return minusTwoPulseTime;
   }
 
-  uint32_t getMinusTwoPulseInterval() {
+  uint16_t getMinusTwoPulseInterval() {
     return minusTwoPulseInterval;
   }
 
@@ -66,11 +66,11 @@ public:
     return minusOnePulseTime;
   }
 
-  uint32_t getMinusOnePulseInterval() {
+  uint16_t getMinusOnePulseInterval() {
     return minusOnePulseInterval;
   }
   
-  uint32_t getCurrentPulseElapsedInterval(Clock *clock) {
+  uint16_t getCurrentPulseElapsedInterval(Clock *clock) {
     return clock->currentTime() - minusOnePulseTime;
   }
     
