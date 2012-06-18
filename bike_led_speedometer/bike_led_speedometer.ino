@@ -5,13 +5,13 @@
 #include "PulseToSpeedStatus.h"
 
 DigitalPin *pulsePin;
-DigitalWritablePin *acceleratingPin, *deceleratingPin, *nonePin, *stoppedPin;
+DigitalWritablePin *acceleratingPin, *deceleratingPin, *stoppedPin;
 Clock *clock;
 
 PulseCounter *pulseCounter;
 PulseToSpeedStatus *pulseToSpeedStatus;
 
-void updatePins(bool,bool,bool,bool);
+void updatePins(bool,bool,bool);
 
 void setup() {
   //Serial.begin(9600);
@@ -20,15 +20,13 @@ void setup() {
   pulsePin = new ArduinoDigitalPin( 6, INPUT );
   acceleratingPin = new ArduinoDigitalPin( 5, OUTPUT );
   deceleratingPin = new ArduinoDigitalPin( 4, OUTPUT );
-  nonePin = new ArduinoDigitalPin( 3, OUTPUT );
-  stoppedPin = new ArduinoDigitalPin( 2, OUTPUT );
+  stoppedPin = new ArduinoDigitalPin( 3, OUTPUT );
   
   pulseCounter = new PulseCounter( pulsePin );
   pulseToSpeedStatus = new PulseToSpeedStatus( pulseCounter );
   
   acceleratingPin->set( false );
   deceleratingPin->set( false );
-  nonePin->set( false );
   stoppedPin->set( false );
 }
 
@@ -37,28 +35,23 @@ void loop() {
   pulseToSpeedStatus->tick( clock );
   PulseToSpeedStatus::Status status = pulseToSpeedStatus->getStatus();
 
-  if( status == PulseToSpeedStatus::None ) {
-//      Serial.println( "None" );
-      updatePins( true, false, false, false );
-  } else if( status == PulseToSpeedStatus::Accelerating ) {
+  if( status == PulseToSpeedStatus::AcceleratingOrConstant ) {
 //      Serial.println( "Accelerating" );
-      updatePins( false, true, false, false );
+      updatePins( true, false, false );
   } else if ( status == PulseToSpeedStatus::Decelerating ) {
 //    Serial.println( "Decelerating" );
-    updatePins( false, false, true, false );
+    updatePins( false, true, false );
   } else if ( status == PulseToSpeedStatus::Stopped ) {
 //    Serial.println( "Stopped" );
-    updatePins( false, false, false, true );
+    updatePins( false, false, true );
   } else {
-    updatePins( true, true, true, true );
+    updatePins( true, true, true );
   }
 }
 
-void updatePins(bool none, bool accelerating, bool decelerating, bool stopped) {
-  nonePin->set( none );
-  acceleratingPin->set( accelerating );
+void updatePins(bool acceleratingOrConstant, bool decelerating, bool stopped) {
+  acceleratingPin->set( acceleratingOrConstant );
   deceleratingPin->set( decelerating );
   stoppedPin->set( stopped );
 }
-
 

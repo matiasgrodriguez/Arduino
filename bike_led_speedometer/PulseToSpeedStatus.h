@@ -9,11 +9,11 @@ class PulseToSpeedStatus {
   
 public:
   
-  enum Status { None, Accelerating, Decelerating, Stopped };
+  enum Status { AcceleratingOrConstant, Decelerating, Stopped };
 
 private:
 
-  PulseCounter *pulseCounter;  
+  PulseCounter *pulseCounter;
   uint32_t lastPulseCount;
   Status status;
   
@@ -37,11 +37,7 @@ public:
     
     lastPulseCount = currentPulseCount;
     uint32_t minusTwoPulseInterval = pulseCounter->getMinusTwoPulseInterval();
-    if( minusOnePulseInterval == minusTwoPulseInterval ) {
-      status = None;
-    } else {
-      status = minusOnePulseInterval < minusTwoPulseInterval ? Accelerating : Decelerating;
-    }
+    status = minusOnePulseInterval <= minusTwoPulseInterval ? AcceleratingOrConstant : Decelerating;
   }
   
   Status getStatus() {
