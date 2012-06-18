@@ -38,6 +38,7 @@ public:
     lastPulseCount = currentPulseCount;
     uint32_t minusTwoPulseInterval = pulseCounter->getMinusTwoPulseInterval();
     status = minusOnePulseInterval <= minusTwoPulseInterval ? AcceleratingOrConstant : Decelerating;
+    //TODO: Use a threshold so a small speed decrease does not return Decelerating.
   }
   
   Status getStatus() {
