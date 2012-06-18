@@ -4,7 +4,6 @@
 
 #include <Arduino.h>
 
-#include "base.h"
 #include "DigitalWritablePin.h"
 
 class ArduinoDigitalPin : public DigitalWritablePin {

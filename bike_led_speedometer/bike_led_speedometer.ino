@@ -1,13 +1,15 @@
 
-#include "ArduinoDigitalPin.h"
 #include "ArduinoClock.h"
+#include "ArduinoDigitalPin.h"
 #include "PulseCounter.h"
 #include "PulseToSpeedStatus.h"
 
+//hardware
 DigitalPin *pulsePin;
 DigitalWritablePin *acceleratingPin, *deceleratingPin, *stoppedPin;
 Clock *clock;
 
+//logic
 PulseCounter *pulseCounter;
 PulseToSpeedStatus *pulseToSpeedStatus;
 

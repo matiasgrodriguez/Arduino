@@ -5,8 +5,5 @@
 //Using types from avr
 #include <avr/common.h>
 
-// for malloc and free
-#include <stdlib.h> 
-
 #endif
 
