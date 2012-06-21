@@ -1,21 +1,23 @@
 
 #include "ArduinoClock.h"
 #include "ArduinoDigitalPin.h"
+#include "ArduinoAnalogWritablePin.h"
 #include "PulseCounter.h"
 #include "PulseToSpeedStatus.h"
 #include "PinEffect.h"
-#include "FxPwm.h"
+#include "SoftPwmAnalogWritablePin.h"
 
 //hardware
 DigitalPin *pulsePin;
-DigitalWritablePin *acceleratingPin, *deceleratingPin, *stoppedPin;
+DigitalWritablePin /**acceleratingPin, */*deceleratingPin, *stoppedPin;
+AnalogWritablePin *acceleratingPin;
 Clock *clock;
 
 //logic
 PulseCounter *pulseCounter;
 PulseToSpeedStatus *pulseToSpeedStatus;
 
-PinEffect *pinEffect;
+SoftPwmAnalogWritablePin *softPwm;
 
 void updatePins(bool,bool,bool);
 
@@ -24,22 +26,25 @@ void setup() {
   
   clock = new ArduinoClock();
   pulsePin = new ArduinoDigitalPin( 6, INPUT );
-  acceleratingPin = new ArduinoDigitalPin( 5, OUTPUT );
+  //acceleratingPin = new ArduinoDigitalPin( 5, OUTPUT );
+  acceleratingPin = new ArduinoAnalogWritablePin( 3 );
   deceleratingPin = new ArduinoDigitalPin( 4, OUTPUT );
-  stoppedPin = new ArduinoDigitalPin( 3, OUTPUT );
+  stoppedPin = new ArduinoDigitalPin( 5, OUTPUT );
   
   pulseCounter = new PulseCounter( pulsePin );
   pulseToSpeedStatus = new PulseToSpeedStatus( pulseCounter );
   
   updatePins( false, false, false );
   
-  pinEffect = new FxPwm();
-  ((FxPwm*)pinEffect)->setDutyCycle( 0, clock );
+  softPwm = new SoftPwmAnalogWritablePin( stoppedPin, clock );
+  softPwm->set( 1 );
+  
+  acceleratingPin->set( 1 );
 }
 
 void loop() {  
-  pulseCounter->tick( clock );
-  pulseToSpeedStatus->tick( clock );
+  //pulseCounter->tick( clock );
+  //pulseToSpeedStatus->tick( clock );
   PulseToSpeedStatus::Status status = pulseToSpeedStatus->getStatus();
 
   if( status == PulseToSpeedStatus::AcceleratingOrConstant ) {
@@ -55,8 +60,8 @@ void loop() {
     updatePins( true, true, true );
   }
   
-  pinEffect->tick( clock );
-  pinEffect->apply( deceleratingPin );
+  softPwm->tick( clock );
+  //softPwm->apply( deceleratingPin );
 }
 
 void updatePins(bool acceleratingOrConstant, bool decelerating, bool stopped) {

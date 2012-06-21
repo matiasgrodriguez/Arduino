@@ -13,6 +13,10 @@ public:
   virtual uint32_t currentTime() {
     return millis();
   }
+
+  virtual uint32_t currentTimeInMicros() {
+    return micros();
+  }
   
 };
 
