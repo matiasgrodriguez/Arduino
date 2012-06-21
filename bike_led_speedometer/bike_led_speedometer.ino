@@ -3,6 +3,8 @@
 #include "ArduinoDigitalPin.h"
 #include "PulseCounter.h"
 #include "PulseToSpeedStatus.h"
+#include "PinEffect.h"
+#include "FxPwm.h"
 
 //hardware
 DigitalPin *pulsePin;
@@ -12,6 +14,8 @@ Clock *clock;
 //logic
 PulseCounter *pulseCounter;
 PulseToSpeedStatus *pulseToSpeedStatus;
+
+PinEffect *pinEffect;
 
 void updatePins(bool,bool,bool);
 
@@ -27,9 +31,10 @@ void setup() {
   pulseCounter = new PulseCounter( pulsePin );
   pulseToSpeedStatus = new PulseToSpeedStatus( pulseCounter );
   
-  acceleratingPin->set( false );
-  deceleratingPin->set( false );
-  stoppedPin->set( false );
+  updatePins( false, false, false );
+  
+  pinEffect = new FxPwm();
+  ((FxPwm*)pinEffect)->setDutyCycle( 0, clock );
 }
 
 void loop() {  
@@ -49,11 +54,14 @@ void loop() {
   } else {
     updatePins( true, true, true );
   }
+  
+  pinEffect->tick( clock );
+  pinEffect->apply( deceleratingPin );
 }
 
 void updatePins(bool acceleratingOrConstant, bool decelerating, bool stopped) {
-  acceleratingPin->set( acceleratingOrConstant );
-  deceleratingPin->set( decelerating );
-  stoppedPin->set( stopped );
+  //acceleratingPin->set( acceleratingOrConstant );
+  //deceleratingPin->set( decelerating );
+  //stoppedPin->set( stopped );
 }
 
