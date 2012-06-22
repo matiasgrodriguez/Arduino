@@ -36,10 +36,11 @@ void setup() {
   
   updatePins( false, false, false );
   
+  uint8_t pwm = 255;
   softPwm = new SoftPwmAnalogWritablePin( stoppedPin, clock );
-  softPwm->set( 1 );
+  softPwm->set( pwm );
   
-  acceleratingPin->set( 1 );
+  acceleratingPin->set( pwm );
 }
 
 void loop() {  

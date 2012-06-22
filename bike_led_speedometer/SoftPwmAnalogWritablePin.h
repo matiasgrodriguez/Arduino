@@ -39,7 +39,7 @@ public:
     }
 
     if( isOn ) {
-      nextInvertionTime = currentTime + ( 255 - dutyCycle );
+      nextInvertionTime = currentTime + ( 255 - dutyCycle );// + 5000;
     } else {
       nextInvertionTime = currentTime + dutyCycle;
     }
