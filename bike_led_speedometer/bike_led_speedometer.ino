@@ -6,6 +6,7 @@
 #include "PulseToSpeedStatus.h"
 #include "PinEffect.h"
 #include "SoftPwmAnalogWritablePin.h"
+#include "FixedPoint.h"
 
 //hardware
 DigitalPin *pulsePin;
@@ -41,6 +42,10 @@ void setup() {
   softPwm->set( pwm );
   
   acceleratingPin->set( pwm );
+  
+  FixedPoint<int32_t,14,7> point1, point2, p3;
+  point1 = point1 * point2;
+  Serial.println( point1.part.integer );
 }
 
 void loop() {  
