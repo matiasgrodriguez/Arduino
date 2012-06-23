@@ -5,20 +5,16 @@
 #include "PulseCounter.h"
 #include "PulseToSpeedStatus.h"
 #include "PinEffect.h"
-#include "SoftPwmAnalogWritablePin.h"
-#include "FixedPoint.h"
 
 //hardware
 DigitalPin *pulsePin;
-DigitalWritablePin /**acceleratingPin, */*deceleratingPin, *stoppedPin;
+DigitalWritablePin *deceleratingPin, *stoppedPin;
 AnalogWritablePin *acceleratingPin;
 Clock *clock;
 
 //logic
 PulseCounter *pulseCounter;
 PulseToSpeedStatus *pulseToSpeedStatus;
-
-SoftPwmAnalogWritablePin *softPwm;
 
 void updatePins(bool,bool,bool);
 
@@ -36,21 +32,12 @@ void setup() {
   pulseToSpeedStatus = new PulseToSpeedStatus( pulseCounter );
   
   updatePins( false, false, false );
-  
-  uint8_t pwm = 255;
-  softPwm = new SoftPwmAnalogWritablePin( stoppedPin, clock );
-  softPwm->set( pwm );
-  
-  acceleratingPin->set( pwm );
-  
-  FixedPoint<int32_t,14,7> point1, point2, p3;
-  point1 = point1 * point2;
-  Serial.println( point1.part.integer );
+  //Serial.println( point1.part.integer );
 }
 
 void loop() {  
-  //pulseCounter->tick( clock );
-  //pulseToSpeedStatus->tick( clock );
+  pulseCounter->tick( clock );
+  pulseToSpeedStatus->tick( clock );
   PulseToSpeedStatus::Status status = pulseToSpeedStatus->getStatus();
 
   if( status == PulseToSpeedStatus::AcceleratingOrConstant ) {
@@ -66,13 +53,11 @@ void loop() {
     updatePins( true, true, true );
   }
   
-  softPwm->tick( clock );
-  //softPwm->apply( deceleratingPin );
 }
 
 void updatePins(bool acceleratingOrConstant, bool decelerating, bool stopped) {
-  //acceleratingPin->set( acceleratingOrConstant );
-  //deceleratingPin->set( decelerating );
-  //stoppedPin->set( stopped );
+  acceleratingPin->set( acceleratingOrConstant );
+  deceleratingPin->set( decelerating );
+  stoppedPin->set( stopped );
 }
 
