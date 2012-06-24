@@ -5,38 +5,54 @@
 #include "DigitalWritablePin.h"
 #include "AnalogWritablePin.h"
 #include "PulseToSpeedStatus.h"
+#include "FxFade.h"
 
-extern DigitalWritablePin *deceleratingPin, *stoppedPin;
-extern AnalogWritablePin *acceleratingPin;
+extern DigitalWritablePin *stoppedPin;
+extern AnalogWritablePin *acceleratingPin, *deceleratingPin;
 extern PulseToSpeedStatus *pulseToSpeedStatus;
 
 class BikeLedSpeedometerUi {
   
+  FxFade fxFade;
+  PulseToSpeedStatus::Status oldStatus;
+  
 public:
 
-  BikeLedSpeedometerUi() {
+  BikeLedSpeedometerUi(Clock *clock) {
+    oldStatus = PulseToSpeedStatus::Stopped;
+    fxFade.setDelay( 500, clock );
   }
 
-  void update() {
+  void tick(Clock *clock) {    
     PulseToSpeedStatus::Status status = pulseToSpeedStatus->getStatus();
-  
+    fxFade.tick( clock );
+    
     if( status == PulseToSpeedStatus::AcceleratingOrConstant ) {
-      updatePins( true, false, false );
-    } else if ( status == PulseToSpeedStatus::Decelerating ) {
-      updatePins( false, true, false );
+      updateAcceleratingOrConstant( clock );
+    } else if( status == PulseToSpeedStatus::Decelerating ) {
+      updateDecelerating();
     } else if ( status == PulseToSpeedStatus::Stopped ) {
-      updatePins( false, false, true );
-    } else {
-      updatePins( true, true, true );
+      updateStoped();
     }
+    
+    oldStatus = status;
   }
   
 private:
 
-  void updatePins(bool acceleratingOrConstant, bool decelerating, bool stopped) {
-    acceleratingPin->set( acceleratingOrConstant ? 255 : 0g );
-    deceleratingPin->set( decelerating );
-    stoppedPin->set( stopped );
+  void updateAcceleratingOrConstant(Clock *clock) {
+    fxFade.apply( acceleratingPin );
+    deceleratingPin->set( 0 );
+  }
+
+  void updateDecelerating() {
+    acceleratingPin->set( 0 );
+    deceleratingPin->set( 255 );
+  }
+
+  void updateStoped() {
+    acceleratingPin->set( 0 );
+    fxFade.apply( deceleratingPin );
   }
 
 };

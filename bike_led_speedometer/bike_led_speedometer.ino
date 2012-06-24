@@ -6,11 +6,12 @@
 #include "PulseToSpeedStatus.h"
 #include "PinEffect.h"
 #include "BikeLedSpeedometerUi.h"
+#include "FxFade.h"
 
 //hardware
 DigitalPin *pulsePin;
-DigitalWritablePin *deceleratingPin, *stoppedPin;
-AnalogWritablePin *acceleratingPin;
+DigitalWritablePin *stoppedPin;
+AnalogWritablePin *acceleratingPin, *deceleratingPin;
 Clock *clock;
 
 //logic
@@ -25,21 +26,18 @@ void setup() {
   clock = new ArduinoClock();
   pulsePin = new ArduinoDigitalPin( 6, INPUT );
   acceleratingPin = new ArduinoAnalogWritablePin( 3 );
-  deceleratingPin = new ArduinoDigitalPin( 4, OUTPUT );
-  stoppedPin = new ArduinoDigitalPin( 5, OUTPUT );
+  deceleratingPin = new ArduinoAnalogWritablePin( 5 );
+  stoppedPin = new ArduinoDigitalPin( 4, OUTPUT );
   
   pulseCounter = new PulseCounter( pulsePin );
   pulseToSpeedStatus = new PulseToSpeedStatus( pulseCounter );
   
-  bikeLedSpeedometerUi = new BikeLedSpeedometerUi();
-  
-  //updatePins( false, false, false );
-  //Serial.println( point1.part.integer );
+  bikeLedSpeedometerUi = new BikeLedSpeedometerUi( clock );  
 }
 
 void loop() {  
   pulseCounter->tick( clock );
   pulseToSpeedStatus->tick( clock );
-  bikeLedSpeedometerUi->update();
+  bikeLedSpeedometerUi->tick( clock );
 }
 

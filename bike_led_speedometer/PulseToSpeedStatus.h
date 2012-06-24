@@ -29,13 +29,15 @@ public:
     uint32_t minusOnePulseInterval = pulseCounter->getMinusOnePulseInterval();
 
     if( lastPulseCount == currentPulseCount ) {
-      if( pulseCounter->getCurrentPulseElapsedInterval( clock ) > minusOnePulseInterval ) {
+      if( currentPulseCount == 0 ) {
+        status = Stopped;
+      } else if( pulseCounter->getCurrentPulseElapsedInterval( clock ) > minusOnePulseInterval ) {
         status = pulseCounter->getCurrentPulseElapsedInterval( clock ) > 4000 ? Stopped : Decelerating;
       }
       return;
     }
     
-    lastPulseCount = currentPulseCount;
+    lastPulseCount = currentPulseCount;    
     uint32_t minusTwoPulseInterval = pulseCounter->getMinusTwoPulseInterval();
     status = minusOnePulseInterval <= minusTwoPulseInterval ? AcceleratingOrConstant : Decelerating;
     //TODO: Use a threshold so a small speed decrease does not return Decelerating.
