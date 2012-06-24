@@ -27,20 +27,34 @@ public:
   void tick(Clock *clock) {
     uint32_t currentPulseCount = pulseCounter->getPulseCount();
     uint32_t minusOnePulseInterval = pulseCounter->getMinusOnePulseInterval();
+    const uint32_t STOPPED_DELAY = 5000;
 
     if( lastPulseCount == currentPulseCount ) {
       if( currentPulseCount == 0 ) {
         status = Stopped;
       } else if( pulseCounter->getCurrentPulseElapsedInterval( clock ) > minusOnePulseInterval ) {
-        status = pulseCounter->getCurrentPulseElapsedInterval( clock ) > 4000 ? Stopped : Decelerating;
+        status = pulseCounter->getCurrentPulseElapsedInterval( clock ) > STOPPED_DELAY ? Stopped : Decelerating;
       }
       return;
     }
     
-    lastPulseCount = currentPulseCount;    
+    lastPulseCount = currentPulseCount;
+    if( currentPulseCount == 1 ) {
+      status = AcceleratingOrConstant;
+      return;
+    }
+    
     uint32_t minusTwoPulseInterval = pulseCounter->getMinusTwoPulseInterval();
-    status = minusOnePulseInterval <= minusTwoPulseInterval ? AcceleratingOrConstant : Decelerating;
-    //TODO: Use a threshold so a small speed decrease does not return Decelerating.
+    if( minusOnePulseInterval > STOPPED_DELAY ) {
+      status = AcceleratingOrConstant;
+    }
+    else if( minusOnePulseInterval <= minusTwoPulseInterval ) {
+      status = AcceleratingOrConstant;
+    } else {
+      uint32_t delta = minusOnePulseInterval - minusTwoPulseInterval;
+      //only consider decelerating if speed decreases more than 15%
+      status = delta * 15 <= minusTwoPulseInterval ? AcceleratingOrConstant : Decelerating;
+    }
   }
   
   Status getStatus() {
