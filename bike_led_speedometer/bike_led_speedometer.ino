@@ -13,7 +13,7 @@
   #define PULSE_PIN 4
   #define ACCELERATING_PIN 0
   #define DECELERATING_PIN 1
-#else
+#else //ARDUINO
   #define PULSE_PIN 2
   #define ACCELERATING_PIN 3
   #define DECELERATING_PIN 5
