@@ -28,7 +28,7 @@ public:
     fxFade.tick( clock );
     
     if( status == PulseToSpeedStatus::AcceleratingOrConstant ) {
-      updateAcceleratingOrConstant( clock );
+      updateAcceleratingOrConstant();
     } else if( status == PulseToSpeedStatus::Decelerating ) {
       updateDecelerating();
     } else if ( status == PulseToSpeedStatus::Stopped ) {
@@ -40,7 +40,7 @@ public:
   
 private:
 
-  void updateAcceleratingOrConstant(Clock *clock) {
+  void updateAcceleratingOrConstant() {
     fxFade.apply( acceleratingPin );
     deceleratingPin->set( 0 );
   }

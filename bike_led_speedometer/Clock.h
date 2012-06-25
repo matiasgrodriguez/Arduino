@@ -8,6 +8,8 @@ class Clock {
 
 public:
 
+  virtual void update() = 0;
+
   virtual uint32_t currentTime() = 0;
   virtual uint32_t currentTimeInMicros() = 0;
   
