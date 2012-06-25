@@ -2,24 +2,20 @@
 #ifndef __BikeLedSpeedometerUi_h__
 #define __BikeLedSpeedometerUi_h__
 
-#include "DigitalWritablePin.h"
 #include "AnalogWritablePin.h"
 #include "PulseToSpeedStatus.h"
 #include "FxFade.h"
 
-extern DigitalWritablePin *stoppedPin;
 extern AnalogWritablePin *acceleratingPin, *deceleratingPin;
 extern PulseToSpeedStatus *pulseToSpeedStatus;
 
 class BikeLedSpeedometerUi {
   
   FxFade fxFade;
-  PulseToSpeedStatus::Status oldStatus;
   
 public:
 
   BikeLedSpeedometerUi(Clock *clock) {
-    oldStatus = PulseToSpeedStatus::Stopped;
     fxFade.setDelay( 500, clock );
   }
 
@@ -34,8 +30,6 @@ public:
     } else if ( status == PulseToSpeedStatus::Stopped ) {
       updateStoped();
     }
-    
-    oldStatus = status;
   }
   
 private:
