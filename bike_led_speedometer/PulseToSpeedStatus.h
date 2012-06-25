@@ -5,6 +5,8 @@
 #include "Clock.h"
 #include "PulseCounter.h"
 
+extern PulseCounter *pulseCounter;
+
 class PulseToSpeedStatus {
   
 public:
@@ -13,50 +15,49 @@ public:
 
 private:
 
-  PulseCounter *pulseCounter;
   uint32_t lastPulseCount;
   Status status;
   
 public:
 
-  PulseToSpeedStatus(PulseCounter *pulseCounter) {
-    this->pulseCounter = pulseCounter;
+  PulseToSpeedStatus() {
     lastPulseCount = 0;
   }
 
-  void tick(Clock *clock) {
-    uint32_t currentPulseCount = pulseCounter->getPulseCount();
-    uint32_t minusOnePulseInterval = pulseCounter->getMinusOnePulseInterval();
-    const uint32_t STOPPED_DELAY = 4000;
+  void tick(Clock *clock) {    
+    if( isStopping( clock ) ) {
+      status = Stopped;
+    } else if( isDecelerating( clock ) ) {
+      status = Decelerating;
+    } else {
+      status = AcceleratingOrConstant;
+    }
+    
+    lastPulseCount = pulseCounter->getPulseCount();
+  }
+  
 
-    if( lastPulseCount == currentPulseCount ) {
-      if( currentPulseCount == 0 ) {
-        status = Stopped;
-      } else { 
-        uint32_t currentPulseElapsedInterval = pulseCounter->getCurrentPulseElapsedInterval( clock );
-        if( currentPulseElapsedInterval > minusOnePulseInterval ) {
-          status = currentPulseElapsedInterval > STOPPED_DELAY ? Stopped : Decelerating;
-        }
-      }
-      return;
-    }
-    
-    lastPulseCount = currentPulseCount;
-    if( currentPulseCount == 1 ) {
+  bool isStopping(Clock *clock) {
+    return 
+      pulseCounter->getPulseCount() == 0
+      || ( pulseCounter->getCurrentPulseElapsedInterval( clock ) > 5000 );
+  }
+
+  bool isDecelerating(Clock *clock) {
+    //fix if last != current, compare its time
+    return pulseCounter->getCurrentPulseElapsedInterval( clock ) > pulseCounter->getMinusOnePulseInterval();
+    /*
+    if( pulseCounter->getMinusOnePulseInterval() > STOPPED_DELAY ) {
       status = AcceleratingOrConstant;
-      return;
-    }
-    
-    uint32_t minusTwoPulseInterval = pulseCounter->getMinusTwoPulseInterval();
-    if( minusOnePulseInterval > STOPPED_DELAY ) {
-      status = AcceleratingOrConstant;
-    } else if( minusOnePulseInterval <= minusTwoPulseInterval ) {
+    } else if( pulseCounter->getMinusOnePulseInterval() <= minusTwoPulseInterval ) {
       status = AcceleratingOrConstant;
     } else {
-      uint32_t delta = minusOnePulseInterval - minusTwoPulseInterval;
+      uint32_t delta = pulseCounter->getMinusOnePulseInterval() - minusTwoPulseInterval;
       //only consider decelerating if speed decreases more than 15%
       status = delta * 15 <= minusTwoPulseInterval ? AcceleratingOrConstant : Decelerating;
+      //status = Decelerating;
     }
+    */
   }
   
   Status getStatus() {
