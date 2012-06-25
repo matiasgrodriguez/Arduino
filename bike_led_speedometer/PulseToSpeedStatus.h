@@ -27,13 +27,16 @@ public:
   void tick(Clock *clock) {
     uint32_t currentPulseCount = pulseCounter->getPulseCount();
     uint32_t minusOnePulseInterval = pulseCounter->getMinusOnePulseInterval();
-    const uint32_t STOPPED_DELAY = 5000;
+    const uint32_t STOPPED_DELAY = 4000;
 
     if( lastPulseCount == currentPulseCount ) {
       if( currentPulseCount == 0 ) {
         status = Stopped;
-      } else if( pulseCounter->getCurrentPulseElapsedInterval( clock ) > minusOnePulseInterval ) {
-        status = pulseCounter->getCurrentPulseElapsedInterval( clock ) > STOPPED_DELAY ? Stopped : Decelerating;
+      } else { 
+        uint32_t currentPulseElapsedInterval = pulseCounter->getCurrentPulseElapsedInterval( clock );
+        if( currentPulseElapsedInterval > minusOnePulseInterval ) {
+          status = currentPulseElapsedInterval > STOPPED_DELAY ? Stopped : Decelerating;
+        }
       }
       return;
     }
@@ -47,8 +50,7 @@ public:
     uint32_t minusTwoPulseInterval = pulseCounter->getMinusTwoPulseInterval();
     if( minusOnePulseInterval > STOPPED_DELAY ) {
       status = AcceleratingOrConstant;
-    }
-    else if( minusOnePulseInterval <= minusTwoPulseInterval ) {
+    } else if( minusOnePulseInterval <= minusTwoPulseInterval ) {
       status = AcceleratingOrConstant;
     } else {
       uint32_t delta = minusOnePulseInterval - minusTwoPulseInterval;
