@@ -45,7 +45,14 @@ public:
 
   bool isDecelerating(Clock *clock) {
     //fix if last != current, compare its time
-    return pulseCounter->getCurrentPulseElapsedInterval( clock ) > pulseCounter->getMinusOnePulseInterval();
+    if( pulseCounter->getCurrentPulseElapsedInterval( clock ) > pulseCounter->getMinusOnePulseInterval() ) {
+      return true;
+    }
+    if( pulseCounter->getMinusOnePulseInterval() > 5000 ) {
+      return false;
+    }
+    bool decelerating = pulseCounter->getMinusOnePulseInterval() > pulseCounter->getMinusTwoPulseInterval();
+    return decelerating && status != Stopped;
     /*
     if( pulseCounter->getMinusOnePulseInterval() > STOPPED_DELAY ) {
       status = AcceleratingOrConstant;
