@@ -10,7 +10,6 @@ class PulseCounter {
   DigitalPin *pulsePin;
   uint32_t pulseCount;
   
-  uint32_t minusTwoPulseTime;
   uint32_t minusTwoPulseInterval;
   uint32_t minusOnePulseTime;
   uint32_t minusOnePulseInterval;
@@ -22,7 +21,6 @@ public:
   PulseCounter(DigitalPin *pulsePin) {
     this->pulsePin = pulsePin;
     pulseCount = 0;
-    minusTwoPulseTime = 0;
     minusTwoPulseInterval = 0;
     minusOnePulseTime = 0;
     minusOnePulseInterval = 0;
@@ -40,22 +38,16 @@ public:
       return;
     }
     
-    uint32_t currentTime = clock->currentTime();
     pulseCount++;
     
-    minusTwoPulseTime = minusOnePulseTime;
     minusTwoPulseInterval = minusOnePulseInterval;
     
-    minusOnePulseInterval = currentTime - minusOnePulseTime;
-    minusOnePulseTime = currentTime;
+    minusOnePulseInterval = clock->currentTime() - minusOnePulseTime;
+    minusOnePulseTime = clock->currentTime();
   }
   
   uint32_t getPulseCount() {
     return pulseCount;
-  }
-
-  uint32_t getMinusTwoPulseTime() {
-    return minusTwoPulseTime;
   }
 
   uint32_t getMinusTwoPulseInterval() {

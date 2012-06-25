@@ -39,7 +39,7 @@ void setup() {
   deceleratingPin = new ArduinoAnalogWritablePin( DECELERATING_PIN );
   
   pulseCounter = new PulseCounter( pulsePin );
-  pulseToSpeedStatus = new PulseToSpeedStatus( pulseCounter );
+  pulseToSpeedStatus = new PulseToSpeedStatus();
   
   bikeLedSpeedometerUi = new BikeLedSpeedometerUi( clock );  
 }
