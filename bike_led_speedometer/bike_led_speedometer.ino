@@ -44,7 +44,9 @@ void setup() {
   bikeLedSpeedometerUi = new BikeLedSpeedometerUi( clock );  
 }
 
-void loop() {  
+void loop() {
+  clock->update();
+  
   pulseCounter->tick( clock );
   pulseToSpeedStatus->tick( clock );
   bikeLedSpeedometerUi->tick( clock );
