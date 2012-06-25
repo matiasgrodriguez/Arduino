@@ -21,10 +21,10 @@ public:
     if( currentTime < nextStepMilliseconds ) {
       return;
     }
-    if( value == 0 || value == 255 ) {
+    if( value == 2 || value == 254 ) {
       increment = !increment;
     }
-    value = increment ? value + 1 : value - 1;
+    value = increment ? value + 12 : value - 12;
     updateNextStepMilliseconds( currentTime );
   }
   
@@ -36,8 +36,8 @@ public:
   }
   
   void setDelay(uint16_t delayMilliseconds, Clock *clock) {
-    deltaMilliseconds = delayMilliseconds / 256;
-    value = 0;
+    deltaMilliseconds = 4;//delayMilliseconds / 256;
+    value = 2;
     increment = false;
     updateNextStepMilliseconds( clock->currentTime() );
   }
