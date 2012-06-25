@@ -10,13 +10,12 @@ class FxFade : public PinEffect{
   uint16_t deltaMilliseconds;
   uint8_t value;
   bool increment;
+  bool update;
   
 public: 
 
-  FxFade() {
-  }
-
   virtual void tick(Clock *clock) {
+    update = false;
     uint32_t currentTime = clock->currentTime();
     if( currentTime < nextStepMilliseconds ) {
       return;
@@ -25,6 +24,7 @@ public:
       increment = !increment;
     }
     value = increment ? value + 12 : value - 12;
+    update = true;
     updateNextStepMilliseconds( currentTime );
   }
   
@@ -32,7 +32,9 @@ public:
   }
   
   virtual void apply(AnalogWritablePin *pin) {
-    pin->set( value );
+    if( update ) {
+      pin->set( value );
+    }
   }
   
   void setDelay(uint16_t delayMilliseconds, Clock *clock) {
