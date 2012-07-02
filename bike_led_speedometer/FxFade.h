@@ -4,50 +4,61 @@
 
 #include "PinEffect.h"
 
-class FxFade : public PinEffect{
+extern Clock *clock;
+
+#define FX_FADE_BIT_UPDATE     7
+#define FX_FADE_BIT_INCREMENT  6
+
+template <int DELTA> class FxFade : public PinEffect{
   
   uint32_t nextStepMilliseconds;
-  uint16_t deltaMilliseconds;
-  uint8_t value;
-  bool increment;
-  bool update;
-  
+  uint8_t valueIncrementAndFlag;
+
 public: 
 
+  FxFade() {
+    valueIncrementAndFlag = 0;
+    updateNextStepMilliseconds();
+  }
+
   virtual void tick(Clock *clock) {
-    update = false;
-    uint32_t currentTime = clock->currentTime();
-    if( currentTime < nextStepMilliseconds ) {
+    if( clock->currentTime() < nextStepMilliseconds ) {
+      BIT_CLEAR( (uint8_t)1, valueIncrementAndFlag, FX_FADE_BIT_UPDATE );
       return;
     }
-    if( value == 2 || value == 254 ) {
-      increment = !increment;
+    BIT_SET( (uint8_t)1, valueIncrementAndFlag, FX_FADE_BIT_UPDATE );
+    uint8_t value = getValue();
+    if( value == 0 || value == 63 ) {
+      BIT_TOGGLE( (uint8_t)1, valueIncrementAndFlag, FX_FADE_BIT_INCREMENT );
     }
-    value = increment ? value + 12 : value - 12;
-    update = true;
-    updateNextStepMilliseconds( currentTime );
+    bool increment = BIT_GET( (uint8_t)1, valueIncrementAndFlag, FX_FADE_BIT_INCREMENT );
+    value += increment ? 1 : -1;
+    setValue( value );
+    updateNextStepMilliseconds();
   }
   
   virtual void apply(DigitalWritablePin *pin) {
   }
   
   virtual void apply(AnalogWritablePin *pin) {
-    if( update ) {
-      pin->set( value );
+    if( BIT_GET( (uint8_t)1, valueIncrementAndFlag, FX_FADE_BIT_UPDATE ) ) {
+      uint8_t val = getValue();
+      pin->set( val << 2 );//*4
     }
-  }
-  
-  void setDelay(uint16_t delayMilliseconds, Clock *clock) {
-    deltaMilliseconds = 4;//delayMilliseconds / 256;
-    value = 2;
-    increment = false;
-    updateNextStepMilliseconds( clock->currentTime() );
   }
   
 private:
 
-  void updateNextStepMilliseconds(uint32_t currentTime) {
-    nextStepMilliseconds = currentTime + deltaMilliseconds;
+  void updateNextStepMilliseconds() {
+    nextStepMilliseconds = clock->currentTime() + DELTA;
+  }
+  
+  uint8_t getValue() {
+    return valueIncrementAndFlag & ~( (uint8_t)0x03 << 6 );
+  }
+  
+  void setValue(uint8_t val) {
+    valueIncrementAndFlag = ( (uint8_t)0x03 << 6 ) & valueIncrementAndFlag | val;
   }
   
 };

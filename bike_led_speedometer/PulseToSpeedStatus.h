@@ -22,6 +22,7 @@ public:
 
   PulseToSpeedStatus() {
     lastPulseCount = 0;
+    status = Stopped;
   }
 
   void tick(Clock *clock) {    
@@ -54,15 +55,9 @@ public:
     bool decelerating = pulseCounter->getMinusOnePulseInterval() > pulseCounter->getMinusTwoPulseInterval();
     return decelerating && status != Stopped;
     /*
-    if( pulseCounter->getMinusOnePulseInterval() > STOPPED_DELAY ) {
-      status = AcceleratingOrConstant;
-    } else if( pulseCounter->getMinusOnePulseInterval() <= minusTwoPulseInterval ) {
-      status = AcceleratingOrConstant;
-    } else {
       uint32_t delta = pulseCounter->getMinusOnePulseInterval() - minusTwoPulseInterval;
       //only consider decelerating if speed decreases more than 15%
       status = delta * 15 <= minusTwoPulseInterval ? AcceleratingOrConstant : Decelerating;
-      //status = Decelerating;
     }
     */
   }
