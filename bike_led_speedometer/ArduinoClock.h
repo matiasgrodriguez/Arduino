@@ -12,6 +12,10 @@ class ArduinoClock : public Clock {
   
 public:
 
+  ArduinoClock() {
+    currentTimeMillis = 0;
+  }
+
   virtual void update() {
     currentTimeMillis = millis();
   }
