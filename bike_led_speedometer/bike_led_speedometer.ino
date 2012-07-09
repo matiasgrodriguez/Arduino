@@ -50,10 +50,10 @@ void setup() {
 }
 
 void watchdog() {
-  static uint32_t toggle = millis() + 250;
+  static uint32_t toggle = millis() + 1000;
   if( millis() >= toggle ) {
     watchDogPin->toggle();
-    toggle = millis() + 250;
+    toggle = millis() + 1000;
   }
 }
 
