@@ -7,7 +7,7 @@
 #include "FxFade.h"
 #include "FxBlink.h"
 
-extern AnalogWritablePin *acceleratingPin;
+extern AnalogWritablePin *pulseFeedbackPin;
 extern DigitalWritablePin *deceleratingPin;
 extern PulseToSpeedStatus *pulseToSpeedStatus;
 
@@ -41,17 +41,17 @@ public:
 private:
 
   void updateAcceleratingOrConstant() {
-    fxFade.apply( acceleratingPin );
+    fxFade.apply( pulseFeedbackPin );
     deceleratingPin->set( false );
   }
 
   void updateDecelerating() {
-    acceleratingPin->set( 0 );
+    pulseFeedbackPin->set( 0 );
     deceleratingPin->set( true );
   }
 
   void updateStoped() {
-    acceleratingPin->set( 0 );
+    pulseFeedbackPin->set( 0 );
     fxBlink.apply( deceleratingPin );
   }
 
