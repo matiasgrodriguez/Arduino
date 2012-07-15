@@ -43,12 +43,9 @@ void setup() {
   
   pulseCounter = new PulseCounter( pulsePin );
   pulseToSpeedStatus = new PulseToSpeedStatus();
-  
   bikeLedSpeedometerUi = new BikeLedSpeedometerUi( clock );
   
   watchDogPin->set( true );
-  
-  //Serial.println("BLA");
 }
 
 void watchdog() {

@@ -22,17 +22,18 @@ public:
   void set() {
     valueAndUpdateFlag = 255;
     updateNextStepMilliseconds();
-    //Serial.println( "SET" );
   }
 
   virtual void tick(Clock *clock) {
     uint8_t value = getValue();
-    if( value == 0 || clock->currentTime() < nextStepMilliseconds ) {
+    if( clock->currentTime() < nextStepMilliseconds ) {
       BIT_CLEAR( (uint8_t)1, valueAndUpdateFlag, FX_FADE_OUT_BIT_UPDATE );
       return;
     }
-    //Serial.print( "value" ); Serial.println( value );
     BIT_SET( (uint8_t)1, valueAndUpdateFlag, FX_FADE_OUT_BIT_UPDATE );
+    if( value == 0 ) {
+      return;
+    }
     value -= 1;
     setValue( value );
     updateNextStepMilliseconds();
@@ -42,10 +43,8 @@ public:
   }
   
   virtual void apply(AnalogWritablePin *pin) {
-    //Serial.println( valueAndUpdateFlag );
     if( BIT_GET( (uint8_t)1, valueAndUpdateFlag, FX_FADE_OUT_BIT_UPDATE ) ) {
       uint8_t val = getValue() << 1;
-      //Serial.println( val );
       pin->set( val );
     }
   }
