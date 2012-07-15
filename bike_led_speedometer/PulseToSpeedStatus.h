@@ -7,21 +7,23 @@
 
 extern PulseCounter *pulseCounter;
 
+#define PULSE_TO_SPEED_STATUS_BIT_PULSED     7
+
 class PulseToSpeedStatus {
-  
+
 public:
   
   enum Status { AcceleratingOrConstant, Decelerating, Stopped };
 
 private:
 
-  uint32_t lastPulseCount;
+  uint32_t lastPulseCountAndPulsedFlag;
   Status status;
   
 public:
 
   PulseToSpeedStatus() {
-    lastPulseCount = 0;
+    lastPulseCountAndPulsedFlag = 0;
     status = Stopped;
   }
 
@@ -33,15 +35,24 @@ public:
     } else {
       status = AcceleratingOrConstant;
     }
+
+    updateLastPulseCount( pulseCounter->getPulseCount() );
+  }
     
-    lastPulseCount = pulseCounter->getPulseCount();
+  Status getStatus() {
+    return status;
   }
   
+  bool pulsedAndClearFlag() {
+    return checkIfWasPulsedAndClearFlag();
+  }
+  
+private:
 
   bool isStopping(Clock *clock) {
     return 
       pulseCounter->getPulseCount() == 0
-      || ( pulseCounter->getCurrentPulseElapsedInterval( clock ) > 5000 );
+      || ( pulseCounter->getCurrentPulseElapsedInterval( clock ) > 3000 );
   }
 
   bool isDecelerating(Clock *clock) {
@@ -62,8 +73,25 @@ public:
     */
   }
   
-  Status getStatus() {
-    return status;
+  void updateLastPulseCount(uint32_t pulseCount) { 
+    if( pulseCount == getLastPulseCount() ) {
+      BIT_CLEAR( ( uint8_t )1, lastPulseCountAndPulsedFlag, PULSE_TO_SPEED_STATUS_BIT_PULSED );
+      return;
+    }
+    lastPulseCountAndPulsedFlag = pulseCount;
+    BIT_SET( ( uint8_t )1, lastPulseCountAndPulsedFlag, PULSE_TO_SPEED_STATUS_BIT_PULSED );
+  }
+
+  uint32_t getLastPulseCount() {
+    return lastPulseCountAndPulsedFlag & ~( ( uint8_t )1 << PULSE_TO_SPEED_STATUS_BIT_PULSED );
+  }
+  
+  bool checkIfWasPulsedAndClearFlag() {
+    bool pulsed = BIT_GET( ( uint8_t )1, lastPulseCountAndPulsedFlag, PULSE_TO_SPEED_STATUS_BIT_PULSED );
+    if( pulsed ) {
+      BIT_CLEAR( ( uint8_t )1, lastPulseCountAndPulsedFlag, PULSE_TO_SPEED_STATUS_BIT_PULSED );
+    }
+    return pulsed;
   }
   
 };

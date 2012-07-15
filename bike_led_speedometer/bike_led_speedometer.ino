@@ -47,6 +47,8 @@ void setup() {
   bikeLedSpeedometerUi = new BikeLedSpeedometerUi( clock );
   
   watchDogPin->set( true );
+  
+  //Serial.println("BLA");
 }
 
 void watchdog() {
