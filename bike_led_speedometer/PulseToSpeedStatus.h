@@ -7,7 +7,7 @@
 
 extern PulseCounter *pulseCounter;
 
-#define PULSE_TO_SPEED_STATUS_BIT_PULSED     7
+#define PULSE_TO_SPEED_STATUS_BIT_PULSED     31
 
 class PulseToSpeedStatus {
 
@@ -75,21 +75,21 @@ private:
   
   void updateLastPulseCount(uint32_t pulseCount) { 
     if( pulseCount == getLastPulseCount() ) {
-      BIT_CLEAR( ( uint8_t )1, lastPulseCountAndPulsedFlag, PULSE_TO_SPEED_STATUS_BIT_PULSED );
+      BIT_CLEAR( 1ul, lastPulseCountAndPulsedFlag, PULSE_TO_SPEED_STATUS_BIT_PULSED );
       return;
     }
     lastPulseCountAndPulsedFlag = pulseCount;
-    BIT_SET( ( uint8_t )1, lastPulseCountAndPulsedFlag, PULSE_TO_SPEED_STATUS_BIT_PULSED );
+    BIT_SET( 1ul, lastPulseCountAndPulsedFlag, PULSE_TO_SPEED_STATUS_BIT_PULSED );
   }
 
   uint32_t getLastPulseCount() {
-    return lastPulseCountAndPulsedFlag & ~( ( uint8_t )1 << PULSE_TO_SPEED_STATUS_BIT_PULSED );
+    return lastPulseCountAndPulsedFlag & ~( 1ul << PULSE_TO_SPEED_STATUS_BIT_PULSED );
   }
   
   bool checkIfWasPulsedAndClearFlag() {
-    bool pulsed = BIT_GET( ( uint8_t )1, lastPulseCountAndPulsedFlag, PULSE_TO_SPEED_STATUS_BIT_PULSED );
+    bool pulsed = BIT_GET( 1ul, lastPulseCountAndPulsedFlag, PULSE_TO_SPEED_STATUS_BIT_PULSED );
     if( pulsed ) {
-      BIT_CLEAR( ( uint8_t )1, lastPulseCountAndPulsedFlag, PULSE_TO_SPEED_STATUS_BIT_PULSED );
+      BIT_CLEAR( 1ul, lastPulseCountAndPulsedFlag, PULSE_TO_SPEED_STATUS_BIT_PULSED );
     }
     return pulsed;
   }
