@@ -34,7 +34,7 @@ public:
     if( value == 0 ) {
       return;
     }
-    value -= 1;
+    value -= ( value > 3 ? 4 : 1 );
     setValue( value );
     updateNextStepMilliseconds();
   }

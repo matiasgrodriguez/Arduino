@@ -15,7 +15,7 @@ extern void watchdog();
 
 class BikeLedSpeedometerUi {
   
-  FxFadeOut<4> fxFadeOut;
+  FxFadeOut<1> fxFadeOut;
   FxBlink<150> fxBlink;
   
 public:
