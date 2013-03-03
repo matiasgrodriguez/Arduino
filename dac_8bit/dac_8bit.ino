@@ -1,11 +1,12 @@
 
 /**
-How to build your own 8-bit DAC:
- ( 
-  TODO: put a link to my blog, 
-  TODO: create a post on my blog about this (with credits) :)
- )
+How to build your own 8-bit DAC and play these tunes:
+  http://matias.blog.br/2013/03/02/algorithmic-symphonies-from-one-line-of-code-meets-my-r-2r-diy-8bit-dac/
 
+Result:
+  http://www.youtube.com/watch?v=mPFx0IxGtb4
+
+Have fun!
 **/
 
 #define DAC_PIN0 1
@@ -21,7 +22,7 @@ How to build your own 8-bit DAC:
 
 #define NUMBER_OF_TUNES 13
 
-const int DELTA_IN_MICROS = 125; //8kHz: 1/8000 = 0,000125
+const int DELTA_IN_MICROS = 125; //8kHz: 1/8000 = 0.000125
 int32_t t;
 uint32_t nextSampleMicros;
 int currentTune;
@@ -101,7 +102,6 @@ void checkButton() {
 }
 
 void setup() {
-  //OSCCAL = 255;
   pinMode( DAC_PIN0, OUTPUT );
   pinMode( DAC_PIN1, OUTPUT );
   pinMode( DAC_PIN2, OUTPUT );
