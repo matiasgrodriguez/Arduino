@@ -1,17 +1,16 @@
 
 #include <Keypad.h>
 
-const byte ROWS = 4; 
-const byte COLS = 4; 
+const byte ROWS = 3; 
+const byte COLS = 3; 
 char keys[ ROWS ][ COLS ] = {
-  {'1','2','3','a'},
-  {'4','5','6','b'},
-  {'7','8','9','c'},
-  {'*','0','#','d'},
+  {'1','2','3'},
+  {'4','5','6'},
+  {'7','8','9'},
 };
 
-byte rowPins[ ROWS ] = {10, 9, 8, 7};
-byte colPins[ COLS ] = {6, 5, 4, 3};
+byte rowPins[ ROWS ] = {10, 9, 8};
+byte colPins[ COLS ] = {6, 5, 4};
 
 int delayMillis = 30;
 
@@ -27,6 +26,18 @@ void lshift() {
 
 void lctrl() {
   Keyboard.press( KEY_LEFT_CTRL );
+}
+
+void pageup() {
+  Keyboard.press( KEY_PAGE_UP );
+}
+
+void pagedown() {
+  Keyboard.press( KEY_PAGE_DOWN );
+}
+
+void enter() {
+  Keyboard.press( KEY_RETURN );
 }
 
 void k(const char key) {
@@ -47,13 +58,24 @@ void releasekey(const char key) {
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-void refactorRenameEclipse() {
-    lalt();lshift();k( 'r' );wait();
+void previousEclipse() {
+}
+
+void actionEclipse() {
+    lctrl();k( '1' );wait();
     releaseall();
+}
+
+void nextEclipse() {
 }
 
 void refactorExtractLocalVariableEclipse() {
     lalt();lshift();k( 'l' );wait();
+    releaseall();
+}
+
+void refactorRenameEclipse() {
+    lalt();lshift();k( 'r' );wait();
     releaseall();
 }
 
@@ -62,6 +84,8 @@ void refactorExtractMethodEclipse() {
     releaseall();
 }
 
+//undef
+
 void refactorInlineEclipse() {
     lalt();lshift();k( 'i' );wait();
     releaseall();
@@ -69,11 +93,19 @@ void refactorInlineEclipse() {
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-void refactorRenameResharper() {
-    lctrl();k( 'r' );wait();
-    releasekey( 'r' );wait();
-    k( 'r' );wait();
+void previousResharper() {
+  lalt();pageup();wait();
+  releaseall();
+}
+
+void actionResharper() {
+    lalt();enter();wait();
     releaseall();
+}
+
+void nextResharper() {
+  lalt();pagedown();wait();
+  releaseall();
 }
 
 void refactorExtractLocalVariableResharper() {
@@ -83,12 +115,21 @@ void refactorExtractLocalVariableResharper() {
     releaseall();
 }
 
+void refactorRenameResharper() {
+    lctrl();k( 'r' );wait();
+    releasekey( 'r' );wait();
+    k( 'r' );wait();
+    releaseall();
+}
+
 void refactorExtractMethodResharper() {
     lctrl();k( 'r' );wait();
     releasekey( 'r' );wait();
     k( 'm' );wait();
     releaseall();
 }
+
+//undef
 
 void refactorInlineResharper() {
     lctrl();k( 'r' );wait();
@@ -101,23 +142,35 @@ void refactorInlineResharper() {
 
 void nop() {}
 
-void (*refactorRename)() = refactorRenameEclipse;
+void (*previous)() = previousEclipse;
+void (*action)() = actionEclipse;
+void (*next)() = nextEclipse;
 void (*refactorExtractLocalVariable)() = refactorExtractLocalVariableEclipse;
+void (*refactorRename)() = refactorRenameEclipse;
 void (*refactorExtractMethod)() = refactorExtractMethodEclipse;
+void (*undef)() = nop;
 void (*refactorInline)() = refactorInlineEclipse;
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-void switchMapping() {
+void menu1() {
   if( refactorRename == refactorRenameEclipse ) {
-    refactorRename = refactorRenameResharper;
+    previous = previousResharper;
+    action = actionResharper;
+    next = nextResharper;
     refactorExtractLocalVariable = refactorExtractLocalVariableResharper;
+    refactorRename = refactorRenameResharper;
     refactorExtractMethod = refactorExtractMethodResharper;
+    undef = nop;
     refactorInline = refactorInlineResharper;
   } else {
-    refactorRename = refactorRenameEclipse;
+    previous = previousEclipse;
+    action = actionEclipse;
+    next = nextEclipse;
     refactorExtractLocalVariable = refactorExtractLocalVariableEclipse;
+    refactorRename = refactorRenameEclipse;
     refactorExtractMethod = refactorExtractMethodEclipse;
+    undef = nop;
     refactorInline = refactorInlineEclipse;
   }
 }
@@ -137,19 +190,24 @@ void loop(){
     return;
   }
   
-  if( key == '*' ) {
-    switchMapping();
-    return;
-  }
-  
   if( key == '1' ) {
-    refactorRename();
+    previous();
   } else if( key == '2' ) {
+    action();
+  } else if( key == '3' ) {
+    next();
+  } else if( key == '4' ) {
     refactorExtractLocalVariable();
   } else if( key == '5' ) {
-    refactorInline();
-  } else if( key == '3' ) {
+    refactorRename();
+  } else if( key == '6' ) {
     refactorExtractMethod();
+  } else if( key == '7' ) {
+    undef();
+  } else if( key == '8' ) {
+    refactorInline();
+  } else if( key == '9' ) {
+    menu1();
   }
   
 }
