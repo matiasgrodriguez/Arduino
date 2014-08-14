@@ -4,9 +4,9 @@
 const byte ROWS = 3; 
 const byte COLS = 3; 
 char keys[ ROWS ][ COLS ] = {
-  {'1','2','3'},
-  {'4','5','6'},
-  {'7','8','9'},
+  {'0','1','2'},
+  {'3','4','5'},
+  {'6','7','8'},
 };
 
 byte rowPins[ ROWS ] = {10, 9, 8};
@@ -142,45 +142,37 @@ void refactorInlineResharper() {
 
 void nop() {}
 
-void (*previous)() = previousEclipse;
-void (*action)() = actionEclipse;
-void (*next)() = nextEclipse;
-void (*refactorExtractLocalVariable)() = refactorExtractLocalVariableEclipse;
-void (*refactorRename)() = refactorRenameEclipse;
-void (*refactorExtractMethod)() = refactorExtractMethodEclipse;
-void (*undef)() = nop;
-void (*refactorInline)() = refactorInlineEclipse;
+void menu1();
+
+void (*eclipse[9])() = {
+  previousEclipse,actionEclipse,nextEclipse,
+  refactorExtractLocalVariableEclipse,refactorRenameEclipse,refactorExtractMethodEclipse,
+  nop,refactorInlineEclipse, menu1
+};
+
+void (*resharper[9])() = {
+  previousResharper,actionResharper,nextResharper,
+  refactorExtractLocalVariableResharper,refactorRenameResharper,refactorExtractMethodResharper,
+  nop,refactorInlineResharper, menu1
+};
+
+void (**lookup)() = eclipse;
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 void menu1() {
-  if( refactorRename == refactorRenameEclipse ) {
-    previous = previousResharper;
-    action = actionResharper;
-    next = nextResharper;
-    refactorExtractLocalVariable = refactorExtractLocalVariableResharper;
-    refactorRename = refactorRenameResharper;
-    refactorExtractMethod = refactorExtractMethodResharper;
-    undef = nop;
-    refactorInline = refactorInlineResharper;
+  if( lookup == eclipse ) {
+    lookup = resharper;
   } else {
-    previous = previousEclipse;
-    action = actionEclipse;
-    next = nextEclipse;
-    refactorExtractLocalVariable = refactorExtractLocalVariableEclipse;
-    refactorRename = refactorRenameEclipse;
-    refactorExtractMethod = refactorExtractMethodEclipse;
-    undef = nop;
-    refactorInline = refactorInlineEclipse;
+    lookup = eclipse;
   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-
 void setup(){
   //Serial.begin(9600);
-  Keyboard.begin();  
+  Keyboard.begin();
 }
 
 void loop(){
@@ -190,26 +182,10 @@ void loop(){
     return;
   }
   
-  if( key == '1' ) {
-    previous();
-  } else if( key == '2' ) {
-    action();
-  } else if( key == '3' ) {
-    next();
-  } else if( key == '4' ) {
-    refactorExtractLocalVariable();
-  } else if( key == '5' ) {
-    refactorRename();
-  } else if( key == '6' ) {
-    refactorExtractMethod();
-  } else if( key == '7' ) {
-    undef();
-  } else if( key == '8' ) {
-    refactorInline();
-  } else if( key == '9' ) {
-    menu1();
+  int offset = (int)key - (int)'0';
+  if( offset >= 0 && offset < 9 ) {
+    lookup[offset]();
   }
-  
 }
 
 
