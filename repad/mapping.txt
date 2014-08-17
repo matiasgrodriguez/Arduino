@@ -1,0 +1,90 @@
+0		//0: eclipse previous 
+0		//1: eclipse action
+lctrl
+1
+wait
+releaseall
+0		//2: eclipse next
+0		//3: eclipse extract variable
+lalt
+lshift
+l
+wait
+releaseall
+0 		//4: eclipse rename
+lalt
+lshift
+r
+wait
+releaseall
+0		//5: eclipse extract method
+lalt
+lshift
+m
+wait
+releaseall
+0		//6: eclipse ?
+0		//7: eclipse inline
+lalt
+lshift
+i
+wait
+releaseall
+0		//8: eclipse ?
+0		//0: resharper previous
+lalt
+pageup
+wait
+releaseall
+0		//1: resharper action
+lalt
+enter
+wait
+releaseall
+0		//2: resharper next
+lalt
+pagedown
+wait
+releaseall
+0		//3: resharper extract variable
+lctrl
+r
+wait
+release
+r
+wait
+v
+wait
+releaseall
+0		//4: resharper rename
+lctrl
+r
+wait
+release
+r
+wait
+r
+wait
+releaseall
+0		//5: resharper extract method
+lctrl
+r
+wait
+release
+r
+wait
+m
+wait
+releaseall
+0		//6: resharper ?
+0		//7: resharper inline
+lctrl
+r
+wait
+release
+r
+wait
+i
+wait
+releaseall
+0		//8: resharper ?
