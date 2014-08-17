@@ -1,16 +1,17 @@
 
 #include <Keypad.h>
 
-const byte ROWS = 3; 
+const byte ROWS = 4; 
 const byte COLS = 3; 
 char keys[ ROWS ][ COLS ] = {
-  {'0','1','2'},
-  {'3','4','5'},
-  {'6','7','8'},
+  { '0',  '1',  '2'},
+  { '3',  '4',  '5'},
+  { '6',  '7',  '8'},
+  { '9', '10', '11'},
 };
 
-byte rowPins[ ROWS ] = {10, 9, 8};
-byte colPins[ COLS ] = {6, 5, 4};
+byte rowPins[ ROWS ] = {7, 6, 5, 15};
+byte colPins[ COLS ] = {14, 16, 8};
 
 int delayMillis = 30;
 
@@ -144,16 +145,19 @@ void nop() {}
 
 void menu1();
 
-void (*eclipse[9])() = {
-  previousEclipse,actionEclipse,nextEclipse,
-  refactorExtractLocalVariableEclipse,refactorRenameEclipse,refactorExtractMethodEclipse,
-  nop,refactorInlineEclipse, menu1
+const int SIZE=12;
+void (*eclipse[SIZE])() = {
+  previousEclipse, actionEclipse, nextEclipse,
+  refactorExtractLocalVariableEclipse, refactorRenameEclipse, refactorExtractMethodEclipse,
+  nop, refactorInlineEclipse, nop,
+  menu1, nop, nop
 };
 
-void (*resharper[9])() = {
-  previousResharper,actionResharper,nextResharper,
-  refactorExtractLocalVariableResharper,refactorRenameResharper,refactorExtractMethodResharper,
-  nop,refactorInlineResharper, menu1
+void (*resharper[SIZE])() = {
+  previousResharper, actionResharper, nextResharper,
+  refactorExtractLocalVariableResharper, refactorRenameResharper, refactorExtractMethodResharper,
+  nop, refactorInlineResharper, nop,
+  menu1, nop, nop
 };
 
 void (**lookup)() = eclipse;
@@ -183,7 +187,7 @@ void loop(){
   }
   
   int offset = (int)key - (int)'0';
-  if( offset >= 0 && offset < 9 ) {
+  if( offset >= 0 && offset < SIZE ) {
     lookup[offset]();
   }
 }
