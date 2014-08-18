@@ -1,17 +1,17 @@
-b1		//start...
-b2		//0: eclipse previous 
-b2		//1: eclipse action
+bs	//buffer start...
+ks	//key start 0: eclipse previous 
+ks	//1: eclipse action
 lctrl
 1
-wait
-releaseall
-b2		//2: eclipse next
-b2		//3: eclipse extract variable
+wa
+ra
+ks		//2: eclipse next
+ks		//3: eclipse extract variable
 lalt
 lshift
 l
-wait
-releaseall
+wa
+ra
 b2 		//4: eclipse rename
 lalt
 lshift

@@ -58,26 +58,14 @@ void releasekey(const char key) {
   Keyboard.release(key);
 }
 
-
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-//http://batchloaf.wordpress.com/2013/02/12/simple-trick-for-sending-characters-to-a-serial-port-in-windows/
-//echo matiasserial >\\.\COM21
-
-String last;
-
-void serialLoop() {
-  if( Serial.available() == 0 ){
-    return;
-  }
-  
-  Serial.print( "Last: " );Serial.println( last );
-  String str = Serial.readStringUntil('\n');
-  Serial.print( "Got: " );Serial.println( str );
-  last = str;
-}
-
-///////////////////////////////////////////////////////////////////////////////////////////
+#define BUFFER_START 1
+#define KEY_START 2
+#define BUFFER_END 4
+#define WAIT 17
+#define RELEASE 18
+#define RELEASEALL 19
 
 #define K_LCTRL KEY_LEFT_CTRL
 #define K_LALT KEY_LEFT_ALT
@@ -88,13 +76,55 @@ void serialLoop() {
 #define K_UP KEY_UP_ARROW
 #define K_DOWN KEY_DOWN_ARROW
 
-#define BEGIN_BUFFER 1
-#define BEGIN_KEY 2
-#define END_BUFFER 4
-#define WAIT 17
-#define RELEASE 18
-#define RELEASEALL 19
+///////////////////////////////////////////////////////////////////////////////////////////
 
+//http://batchloaf.wordpress.com/2013/02/12/simple-trick-for-sending-characters-to-a-serial-port-in-windows/
+//echo matiasserial >\\.\COM21
+
+struct SerialUploadState {
+  int current;
+};
+
+SerialUploadState serialUploadState;
+
+void serialLoop() {
+  if( Serial.available() == 0 ){
+    return;
+  }
+  
+  String line = Serial.readStringUntil('\n');
+  byte command = 0;
+  if( line.equals( "bs" ) ) {
+    Serial.println( "BUFFER_START" );
+    serialUploadState.current = 0;
+    command = BUFFER_START;
+  } else if( line.equals( "ks" ) ) {
+    Serial.println( "KEY_START" );
+    command = KEY_START;
+  } else if( line.equals( "wa" ) ) {
+    Serial.println( "WAIT" );
+    command = WAIT;
+  } else if( line.equals( "rk" ) ) {
+    Serial.println( "RELEASE" );
+    command = RELEASE;
+  } else if( line.equals( "ra" ) ) {
+    Serial.println( "RELEASEALL" );
+    command = RELEASEALL;
+  } else if( line.equals( "be" ) ) {
+    Serial.println( "BUFFER_END" );
+    command = BUFFER_END;
+  } /*else if( line.equals( "" ) ) {
+    command = ;
+  } else if( line.equals( "" ) ) {
+    command = ;
+  } else if( line.equals( "" ) ) {
+    command = ;
+  } else if( line.equals( "" ) ) {
+  }*/
+  //EEPROM.write( serialUploadState.current++, command );
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////
 
 #define LAYOUT_COMMANDS    9
 #define LAYOUTS_COMMANDS   LAYOUT_COMMANDS*10
@@ -108,86 +138,86 @@ struct Layouts {
 Layouts layouts;
 
 void storeHardCodedValues() {
-  const size_t MAX_SIZE = 256;
+  const size_t MAX_SIZE = 512;
   byte commands[MAX_SIZE];
   memset(commands, 0, sizeof(commands));
   
   int i = 0;
-  commands[i++] = BEGIN_BUFFER; //buffer start
+  commands[i++] = BUFFER_START; //buffer start
 
-  commands[i++] = BEGIN_KEY; //shortcut start: 0 eclipse previous
+  commands[i++] = KEY_START; //shortcut start: 0 eclipse previous
   commands[i++] = K_LALT;
   commands[i++] = K_LSHIFT;
   commands[i++] = K_UP;
   commands[i++] = WAIT;
   commands[i++] = RELEASEALL;
 
-  commands[i++] = BEGIN_KEY; //shortcut start: 1 eclipse action
+  commands[i++] = KEY_START; //shortcut start: 1 eclipse action
   commands[i++] = K_LCTRL;
   commands[i++] = '1';
   commands[i++] = WAIT;
   commands[i++] = RELEASEALL;
 
-  commands[i++] = BEGIN_KEY; //shortcut start: 2 eclipse next
+  commands[i++] = KEY_START; //shortcut start: 2 eclipse next
   commands[i++] = K_LALT;
   commands[i++] = K_LSHIFT;
   commands[i++] = K_DOWN;
   commands[i++] = WAIT;
   commands[i++] = RELEASEALL;
 
-  commands[i++] = BEGIN_KEY; //shortcut start: 3 eclipse variable
+  commands[i++] = KEY_START; //shortcut start: 3 eclipse variable
   commands[i++] = K_LALT;
   commands[i++] = K_LSHIFT;
   commands[i++] = 'l'; 
   commands[i++] = WAIT; 
   commands[i++] = RELEASEALL; 
   
-  commands[i++] = BEGIN_KEY; //shortcut start: 4 eclipse rename
+  commands[i++] = KEY_START; //shortcut start: 4 eclipse rename
   commands[i++] = K_LALT;
   commands[i++] = K_LSHIFT;
   commands[i++] = 'r'; 
   commands[i++] = WAIT; 
   commands[i++] = RELEASEALL; 
   
-  commands[i++] = BEGIN_KEY; //shortcut start: 5 eclipse method
+  commands[i++] = KEY_START; //shortcut start: 5 eclipse method
   commands[i++] = K_LALT;
   commands[i++] = K_LSHIFT;
   commands[i++] = 'm'; 
   commands[i++] = WAIT; 
   commands[i++] = RELEASEALL; 
 
-  commands[i++] = BEGIN_KEY; //shortcut start: 6 eclipse ?
+  commands[i++] = KEY_START; //shortcut start: 6 eclipse ?
   
-  commands[i++] = BEGIN_KEY; //shortcut start: 7 eclipse inline
+  commands[i++] = KEY_START; //shortcut start: 7 eclipse inline
   commands[i++] = K_LALT;
   commands[i++] = K_LSHIFT;
   commands[i++] = 'i'; 
   commands[i++] = WAIT; 
   commands[i++] = RELEASEALL; 
   
-  commands[i++] = BEGIN_KEY; //shortcut start: 8 eclipse ?
+  commands[i++] = KEY_START; //shortcut start: 8 eclipse ?
   
   ////////////
   
-  commands[i++] = BEGIN_KEY; //shortcut start: 0 resharper previous
+  commands[i++] = KEY_START; //shortcut start: 0 resharper previous
   commands[i++] = K_LALT;
   commands[i++] = K_PAGEUP;
   commands[i++] = WAIT;
   commands[i++] = RELEASEALL;
 
-  commands[i++] = BEGIN_KEY; //shortcut start: 0 resharper action
+  commands[i++] = KEY_START; //shortcut start: 0 resharper action
   commands[i++] = K_LALT;
   commands[i++] = K_ENTER;
   commands[i++] = WAIT;
   commands[i++] = RELEASEALL;
 
-  commands[i++] = BEGIN_KEY; //shortcut start: 0 resharper next
+  commands[i++] = KEY_START; //shortcut start: 0 resharper next
   commands[i++] = K_LALT;
   commands[i++] = K_PAGEDOWN;
   commands[i++] = WAIT;
   commands[i++] = RELEASEALL;
 
-  commands[i++] = BEGIN_KEY; //shortcut start: 0 resharper variable
+  commands[i++] = KEY_START; //shortcut start: 0 resharper variable
   commands[i++] = K_LCTRL;
   commands[i++] = 'r';
   commands[i++] = WAIT;
@@ -198,7 +228,7 @@ void storeHardCodedValues() {
   commands[i++] = WAIT;
   commands[i++] = RELEASEALL;
 
-  commands[i++] = BEGIN_KEY; //shortcut start: 0 resharper rename
+  commands[i++] = KEY_START; //shortcut start: 0 resharper rename
   commands[i++] = K_LCTRL;
   commands[i++] = 'r';
   commands[i++] = WAIT;
@@ -209,7 +239,7 @@ void storeHardCodedValues() {
   commands[i++] = WAIT;
   commands[i++] = RELEASEALL;
 
-  commands[i++] = BEGIN_KEY; //shortcut start: 0 resharper method
+  commands[i++] = KEY_START; //shortcut start: 0 resharper method
   commands[i++] = K_LCTRL;
   commands[i++] = 'r';
   commands[i++] = WAIT;
@@ -220,9 +250,9 @@ void storeHardCodedValues() {
   commands[i++] = WAIT;
   commands[i++] = RELEASEALL;
 
-  commands[i++] = BEGIN_KEY; //shortcut start: 0 resharper ?
+  commands[i++] = KEY_START; //shortcut start: 0 resharper ?
 
-  commands[i++] = BEGIN_KEY; //shortcut start: 0 resharper inline
+  commands[i++] = KEY_START; //shortcut start: 0 resharper inline
   commands[i++] = K_LCTRL;
   commands[i++] = 'r';
   commands[i++] = WAIT;
@@ -233,30 +263,30 @@ void storeHardCodedValues() {
   commands[i++] = WAIT;
   commands[i++] = RELEASEALL;
 
-  commands[i++] = BEGIN_KEY; //shortcut start: 0 resharper ?
+  commands[i++] = KEY_START; //shortcut start: 0 resharper ?
 
-  commands[i++] = END_BUFFER; 
+  commands[i++] = BUFFER_END; 
   
   for(int i = 0; i < MAX_SIZE; ++i) {
     byte command = commands[ i ];
     EEPROM.write( i, command );
-    if( command == END_BUFFER ) {
+    if( command == BUFFER_END ) {
       break;
     }
   }
 }
 
 void setupCommands() {
-  if( EEPROM.read( 0 ) != BEGIN_BUFFER ) {
+  if( EEPROM.read( 0 ) != BUFFER_START ) {
     storeHardCodedValues();
   }
   
   memset(&layouts, 0, sizeof(layouts));
   for(int i = 0; i < 512; ++i) {
     byte command = EEPROM.read( i );
-    if( command == BEGIN_KEY ) {
+    if( command == KEY_START ) {
       layouts.indices[ layouts.index++ ] = i;
-    } else if( command == END_BUFFER ) {
+    } else if( command == BUFFER_END ) {
       break;
     }
   }
@@ -268,7 +298,7 @@ void execute(int button) {
   for(int i = layouts.indices[layouts.current + button] + 1; ; ++i) {
     byte command = EEPROM.read( i );
     //Serial.print( "i: " );Serial.print( i );Serial.print( " cmd: " );Serial.println( command );
-    if( BEGIN_KEY == command || END_BUFFER == command || 0 == command ) { //peek
+    if( KEY_START == command || BUFFER_END == command || 0 == command ) { //peek
       break;
     }
     if( WAIT == command ) {
