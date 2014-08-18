@@ -1,5 +1,6 @@
 
 #include <Keypad.h>
+#include <EEPROM.h>
 
 const byte ROWS = 4; 
 const byte COLS = 3; 
@@ -94,23 +95,26 @@ void serialLoop() {
 #define RELEASE 18
 #define RELEASEALL 19
 
-struct Layout {
-  int *current;
-  int eclipse[9];
-  int resharper[9];
+
+#define LAYOUT_COMMANDS    9
+#define LAYOUTS_COMMANDS   LAYOUT_COMMANDS*10
+
+struct Layouts {
+  int current;
+  int index;
+  byte indices[LAYOUTS_COMMANDS];
 };
 
-Layout layout;
-byte commands[256];
+Layouts layouts;
 
-void setupCommands() {
+void storeHardCodedValues() {
+  const size_t MAX_SIZE = 256;
+  byte commands[MAX_SIZE];
   memset(commands, 0, sizeof(commands));
-  memset(&layout, 0, sizeof(layout));
-
+  
   int i = 0;
-  commands[i++] = 1; //buffer start
+  commands[i++] = BEGIN_BUFFER; //buffer start
 
-  layout.eclipse[0] = i;
   commands[i++] = BEGIN_KEY; //shortcut start: 0 eclipse previous
   commands[i++] = K_LALT;
   commands[i++] = K_LSHIFT;
@@ -118,14 +122,12 @@ void setupCommands() {
   commands[i++] = WAIT;
   commands[i++] = RELEASEALL;
 
-  layout.eclipse[1] = i;
   commands[i++] = BEGIN_KEY; //shortcut start: 1 eclipse action
   commands[i++] = K_LCTRL;
   commands[i++] = '1';
   commands[i++] = WAIT;
   commands[i++] = RELEASEALL;
 
-  layout.eclipse[2] = i;  
   commands[i++] = BEGIN_KEY; //shortcut start: 2 eclipse next
   commands[i++] = K_LALT;
   commands[i++] = K_LSHIFT;
@@ -133,7 +135,6 @@ void setupCommands() {
   commands[i++] = WAIT;
   commands[i++] = RELEASEALL;
 
-  layout.eclipse[3] = i;  
   commands[i++] = BEGIN_KEY; //shortcut start: 3 eclipse variable
   commands[i++] = K_LALT;
   commands[i++] = K_LSHIFT;
@@ -141,7 +142,6 @@ void setupCommands() {
   commands[i++] = WAIT; 
   commands[i++] = RELEASEALL; 
   
-  layout.eclipse[4] = i;  
   commands[i++] = BEGIN_KEY; //shortcut start: 4 eclipse rename
   commands[i++] = K_LALT;
   commands[i++] = K_LSHIFT;
@@ -149,7 +149,6 @@ void setupCommands() {
   commands[i++] = WAIT; 
   commands[i++] = RELEASEALL; 
   
-  layout.eclipse[5] = i;  
   commands[i++] = BEGIN_KEY; //shortcut start: 5 eclipse method
   commands[i++] = K_LALT;
   commands[i++] = K_LSHIFT;
@@ -157,10 +156,8 @@ void setupCommands() {
   commands[i++] = WAIT; 
   commands[i++] = RELEASEALL; 
 
-  layout.eclipse[6] = i;  
   commands[i++] = BEGIN_KEY; //shortcut start: 6 eclipse ?
   
-  layout.eclipse[7] = i;  
   commands[i++] = BEGIN_KEY; //shortcut start: 7 eclipse inline
   commands[i++] = K_LALT;
   commands[i++] = K_LSHIFT;
@@ -168,33 +165,28 @@ void setupCommands() {
   commands[i++] = WAIT; 
   commands[i++] = RELEASEALL; 
   
-  layout.eclipse[8] = i;  
   commands[i++] = BEGIN_KEY; //shortcut start: 8 eclipse ?
   
   ////////////
   
-  layout.resharper[0] = i;
   commands[i++] = BEGIN_KEY; //shortcut start: 0 resharper previous
   commands[i++] = K_LALT;
   commands[i++] = K_PAGEUP;
   commands[i++] = WAIT;
   commands[i++] = RELEASEALL;
 
-  layout.resharper[1] = i;
   commands[i++] = BEGIN_KEY; //shortcut start: 0 resharper action
   commands[i++] = K_LALT;
   commands[i++] = K_ENTER;
   commands[i++] = WAIT;
   commands[i++] = RELEASEALL;
 
-  layout.resharper[2] = i;
   commands[i++] = BEGIN_KEY; //shortcut start: 0 resharper next
   commands[i++] = K_LALT;
   commands[i++] = K_PAGEDOWN;
   commands[i++] = WAIT;
   commands[i++] = RELEASEALL;
 
-  layout.resharper[3] = i;
   commands[i++] = BEGIN_KEY; //shortcut start: 0 resharper variable
   commands[i++] = K_LCTRL;
   commands[i++] = 'r';
@@ -206,7 +198,6 @@ void setupCommands() {
   commands[i++] = WAIT;
   commands[i++] = RELEASEALL;
 
-  layout.resharper[4] = i;
   commands[i++] = BEGIN_KEY; //shortcut start: 0 resharper rename
   commands[i++] = K_LCTRL;
   commands[i++] = 'r';
@@ -218,7 +209,6 @@ void setupCommands() {
   commands[i++] = WAIT;
   commands[i++] = RELEASEALL;
 
-  layout.resharper[5] = i;
   commands[i++] = BEGIN_KEY; //shortcut start: 0 resharper method
   commands[i++] = K_LCTRL;
   commands[i++] = 'r';
@@ -230,10 +220,8 @@ void setupCommands() {
   commands[i++] = WAIT;
   commands[i++] = RELEASEALL;
 
-  layout.resharper[6] = i;
   commands[i++] = BEGIN_KEY; //shortcut start: 0 resharper ?
 
-  layout.resharper[7] = i;
   commands[i++] = BEGIN_KEY; //shortcut start: 0 resharper inline
   commands[i++] = K_LCTRL;
   commands[i++] = 'r';
@@ -245,27 +233,49 @@ void setupCommands() {
   commands[i++] = WAIT;
   commands[i++] = RELEASEALL;
 
-  layout.resharper[8] = i;
   commands[i++] = BEGIN_KEY; //shortcut start: 0 resharper ?
 
-  commands[i++] = END_BUFFER; //buffer end
+  commands[i++] = END_BUFFER; 
   
-  layout.current = layout.eclipse;
+  for(int i = 0; i < MAX_SIZE; ++i) {
+    byte command = commands[ i ];
+    EEPROM.write( i, command );
+    if( command == END_BUFFER ) {
+      break;
+    }
+  }
+}
+
+void setupCommands() {
+  if( EEPROM.read( 0 ) != BEGIN_BUFFER ) {
+    storeHardCodedValues();
+  }
+  
+  memset(&layouts, 0, sizeof(layouts));
+  for(int i = 0; i < 512; ++i) {
+    byte command = EEPROM.read( i );
+    if( command == BEGIN_KEY ) {
+      layouts.indices[ layouts.index++ ] = i;
+    } else if( command == END_BUFFER ) {
+      break;
+    }
+  }
 }
 
 void execute(int button) {
+  const size_t abortValue = 1000;
   //Serial.print( "execute: " );Serial.println( button );
-  for(int i = layout.current[button] + 1; ; ++i) {
-    byte command = commands[ i ];
+  for(int i = layouts.indices[layouts.current + button] + 1; ; ++i) {
+    byte command = EEPROM.read( i );
     //Serial.print( "i: " );Serial.print( i );Serial.print( " cmd: " );Serial.println( command );
-    if( BEGIN_KEY == command || END_BUFFER == command ) { //peek
+    if( BEGIN_KEY == command || END_BUFFER == command || 0 == command ) { //peek
       break;
     }
     if( WAIT == command ) {
       //Serial.println( "wait" );
       wait();
     } else if( RELEASE == command ) {
-      byte k = commands[ ++i ];
+      byte k = EEPROM.read( ++i );
       //Serial.print( "release " );Serial.println( k );
       releasekey( k );
     } else if( RELEASEALL == command ) {
@@ -276,7 +286,7 @@ void execute(int button) {
       k( command );
     }
     
-    if( i > 255 ) {
+    if( i >= abortValue ) {
       //Serial.println( "watchdog out" );
       break;
     }
@@ -287,10 +297,9 @@ void execute(int button) {
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 void menu1() {
-  if( layout.current == layout.eclipse ) {
-    layout.current = layout.resharper;
-  } else {
-    layout.current = layout.eclipse;
+  layouts.current += LAYOUT_COMMANDS;
+  if( layouts.current >= layouts.index ) {
+    layouts.current = 0;
   }
 }
 
