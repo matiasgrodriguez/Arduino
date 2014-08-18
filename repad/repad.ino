@@ -84,6 +84,8 @@ void serialLoop() {
 #define K_PAGEUP KEY_PAGE_UP 
 #define K_PAGEDOWN KEY_PAGE_DOWN
 #define K_ENTER KEY_RETURN
+#define K_UP KEY_UP_ARROW
+#define K_DOWN KEY_DOWN_ARROW
 
 #define BEGIN_BUFFER 1
 #define BEGIN_KEY 2
@@ -110,6 +112,11 @@ void setupCommands() {
 
   layout.eclipse[0] = i;
   commands[i++] = BEGIN_KEY; //shortcut start: 0 eclipse previous
+  commands[i++] = K_LALT;
+  commands[i++] = K_LSHIFT;
+  commands[i++] = K_UP;
+  commands[i++] = WAIT;
+  commands[i++] = RELEASEALL;
 
   layout.eclipse[1] = i;
   commands[i++] = BEGIN_KEY; //shortcut start: 1 eclipse action
@@ -120,7 +127,12 @@ void setupCommands() {
 
   layout.eclipse[2] = i;  
   commands[i++] = BEGIN_KEY; //shortcut start: 2 eclipse next
-  
+  commands[i++] = K_LALT;
+  commands[i++] = K_LSHIFT;
+  commands[i++] = K_DOWN;
+  commands[i++] = WAIT;
+  commands[i++] = RELEASEALL;
+
   layout.eclipse[3] = i;  
   commands[i++] = BEGIN_KEY; //shortcut start: 3 eclipse variable
   commands[i++] = K_LALT;
