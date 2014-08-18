@@ -239,8 +239,6 @@ void setupCommands() {
   commands[i++] = END_BUFFER; //buffer end
   
   layout.current = layout.eclipse;
-  
-  Serial.print( "final i: " );Serial.println( i );
 }
 
 void execute(int button) {
