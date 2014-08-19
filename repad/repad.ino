@@ -4,8 +4,10 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-const byte KEYPAD_ROWS = 4; 
-const byte KEYPAD_COLS = 3; 
+#define KEYPAD_ROWS                           4
+#define KEYPAD_COLS                           3
+#define KEYPAD_USER_KEYS                      9
+
 char keys[ KEYPAD_ROWS ][ KEYPAD_COLS ] = {
   { '0',  '1',  '2'},
   { '3',  '4',  '5'},
@@ -303,9 +305,8 @@ void loop(){
     return;
   }
   
-  const int SIZE=9;
-  int offset = (int)key - (int)'0';
-  if( offset >= 0 && offset < SIZE ) {
+  int offset = key - '0';
+  if( offset >= 0 && offset < KEYPAD_USER_KEYS ) {
     execute( offset );
   }
 }
