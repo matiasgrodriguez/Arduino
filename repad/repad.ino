@@ -209,7 +209,7 @@ void serialUploadIfAvailable() {
   eeprom_write( serialUploadState.current++, command );
   
   if( needsToUpdateLayout ) {
-    setupCommands();
+    setupLayouts();
   }
 }
 
@@ -227,7 +227,7 @@ void storeHardCodedValues() {
   }
 }
 
-void setupCommands() {
+void setupLayouts() {
   if( EEPROM.read( 0 ) != BUFFER_START ) {
     storeHardCodedValues();
   }
@@ -244,34 +244,26 @@ void setupCommands() {
 }
 
 void execute(int button) {
-  //Serial.print( "execute: " );Serial.println( button );
   for(int i = layouts.indices[layouts.current + button] + 1; ; ++i) {
     byte command = EEPROM.read( i );
-    //Serial.print( "i: " );Serial.print( i );Serial.print( " cmd: " );Serial.println( command );
-    if( KEY_START == command || BUFFER_END == command || 0 == command ) { //peek
+    if( KEY_START == command || BUFFER_END == command || 0 == command ) {
       break;
     }
     if( WAIT == command ) {
-      //Serial.println( "wait" );
       wait();
     } else if( RELEASE == command ) {
       byte k = EEPROM.read( ++i );
-      //Serial.print( "release " );Serial.println( k );
       releasekey( k );
     } else if( RELEASEALL == command ) {
-      //Serial.println( "releaseall" );
       releaseall();
     } else {
-      //Serial.println( "key" );
       k( command );
     }
     
     if( i >= EEPROM_SIZE ) {
-      //Serial.println( "watchdog out" );
       break;
     }
   }
-  //Serial.println( "execute end" );
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -289,7 +281,7 @@ void setup(){
   Serial.begin(9600);
   Keyboard.begin();
   
-  setupCommands();
+  setupLayouts();
 }
 
 void loop(){
