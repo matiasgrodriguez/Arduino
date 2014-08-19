@@ -210,24 +210,9 @@ void serialLoop() {
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 void storeHardCodedValues() {
-  const size_t MAX_SIZE = 512;
-  byte commands[MAX_SIZE];
-  memset(commands, 0, sizeof(commands));
-  
-  int i = 0;
-  commands[i++] = BUFFER_START;
-  commands[i++] = KEY_START;
-  commands[i++] = KEY_START;
-  commands[i++] = KEY_START;
-  commands[i++] = KEY_START;
-  commands[i++] = KEY_START;
-  commands[i++] = KEY_START;
-  commands[i++] = KEY_START;
-  commands[i++] = KEY_START;
-  commands[i++] = KEY_START;
-  commands[i++] = BUFFER_END; 
-  
-  for(int i = 0; i < MAX_SIZE; ++i) {
+  byte commands[] = { BUFFER_START, KEY_START, KEY_START, KEY_START, KEY_START, KEY_START, KEY_START, KEY_START, KEY_START, KEY_START, BUFFER_END };
+ 
+  for(int i = 0; ; ++i) {
     byte command = commands[ i ];
     eeprom_write( i, command );
     if( command == BUFFER_END ) {
