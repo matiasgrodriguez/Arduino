@@ -99,4 +99,61 @@ i
 wa
 ra
 ks			undefined
+ks			Resharper Start, previous
+lalt
+pup
+wa
+ra
+ks			action
+lalt
+enter
+wa
+ra
+ks			next
+lalt
+pdown
+wa
+ra
+ks			extract var
+lctrl
+r
+wa
+rk
+r
+wa
+v
+wa
+ra
+ks			rename
+lctrl
+r
+wa
+rk
+r
+wa
+r
+wa
+ra
+ks			extract method
+lctrl
+r
+wa
+rk
+r
+wa
+m
+wa
+ra
+ks			undefined
+ks			inline
+lctrl
+r
+wa
+rk
+r
+wa
+i
+wa
+ra
+ks			undefined
 be
