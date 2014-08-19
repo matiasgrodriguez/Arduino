@@ -4,7 +4,7 @@ REfactoring PAD
 
 Developer's best friend :)
 
-Repad is a 3x3 matrix keypad that you can configure each key to perform your favorite IDE refactoring or whatever you like (game combos, lock your computer, etc) 
+Repad is a 3x3 matrix keypad that you can configure each key to perform your favorite IDE refactoring... or whatever you like (game combos, lock your computer, etc) 
 
 You do this by writing a config file and uploading it to the repad.
 
@@ -67,7 +67,7 @@ Then you must configure 9 keys. Each individual key configuration starts with a 
 
 ks
 
-At the end you must put a "be" command (buffer end)
+At the end you must put a "be" command (buffer end). Don't forget to hit enter! (line break)
 
 For example this is a valid repad key configuration that binds no special meaning to each key:
 
@@ -143,11 +143,28 @@ ks
 ks
 be
 
-Failing to follow these guidelines may yiels unpredicted/unexpected results.
+You can define at most 10 layouts, but you are also limited to the total of bytes of your eprom.
+
+Failing to follow these guidelines may yield unpredicted/unexpected results.
 
 = HOW TO UPLOAD THE CONFIGURATION =
 
-(TODO)
+Windows:
+
+Find the COM port assigned to your repad. You can do this by running the mode command with your repad unpluged.
+
+C:> mode
+
+This will list all COM devices, then plug the repad and run "mode" again. The new COM device is your repad. Then configure the COM transmission settings to:
+
+C:> mode COM21 BAUD=9600 PARITY=n DATA=8 STOP=1
+(in my case the repad is on COM21)
+
+Then just copy the mapping file to the COM port 
+
+C:> copy mapping-numberpad.txt \\.\COM21
+
+Thats it!
 
 Hope you enjoy it,
 Matías G. Rodriguez
