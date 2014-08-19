@@ -35,8 +35,8 @@ Keypad keypad = Keypad( makeKeymap( keys ), rowPins, colPins, KEYPAD_ROWS, KEYPA
 #define LAYOUTS_COMMANDS   LAYOUT_COMMANDS * 10
 
 struct Layouts {
-  int current;
-  int index;
+  int layoutOffset;
+  unsigned int commandCount;
   byte indices[ LAYOUTS_COMMANDS ];
 };
 
@@ -84,11 +84,8 @@ void releasekey(const char key) {
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-//http://batchloaf.wordpress.com/2013/02/12/simple-trick-for-sending-characters-to-a-serial-port-in-windows/
-//echo matiasserial >\\.\COM21
-
 struct SerialUploadState {
-  int current;
+  unsigned int address;
 };
 
 SerialUploadState serialUploadState;
@@ -104,22 +101,20 @@ void serialUploadIfAvailable() {
     return;
   }
   
-  String line = Serial.readStringUntil('\n');
-  /*
+  String line = Serial.readStringUntil( '\n' );
   if( line.startsWith( "dump" ) ) {
-    Serial.print( "layouts " );Serial.print( layouts.current );Serial.print( " index " );Serial.println( layouts.index );
-    for(int i=0; i < layouts.index; ++i) {
+    Serial.print( "Layouts> layoutOffset: " );Serial.print( layouts.layoutOffset );Serial.print( " commandCount " );Serial.println( layouts.commandCount );
+    for(int i=0; i < layouts.commandCount; ++i) {
       Serial.println( layouts.indices[ i ] );
     }
     return;
   }
-  */
   
   boolean needsToUpdateLayout = false;
   byte command = 0;
   
   if( line.startsWith( "bs" ) ) {
-    serialUploadState.current = 0;
+    serialUploadState.address = 0;
     command = BUFFER_START;
   } else if( line.startsWith( "ks" ) ) {
     command = KEY_START;
@@ -206,7 +201,7 @@ void serialUploadIfAvailable() {
     command = line.charAt(0);
   }
 
-  eeprom_write( serialUploadState.current++, command );
+  eeprom_write( serialUploadState.address++, command );
   
   if( needsToUpdateLayout ) {
     setupLayouts();
@@ -236,7 +231,7 @@ void setupLayouts() {
   for(int i = 0; i < EEPROM_SIZE; ++i) {
     byte command = EEPROM.read( i );
     if( command == KEY_START ) {
-      layouts.indices[ layouts.index++ ] = i;
+      layouts.indices[ layouts.commandCount++ ] = i;
     } else if( command == BUFFER_END ) {
       break;
     }
@@ -244,7 +239,7 @@ void setupLayouts() {
 }
 
 void execute(int button) {
-  for(int i = layouts.indices[layouts.current + button] + 1; ; ++i) {
+  for(int i = layouts.indices[layouts.layoutOffset + button] + 1; ; ++i) {
     byte command = EEPROM.read( i );
     if( KEY_START == command || BUFFER_END == command || 0 == command ) {
       break;
@@ -269,9 +264,9 @@ void execute(int button) {
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 void menu1() {
-  layouts.current += LAYOUT_COMMANDS;
-  if( layouts.current >= layouts.index ) {
-    layouts.current = 0;
+  layouts.layoutOffset += LAYOUT_COMMANDS;
+  if( layouts.layoutOffset >= layouts.commandCount ) {
+    layouts.layoutOffset = 0;
   }
 }
 
