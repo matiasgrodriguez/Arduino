@@ -110,6 +110,10 @@ void serialUploadIfAvailable() {
     return;
   }
   
+  if( line.length() == 0 ) {
+    return;
+  }
+  
   boolean needsToUpdateLayout = false;
   byte command = 0;
   
@@ -298,6 +302,4 @@ void loop(){
     execute( offset );
   }
 }
-
-
 
