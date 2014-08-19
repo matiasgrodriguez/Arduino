@@ -1,20 +1,45 @@
-bs	Eclipse and Resharper
-ks	Eclipse Start
-ks
-ks
-ks
-ks
-ks
-ks
-ks
-ks
-ks	Resharper Start
-ks
-ks
-ks
-ks
-ks
-ks
-ks
-ks
+bs			Eclipse and Resharper
+ks			Eclipse Start, previous
+lalt
+lshift
+up
+wa
+ra
+ks			action
+lctrl
+1
+wa
+ra
+ks			next
+lalt
+lshift
+down
+wa
+ra
+ks			extract var
+lalt
+lshift
+l
+wa
+ra
+ks			rename
+lalt
+lshift
+r
+wa
+ra
+ks			extract method
+lalt
+lshift
+m
+wa
+ra
+ks			undefined
+ks			inline
+lalt
+lshift
+i
+wa
+ra
+ks			undefined
 be
