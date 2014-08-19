@@ -2,21 +2,23 @@
 #include <Keypad.h>
 #include <EEPROM.h>
 
-const byte ROWS = 4; 
-const byte COLS = 3; 
-char keys[ ROWS ][ COLS ] = {
+///////////////////////////////////////////////////////////////////////////////////////////
+
+const byte KEYPAD_ROWS = 4; 
+const byte KEYPAD_COLS = 3; 
+char keys[ KEYPAD_ROWS ][ KEYPAD_COLS ] = {
   { '0',  '1',  '2'},
   { '3',  '4',  '5'},
   { '6',  '7',  '8'},
   { '9', '10', '11'},
 };
 
-byte rowPins[ ROWS ] = {7, 6, 5, 15};
-byte colPins[ COLS ] = {14, 16, 8};
+byte rowPins[ KEYPAD_ROWS ] = {7, 6, 5, 15};
+byte colPins[ KEYPAD_COLS ] = {14, 16, 8};
 
-int delayMillis = 30;
+Keypad keypad = Keypad( makeKeymap( keys ), rowPins, colPins, KEYPAD_ROWS, KEYPAD_COLS );
 
-Keypad keypad = Keypad( makeKeymap( keys ), rowPins, colPins, ROWS, COLS );
+///////////////////////////////////////////////////////////////////////////////////////////
 
 void lalt() {
   Keyboard.press( KEY_LEFT_ALT );
@@ -47,7 +49,7 @@ void k(const char key) {
 }
 
 void wait() {
-  delay( delayMillis );
+  delay( 30 );
 }
 
 void releaseall() {
@@ -60,15 +62,15 @@ void releasekey(const char key) {
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-#define BUFFER_START 1
-#define KEY_START 2
-#define BUFFER_END 4
-#define WAIT 17
-#define RELEASE 18
-#define RELEASEALL 19
+#define BUFFER_START                          1
+#define KEY_START                             2
+#define BUFFER_END                            4
+#define WAIT                                 17
+#define RELEASE                              18
+#define RELEASEALL                           19
 
-#define LAYOUT_COMMANDS    9
-#define LAYOUTS_COMMANDS   LAYOUT_COMMANDS*10
+#define LAYOUT_COMMANDS                       9
+#define LAYOUTS_COMMANDS   LAYOUT_COMMANDS * 10
 
 struct Layouts {
   int current;
