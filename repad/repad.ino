@@ -22,6 +22,8 @@ Keypad keypad = Keypad( makeKeymap( keys ), rowPins, colPins, KEYPAD_ROWS, KEYPA
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 
+#define EEPROM_SIZE                        1000
+
 #define BUFFER_START                          1
 #define KEY_START                             2
 #define BUFFER_END                            4
@@ -97,7 +99,7 @@ void eeprom_write(int address, byte value) {
   }
 }
 
-void serialLoop() {
+void serialUploadIfAvailable() {
   if( Serial.available() == 0 ){
     return;
   }
@@ -231,7 +233,7 @@ void setupCommands() {
   }
   
   memset(&layouts, 0, sizeof(layouts));
-  for(int i = 0; i < 512; ++i) {
+  for(int i = 0; i < EEPROM_SIZE; ++i) {
     byte command = EEPROM.read( i );
     if( command == KEY_START ) {
       layouts.indices[ layouts.index++ ] = i;
@@ -242,7 +244,6 @@ void setupCommands() {
 }
 
 void execute(int button) {
-  const size_t abortValue = 1000;
   //Serial.print( "execute: " );Serial.println( button );
   for(int i = layouts.indices[layouts.current + button] + 1; ; ++i) {
     byte command = EEPROM.read( i );
@@ -265,7 +266,7 @@ void execute(int button) {
       k( command );
     }
     
-    if( i >= abortValue ) {
+    if( i >= EEPROM_SIZE ) {
       //Serial.println( "watchdog out" );
       break;
     }
@@ -294,7 +295,7 @@ void setup(){
 void loop(){
   char key = keypad.getKey();
   
-  serialLoop();
+  serialUploadIfAvailable();
 
   if( key == NO_KEY ){
     return;
