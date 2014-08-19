@@ -71,7 +71,7 @@ void k(const char key) {
 }
 
 void wait() {
-  delay( 30 );
+  delay( 25 );
 }
 
 void releaseall() {
