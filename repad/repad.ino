@@ -22,6 +22,24 @@ Keypad keypad = Keypad( makeKeymap( keys ), rowPins, colPins, KEYPAD_ROWS, KEYPA
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 
+#define BUFFER_START                          1
+#define KEY_START                             2
+#define BUFFER_END                            4
+#define WAIT                                 17
+#define RELEASE                              18
+#define RELEASEALL                           19
+
+#define LAYOUT_COMMANDS                       9
+#define LAYOUTS_COMMANDS   LAYOUT_COMMANDS * 10
+
+struct Layouts {
+  int current;
+  int index;
+  byte indices[ LAYOUTS_COMMANDS ];
+};
+
+Layouts layouts;
+
 void lalt() {
   Keyboard.press( KEY_LEFT_ALT );
 }
@@ -61,26 +79,6 @@ void releaseall() {
 void releasekey(const char key) {
   Keyboard.release(key);
 }
-
-///////////////////////////////////////////////////////////////////////////////////////////
-
-#define BUFFER_START                          1
-#define KEY_START                             2
-#define BUFFER_END                            4
-#define WAIT                                 17
-#define RELEASE                              18
-#define RELEASEALL                           19
-
-#define LAYOUT_COMMANDS                       9
-#define LAYOUTS_COMMANDS   LAYOUT_COMMANDS * 10
-
-struct Layouts {
-  int current;
-  int index;
-  byte indices[LAYOUTS_COMMANDS];
-};
-
-Layouts layouts;
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 
