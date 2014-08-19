@@ -94,7 +94,9 @@ struct SerialUploadState {
 SerialUploadState serialUploadState;
 
 void eeprom_write(int address, byte value) {
-  EEPROM.write( address, value );
+  if( EEPROM.read( address ) != value ) {
+    EEPROM.write( address, value );
+  }
 }
 
 void serialLoop() {
