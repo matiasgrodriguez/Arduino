@@ -143,7 +143,7 @@ ks
 ks
 be
 
-You can define at most 10 layouts, but you are also limited to the total of bytes of your eprom.
+You can define at most 10 layouts, but you are also limited to the total of bytes of your eeprom.
 
 Failing to follow these guidelines may yield unpredicted/unexpected results.
 
