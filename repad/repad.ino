@@ -35,8 +35,8 @@ Keypad keypad = Keypad( makeKeymap( keys ), rowPins, colPins, KEYPAD_ROWS, KEYPA
 #define LAYOUTS_COMMANDS   LAYOUT_COMMANDS * 10
 
 struct Layouts {
-  int layoutOffset;
-  unsigned int commandCount;
+  int keyOffset;
+  unsigned int keyCount;
   byte indices[ LAYOUTS_COMMANDS ];
 };
 
@@ -85,6 +85,7 @@ void releasekey(const char key) {
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 struct SerialUploadState {
+  boolean allow;
   unsigned int address;
 };
 
@@ -102,15 +103,28 @@ void serialUploadIfAvailable() {
   }
   
   String line = Serial.readStringUntil( '\n' );
+
+  if( line.length() == 0 ) {
+    return;
+  }  
+
   if( line.startsWith( "dump" ) ) {
-    Serial.print( "Layouts> layoutOffset: " );Serial.print( layouts.layoutOffset );Serial.print( " commandCount " );Serial.println( layouts.commandCount );
-    for(int i=0; i < layouts.commandCount; ++i) {
-      Serial.println( layouts.indices[ i ] );
+    Serial.print( "Layouts> keyOffset: " );Serial.print( layouts.keyOffset );Serial.print( " keyCount " );Serial.println( layouts.keyCount );
+    for(int i=0; i < layouts.keyCount; ++i) {
+      Serial.print( i ); Serial.print( "> " ); Serial.println( layouts.indices[ i ] );
+    }
+    Serial.println( "EEPROM> content: " );
+    for(int i=0; i < EEPROM_SIZE/2; ++i) {
+      Serial.print( i ); Serial.print( "> " ); Serial.println( EEPROM.read(i) );
     }
     return;
   }
   
-  if( line.length() == 0 ) {
+  if( line.startsWith( "bs" ) ) {
+    serialUploadState.allow = true;
+  }
+  
+  if( !serialUploadState.allow ) {
     return;
   }
   
@@ -133,6 +147,7 @@ void serialUploadIfAvailable() {
   } else if( line.startsWith( "be" ) ) {
     command = BUFFER_END; 
     needsToUpdateLayout = true;
+    serialUploadState.allow = false;
   } else if( line.startsWith( "lctrl" ) ) {
     command = KEY_LEFT_CTRL;
   } else if( line.startsWith( "lshift" ) ) {
@@ -235,7 +250,7 @@ void setupLayouts() {
   for(int i = 0; i < EEPROM_SIZE; ++i) {
     byte command = EEPROM.read( i );
     if( command == KEY_START ) {
-      layouts.indices[ layouts.commandCount++ ] = i;
+      layouts.indices[ layouts.keyCount++ ] = i;
     } else if( command == BUFFER_END ) {
       break;
     }
@@ -243,19 +258,25 @@ void setupLayouts() {
 }
 
 void execute(int button) {
-  for(int i = layouts.indices[layouts.layoutOffset + button] + 1; ; ++i) {
+  Serial.print( "execute: " );Serial.println( button );
+  for(int i = layouts.indices[layouts.keyOffset + button] + 1; ; ++i) {
     byte command = EEPROM.read( i );
+    Serial.print( "i: " );Serial.print( i );Serial.print( " cmd: " );Serial.println( command );
     if( KEY_START == command || BUFFER_END == command || 0 == command ) {
       break;
     }
     if( WAIT == command ) {
+      Serial.println( "wait" );
       wait();
     } else if( RELEASE == command ) {
       byte k = EEPROM.read( ++i );
+      Serial.print( "release " );Serial.println( k );
       releasekey( k );
     } else if( RELEASEALL == command ) {
+      Serial.println( "releaseall" );
       releaseall();
     } else {
+      Serial.print( "key: " );Serial.println( command );
       k( command );
     }
     
@@ -263,20 +284,23 @@ void execute(int button) {
       break;
     }
   }
+  Serial.println( " " );
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 void menu1() {
-  layouts.layoutOffset += LAYOUT_COMMANDS;
-  if( layouts.layoutOffset >= layouts.commandCount ) {
-    layouts.layoutOffset = 0;
+  layouts.keyOffset += LAYOUT_COMMANDS;
+  if( layouts.keyOffset >= layouts.keyCount ) {
+    layouts.keyOffset = 0;
   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 void setup(){
+  memset(&serialUploadState, 0, sizeof(serialUploadState));
+  
   Serial.begin(9600);
   Keyboard.begin();
   
