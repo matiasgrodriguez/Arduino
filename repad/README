@@ -8,13 +8,103 @@ Repad is a 3x3 matrix keypad that you can configure each key to perform your fav
 
 You do this by writing a config file and uploading it to the repad.
 
------
+= KEYPAD CONFIGURATION =
+
+The repad keys can be configured using a text file where each line corresponds to a command. The first line must start with a "bs" command (bull sh... I mean "buffer start"). 
+
+bs
+
+Then you must configure 9 keys. Each individual key configuration starts with a "ks" command (key start/setup). There is no special command to indicate the key configuration end.
+
+ks
+
+At the end you must put a "be" command (buffer end). Don't forget to hit enter! (line break)
+
+For example this is a valid repad key configuration that binds no special meaning to each key:
+
+bs	//buffer start
+ks	//empty key
+ks	//yes, comments are supported
+ks	actually everything after the command is ignored :)
+ks	//so no need to type //
+ks	//empty key
+ks	//empty key
+ks	//empty key
+ks	//empty key
+be	//buffer end
+
+Repad configuration that binds Alt + Enter to the key on the center of the pad
+
+bs
+ks
+ks
+ks
+ks
+ks
+lalt	//press left alt
+enter	//press enter
+wa		//wait 25 milliseconds
+ra		//release all keys
+ks
+ks
+ks
+be
+
+Here is an example of a key bind to the Resharper rename refactor: Ctrl + R + R
+
+ks		
+lctrl	//press left ctrl
+r		//press r
+wa		//wait
+rk		//release key command (the key to be relased is in the next command)
+r		//release 'r'
+wa		//wait
+r		//press r again
+w		//wait
+ra		//release all keys
+
+The repad allows you to create multiple key configurations and using the special key "menu switch" you can switch among them. For example if you want to configure three layouts you should configure 27 keys (3 layouts * 9 keys)
+
+Example:
+
+bs
+ks	//first layout
+ks
+ks
+ks
+ks
+ks
+ks
+ks
+ks	//second layout
+ks
+ks
+ks
+ks
+ks
+ks
+ks
+ks	//third layout
+ks
+ks
+ks
+ks
+ks
+ks
+ks
+be
+
+You can define at most 10 layouts, but you are also limited to the total of bytes of your eeprom.
+
+Failing to follow these guidelines may yield unpredicted/unexpected results.
+
+= AVAILABLE COMMANDS =
 
 Special commands
 
 bs	//buffer start
 ks	//key start
-wa	//wait (25 ms delay)
+wa	//wait (30 ms delay)
 rk	//release key
 ra	//release all keys
 be	//buffer end
@@ -57,96 +147,6 @@ f10
 f11
 f12
 
-= KEYPAD CONFIGURATION =
-
-The repad keys can be configured using a text file where each line corresponds to a command. The first line must start with a "bs" command (bull sh... I mean "buffer start"). 
-
-bs
-
-Then you must configure 9 keys. Each individual key configuration starts with a "ks" command (key start/setup). There is no special command to indicate the key configuration end.
-
-ks
-
-At the end you must put a "be" command (buffer end). Don't forget to hit enter! (line break)
-
-For example this is a valid repad key configuration that binds no special meaning to each key:
-
-bs	//buffer start
-ks	//empty key
-ks	//yes, comments are supported
-ks	actually everything after the command is ignored :)
-ks	//empty key
-ks	//empty key
-ks	//empty key
-ks	//empty key
-ks	//empty key
-be	//buffer end
-
-Repad configuration that binds Alt + Enter to the key on the center of the pad
-
-bs
-ks
-ks
-ks
-ks
-ks
-lalt	//press left alt
-enter	//press enter
-wa		//wait 25 milliseconds
-ra		//release all keys
-ks
-ks
-ks
-be
-
-Here is an example of a key bind to the Resharper rename refactor: Ctrl + R + R
-
-ks		
-lctrl	//press left ctrl
-r		//press r
-wa		//wait
-rk		//release key (the key to relase is in the next command)
-r		//release 'r'
-wa		//wait
-r		//press r again
-w		//wait
-ra		//release all keys
-
-The repad allows you to create multiple key configurations and using the special key "menu switch" you can switch among them. For example if you want to configure three layouts you should configure 27 keys (3 layouts * 9 keys)
-
-Example:
-
-bs
-ks	//first layout
-ks
-ks
-ks
-ks
-ks
-ks
-ks
-ks	//second layout
-ks
-ks
-ks
-ks
-ks
-ks
-ks
-ks	//third layout
-ks
-ks
-ks
-ks
-ks
-ks
-ks
-be
-
-You can define at most 10 layouts, but you are also limited to the total of bytes of your eeprom.
-
-Failing to follow these guidelines may yield unpredicted/unexpected results.
-
 = HOW TO UPLOAD THE CONFIGURATION =
 
 Windows:
@@ -168,6 +168,3 @@ Thats it!
 
 Hope you enjoy it,
 Matías G. Rodriguez
-
-
-
