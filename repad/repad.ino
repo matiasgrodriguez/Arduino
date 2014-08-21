@@ -103,6 +103,7 @@ void serialUploadIfAvailable() {
   }
   
   String line = Serial.readStringUntil( '\n' );
+  Serial.print( "upload> " );Serial.println( line );
 
   if( line.length() == 0 ) {
     return;
@@ -125,6 +126,7 @@ void serialUploadIfAvailable() {
   }
   
   if( !serialUploadState.allow ) {
+    Serial.println( "Upload disabled" );
     return;
   }
   
