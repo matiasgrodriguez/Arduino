@@ -2,8 +2,6 @@
 #ifndef __SelectTimeControlOptionUiHandler_h__
 #define __SelectTimeControlOptionUiHandler_h__
 
-#include <avr/pgmspace.h>
-
 #include "UiHandler.h"
 #include "GameClock.h"
 #include "GameClockLcd.h"
@@ -18,7 +16,7 @@ extern GameClock gameClock;
 extern GameUiHandler gameUiHandler;
 extern UiHandler *currentUiHandler;
 
-const prog_char selectTimeControlOptionUiHandlerBack[] PROGMEM = "^ back ^";
+const char selectTimeControlOptionUiHandlerBack[] PROGMEM = "^ back ^";
 
 class SelectTimeControlOptionUiHandler : public UiHandler {
   

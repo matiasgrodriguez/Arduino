@@ -2,8 +2,6 @@
 #ifndef __SelectTimeControlUiHandler_h__
 #define __SelectTimeControlUiHandler_h__
 
-#include <avr/pgmspace.h>
-
 #include "UiHandler.h"
 #include "TimeControlUi.h"
 #include "GameButtonGestures.h"
@@ -17,8 +15,8 @@ extern TimeControlUi *timeControls[];
 extern SelectTimeControlOptionUiHandler selectTimeControlOptionUiHandler;
 extern UiHandler *currentUiHandler;
 
-const prog_char SELECT_TIME_CONTROL_UI_HANDLER_LEFT_MESSAGE[] PROGMEM = "Next";
-const prog_char SELECT_TIME_CONTROL_UI_HANDLER_RIGHT_MESSAGE[] PROGMEM = "OK";
+const char SELECT_TIME_CONTROL_UI_HANDLER_LEFT_MESSAGE[] PROGMEM = "Next";
+const char SELECT_TIME_CONTROL_UI_HANDLER_RIGHT_MESSAGE[] PROGMEM = "OK";
 
 class SelectTimeControlUiHandler : public UiHandler {
   

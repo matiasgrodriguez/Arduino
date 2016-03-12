@@ -7,26 +7,26 @@
 #include "TimeControlUi.h"
 #include "FischerDelayTimeControl.h"
 
-const prog_char fischerDelayName[] PROGMEM = "Fischer Delay";
+const char fischerDelayName[] PROGMEM = "Fischer Delay";
 
-const prog_char fischerDelayOption1[] PROGMEM = "Chess Cube        10 sec + 1 sec";
-const prog_char fischerDelayOption2[] PROGMEM = "Chess Cube         1 min + 1 sec";
-const prog_char fischerDelayOption3[] PROGMEM = "Chess Cube        2 min + 12 sec";
-const prog_char fischerDelayOption4[] PROGMEM = "Chess Cube         3 min + 2 sec";
-const prog_char fischerDelayOption5[] PROGMEM = "Chess Cube         5 min + 3 sec";
-const prog_char fischerDelayOption6[] PROGMEM = "Chess Cube       25 min + 10 sec";
+const char fischerDelayOption1[] PROGMEM = "Chess Cube        10 sec + 1 sec";
+const char fischerDelayOption2[] PROGMEM = "Chess Cube         1 min + 1 sec";
+const char fischerDelayOption3[] PROGMEM = "Chess Cube        2 min + 12 sec";
+const char fischerDelayOption4[] PROGMEM = "Chess Cube         3 min + 2 sec";
+const char fischerDelayOption5[] PROGMEM = "Chess Cube         5 min + 3 sec";
+const char fischerDelayOption6[] PROGMEM = "Chess Cube       25 min + 10 sec";
 
-const prog_char *fischerDelayOptions[] PROGMEM = {
+const char * const fischerDelayOptions[] PROGMEM = {
   fischerDelayOption1, fischerDelayOption2, fischerDelayOption3, fischerDelayOption4, fischerDelayOption5, fischerDelayOption6
 };
 
-const prog_char fischerDelayFormat[] PROGMEM = "+%d sec";
+const char fischerDelayFormat[] PROGMEM = "+%d sec";
 
 class FischerDelayTimeControlUi : public TimeControlUi {
   
 public:
 
-  virtual const prog_char *getName() {
+  virtual const char *getName() {
     return fischerDelayName;
   }
   
@@ -34,7 +34,7 @@ public:
     return 6;
   }
   
-  virtual const prog_char *getOption(int16_t option) {
+  virtual const char *getOption(int16_t option) {
     switch( option ) {
       case 0: return fischerDelayOptions[ option ];
       case 1: return fischerDelayOptions[ option ];

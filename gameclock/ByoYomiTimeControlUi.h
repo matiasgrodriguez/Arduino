@@ -2,28 +2,27 @@
 #ifndef __ByoYomiTimeControlUi_h__
 #define __ByoYomiTimeControlUi_h__
 
-#include <avr/pgmspace.h>
 #include "TimeControlUi.h"
 #include "ByoYomiTimeControl.h"
 
-const prog_char byoYomiName[] PROGMEM = "Byo Yomi";
+const char byoYomiName[] PROGMEM = "Byo Yomi";
 
-const prog_char byoYomiOption1[] PROGMEM = "KGS Medium           25m +5(30s)";
-const prog_char byoYomiOption2[] PROGMEM = "KGS Fast             10m +5(20s)";
-const prog_char byoYomiOption3[] PROGMEM = "KGS Blitz             1m +3(10s)";
+const char byoYomiOption1[] PROGMEM = "KGS Medium           25m +5(30s)";
+const char byoYomiOption2[] PROGMEM = "KGS Fast             10m +5(20s)";
+const char byoYomiOption3[] PROGMEM = "KGS Blitz             1m +3(10s)";
 
-const prog_char *byoYomiOptions[] PROGMEM = {
+const char * const byoYomiOptions[] PROGMEM = {
   byoYomiOption1, byoYomiOption2, byoYomiOption3
 };
 
-const prog_char byoYomiUiNormalTime[] PROGMEM = "normal";
-const prog_char byoYomiUiFormat[] PROGMEM = "%d";
+const char byoYomiUiNormalTime[] PROGMEM = "normal";
+const char byoYomiUiFormat[] PROGMEM = "%d";
 
 class ByoYomiTimeControlUi : public TimeControlUi {
   
 public:
 
-  virtual const prog_char *getName() {
+  virtual const char *getName() {
     return byoYomiName;
   }
   
@@ -31,7 +30,7 @@ public:
     return 3;
   }
   
-  virtual const prog_char *getOption(int16_t option) {
+  virtual const char *getOption(int16_t option) {
     switch( option ) {
       case 0: return byoYomiOptions[ option ];
       case 1: return byoYomiOptions[ option ];

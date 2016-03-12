@@ -74,5 +74,5 @@ private:
   
 };
 
-#endif __Buzzer_h__
+#endif
 

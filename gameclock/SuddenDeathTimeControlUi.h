@@ -2,23 +2,22 @@
 #ifndef __SuddenDeathTimeControlUi_h__
 #define __SuddenDeathTimeControlUi_h__
 
-#include <avr/pgmspace.h>
 #include <stdlib.h>
 
 #include "TimeControlUi.h"
 #include "SuddenDeathTimeControl.h"
 
-const prog_char suddenDeathName[] PROGMEM = "Sudden Death";
+const char suddenDeathName[] PROGMEM = "Sudden Death";
 
-const prog_char suddenDeathOption1[] PROGMEM = "                          30 sec";
-const prog_char suddenDeathOption2[] PROGMEM = "                           1 min";
-const prog_char suddenDeathOption3[] PROGMEM = "                           5 min";
-const prog_char suddenDeathOption4[] PROGMEM = "                          10 min";
-const prog_char suddenDeathOption5[] PROGMEM = "                          20 min";
-const prog_char suddenDeathOption6[] PROGMEM = "                          30 min";
-const prog_char suddenDeathOption7[] PROGMEM = "                          1 hour";
+const char suddenDeathOption1[] PROGMEM = "                          30 sec";
+const char suddenDeathOption2[] PROGMEM = "                           1 min";
+const char suddenDeathOption3[] PROGMEM = "                           5 min";
+const char suddenDeathOption4[] PROGMEM = "                          10 min";
+const char suddenDeathOption5[] PROGMEM = "                          20 min";
+const char suddenDeathOption6[] PROGMEM = "                          30 min";
+const char suddenDeathOption7[] PROGMEM = "                          1 hour";
 
-const prog_char *suddenDeathOptions[] PROGMEM = {
+const char * const suddenDeathOptions[] PROGMEM = {
   suddenDeathOption1, suddenDeathOption2, suddenDeathOption3, suddenDeathOption4, suddenDeathOption5, suddenDeathOption6, suddenDeathOption7
 };
 
@@ -26,7 +25,7 @@ class SuddenDeathTimeControlUi : public TimeControlUi {
   
 public:
 
-  virtual const prog_char *getName() {
+  virtual const char *getName() {
     return suddenDeathName;
   }
   
@@ -34,7 +33,7 @@ public:
     return 7;
   }
   
-  virtual const prog_char *getOption(int16_t option) {
+  virtual const char *getOption(int16_t option) {
     switch( option ) {
       case 0: return suddenDeathOptions[ option ];
       case 1: return suddenDeathOptions[ option ];

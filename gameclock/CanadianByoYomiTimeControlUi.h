@@ -2,31 +2,30 @@
 #ifndef __CanadianByoYomiTimeControlUi_h__
 #define __CanadianByoYomiTimeControlUi_h__
 
-#include <avr/pgmspace.h>
 #include <stdlib.h>
 
 #include "TimeControlUi.h"
 #include "ByoYomiTimeControl.h"
 
-const prog_char canadianByoYomiName[] PROGMEM = "Canadian ByoYomi";
+const char canadianByoYomiName[] PROGMEM = "Canadian ByoYomi";
 
-const prog_char canadianByoYomiOption1[] PROGMEM = "IGS Panda       1m +25mov in 15m";
-const prog_char canadianByoYomiOption2[] PROGMEM = "IGS Panda       1m +25mov in 10m";
-const prog_char canadianByoYomiOption3[] PROGMEM = "IGS Panda       1m +25mov in  7m";
-const prog_char canadianByoYomiOption4[] PROGMEM = "IGS Panda       1m +25mov in  5m";
+const char canadianByoYomiOption1[] PROGMEM = "IGS Panda       1m +25mov in 15m";
+const char canadianByoYomiOption2[] PROGMEM = "IGS Panda       1m +25mov in 10m";
+const char canadianByoYomiOption3[] PROGMEM = "IGS Panda       1m +25mov in  7m";
+const char canadianByoYomiOption4[] PROGMEM = "IGS Panda       1m +25mov in  5m";
 
-const prog_char *canadianByoYomiOptions[] PROGMEM = {
+const char * const canadianByoYomiOptions[] PROGMEM = {
   canadianByoYomiOption1, canadianByoYomiOption2, canadianByoYomiOption3, canadianByoYomiOption4
 };
 
-const prog_char canadianByoYomiUiNormalTime[] PROGMEM = "normal";
-const prog_char canadianByoYomiUiFormat[] PROGMEM = "%d";
+const char canadianByoYomiUiNormalTime[] PROGMEM = "normal";
+const char canadianByoYomiUiFormat[] PROGMEM = "%d";
 
 class CanadianByoYomiTimeControlUi : public TimeControlUi {
   
 public:
 
-  virtual const prog_char *getName() {
+  virtual const char *getName() {
     return canadianByoYomiName;
   }
   
@@ -34,7 +33,7 @@ public:
     return 4;
   }
   
-  virtual const prog_char *getOption(int16_t option) {
+  virtual const char *getOption(int16_t option) {
     switch( option ) {
       case 0: return canadianByoYomiOptions[ option ];
       case 1: return canadianByoYomiOptions[ option ];

@@ -2,7 +2,6 @@
 #ifndef __GameClockLcd_h__
 #define __GameClockLcd_h__
 
-#include <avr/pgmspace.h>
 #include <LiquidCrystal.h>
 
 #define GAME_CLOCK_LCD_BUFFER_SIZE 17
@@ -43,31 +42,31 @@ public:
     updateBlinkState( clock );
   }
   
-  void printTopLeft(const prog_char *str) {
+  void printTopLeft(const char *str) {
     printAligned( str, topBuffer, Left );
   }
 
-  void printTopCenter(const prog_char *str) {
+  void printTopCenter(const char *str) {
     printAligned( str, topBuffer, Center );
   }
 
-  void printTopRight(const prog_char *str) {
+  void printTopRight(const char *str) {
     printAligned( str, topBuffer, Right );
   }
 
-  void printBottomLeft(const prog_char *str) {
+  void printBottomLeft(const char *str) {
     printAligned( str, bottomBuffer, Left );
   }
 
-  void printBottomCenter(const prog_char *str) {
+  void printBottomCenter(const char *str) {
     printAligned( str, bottomBuffer, Center );
   }
 
-  void printBottomRight(const prog_char *str) {
+  void printBottomRight(const char *str) {
     printAligned( str, bottomBuffer, Right );
   }
   
-  void printWholeScreen(const prog_char *str) {
+  void printWholeScreen(const char *str) {
     if( notBlinkingOrBlinkOnFase() ) {
       memcpy_P( topBuffer, str, GAME_CLOCK_LCD_BUFFER_SIZE - 1 );
       memcpy_P( bottomBuffer, &str[ GAME_CLOCK_LCD_BUFFER_SIZE - 1 ], GAME_CLOCK_LCD_BUFFER_SIZE - 1 );
@@ -82,21 +81,21 @@ public:
     formatTime( time, &topBuffer[ 11 ], blink );
   }
   
-  void sPrintBottomLeft(const prog_char *format, ...) {
+  void sPrintBottomLeft(const char *format, ...) {
     va_list body;
     va_start( body, format );
     sPrint( bottomBuffer, Left, format, body );
     va_end( body );
   }
 
-  void sPrintBottomCenter(const prog_char *format, ...) {
+  void sPrintBottomCenter(const char *format, ...) {
     va_list body;
     va_start( body, format );
     sPrint( bottomBuffer, Center, format, body );
     va_end( body );
   }
 
-  void sPrintBottomRight(const prog_char *format, ...) {
+  void sPrintBottomRight(const char *format, ...) {
     va_list body;
     va_start( body, format );
     sPrint( bottomBuffer, Right, format, body );
@@ -126,7 +125,7 @@ private:
     buffer[ lastPosition ] = '\0';
   }
   
-  void printAligned(const prog_char *str, char *screenBuffer, Alignment aligment) {
+  void printAligned(const char *str, char *screenBuffer, Alignment aligment) {
     char buffer[ GAME_CLOCK_LCD_BUFFER_SIZE ];
     strcpy_P( buffer, str );
     printAlignedUsingLocalBuffer( buffer, screenBuffer, aligment );
@@ -173,7 +172,7 @@ private:
     }
   }
   
-  void sPrint(char *screenBuffer, Alignment aligment, const prog_char *format, va_list body) {
+  void sPrint(char *screenBuffer, Alignment aligment, const char *format, va_list body) {
     char buffer[ GAME_CLOCK_LCD_BUFFER_SIZE ];
     vsprintf_P(buffer, format, body);
     printAlignedUsingLocalBuffer( buffer, screenBuffer, aligment );

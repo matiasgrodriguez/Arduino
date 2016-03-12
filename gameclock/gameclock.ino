@@ -19,7 +19,6 @@
 #include "BronsteinDelayTimeControlUi.h"
 #include "HourGlassTimeControlUi.h"
 #include "SuddenDeathTimeControlUi.h"
-//#include "NormalDelayTimeControlUi.h"
 
 //Hardware:
 GameClockLcd lcd2( 7, 6, 5, 4, 3, 2);

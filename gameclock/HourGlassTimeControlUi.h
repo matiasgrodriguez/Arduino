@@ -2,30 +2,28 @@
 #ifndef __HourGlassTimeControlUi_h__
 #define __HourGlassTimeControlUi_h__
 
-#include <avr/pgmspace.h>
-
 #include "TimeControlUi.h"
 #include "HourGlassTimeControl.h"
 
-const prog_char hourGlassName[] PROGMEM = "Hour Glass";
+const char hourGlassName[] PROGMEM = "Hour Glass";
 
-const prog_char hourGlassOption1[] PROGMEM = "                          30 sec";
-const prog_char hourGlassOption2[] PROGMEM = "                           1 min";
-const prog_char hourGlassOption3[] PROGMEM = "                           2 min";
-const prog_char hourGlassOption4[] PROGMEM = "                           5 min";
-const prog_char hourGlassOption5[] PROGMEM = "                          10 min";
+const char hourGlassOption1[] PROGMEM = "                          30 sec";
+const char hourGlassOption2[] PROGMEM = "                           1 min";
+const char hourGlassOption3[] PROGMEM = "                           2 min";
+const char hourGlassOption4[] PROGMEM = "                           5 min";
+const char hourGlassOption5[] PROGMEM = "                          10 min";
 
-const prog_char *hourGlassOptions[] PROGMEM = {
+const char * const hourGlassOptions[] PROGMEM = {
   hourGlassOption1, hourGlassOption2, hourGlassOption3, hourGlassOption4, hourGlassOption5
 };
 
-const prog_char HOURGLASS_FORMAT[] PROGMEM = "%c %d sec";
+const char HOURGLASS_FORMAT[] PROGMEM = "%c %d sec";
 
 class HourGlassTimeControlUi : public TimeControlUi {
   
 public:
 
-  virtual const prog_char *getName() {
+  virtual const char *getName() {
     return hourGlassName;
   }
   
@@ -33,7 +31,7 @@ public:
     return 5;
   }
   
-  virtual const prog_char *getOption(int16_t option) {
+  virtual const char *getOption(int16_t option) {
     switch( option ) {
       case 0: return hourGlassOptions[ option ];
       case 1: return hourGlassOptions[ option ];

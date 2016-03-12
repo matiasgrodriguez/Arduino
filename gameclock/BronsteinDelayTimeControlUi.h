@@ -2,29 +2,28 @@
 #ifndef __BronsteinDelayTimeControlUi_h__
 #define __BronsteinDelayTimeControlUi_h__
 
-#include <avr/pgmspace.h>
 #include <stdlib.h>
 #include "TimeControlUi.h"
 #include "BronsteinDelayTimeControl.h"
 
-const prog_char bronsteinDelayName[] PROGMEM = "Bronstein Delay";
+const char bronsteinDelayName[] PROGMEM = "Bronstein Delay";
 
-const prog_char bronsteinDelayOption1[] PROGMEM = "                  2 min + 12 sec";
-const prog_char bronsteinDelayOption2[] PROGMEM = "Objective         3 min + 12 sec";
-const prog_char bronsteinDelayOption3[] PROGMEM = "                  5 min + 12 sec";
-const prog_char bronsteinDelayOption4[] PROGMEM = "                 10 min + 10 sec";
+const char bronsteinDelayOption1[] PROGMEM = "                  2 min + 12 sec";
+const char bronsteinDelayOption2[] PROGMEM = "Objective         3 min + 12 sec";
+const char bronsteinDelayOption3[] PROGMEM = "                  5 min + 12 sec";
+const char bronsteinDelayOption4[] PROGMEM = "                 10 min + 10 sec";
 
-const prog_char *bronsteinDelayOptions[] PROGMEM = {
+const char * const bronsteinDelayOptions[] PROGMEM = {
   bronsteinDelayOption1, bronsteinDelayOption2, bronsteinDelayOption3, bronsteinDelayOption4
 };
 
-const prog_char bronsteinDelayFormat[] PROGMEM = "delay %d sec";
+const char bronsteinDelayFormat[] PROGMEM = "delay %d sec";
 
 class BronsteinDelayTimeControlUi : public TimeControlUi {
   
 public:
 
-  virtual const prog_char *getName() {
+  virtual const char *getName() {
     return bronsteinDelayName;
   }
   
@@ -32,7 +31,7 @@ public:
     return 4;
   }
   
-  virtual const prog_char *getOption(int16_t option) {
+  virtual const char *getOption(int16_t option) {
     switch( option ) {
       case 0: return bronsteinDelayOptions[ option ];
       case 1: return bronsteinDelayOptions[ option ];

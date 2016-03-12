@@ -13,8 +13,8 @@ extern GameClock gameClock;
 extern GameButtonGestures buttonGestures;
 extern GameClockLcd lcd2;
 
-const prog_char gameUiHandlerPlayerOneWinnerMessage[] PROGMEM = "WINNER ";
-const prog_char gameUiHandlerPlayerTwoWinnerMessage[] PROGMEM = " WINNER";
+const char gameUiHandlerPlayerOneWinnerMessage[] PROGMEM = "WINNER ";
+const char gameUiHandlerPlayerTwoWinnerMessage[] PROGMEM = " WINNER";
 
 void(* resetFunc) (void) = 0; //declare reset function @ address 0
 
